@@ -6,9 +6,9 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
-                <div class="row  mb-2 my-3">
+                <div class="row mb-2 my-3">
                     <div class="col-sm-6">
-                        <h1>Products list</h1>
+                        <h1>Daybook List</h1>
                     </div>
                     <div style="margin-left:550px;">
                         <a class="btn btn-success " href="#">Export</a>
@@ -29,17 +29,17 @@
             <!-- /.container-fluid -->
         </section>
 
+        <!-- Main content -->
+
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
+                    <th>Expense by</th>
+                    <th>Amount</th>
+                    <th>Company</th>
+                    <th>Category</th>
+                    <th>Expense Date</th>
                     <th>Action</th>
-
                 </tr>
             </thead>
             <tbody>
@@ -47,16 +47,32 @@
                     <td>
                         Yaa
                     </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+
+                    <td>
+                        ya@gmail.com
+                    </td>
+
+                    <td>
+                        20
+                    </td>
+
+                    <td>
+                        fsgg
+                    </td>
+                    
+                    <td>
+                        fsgg
+                    </td>
+
                     <td>
                         <a class="btn btn-success" href="#">Edit</a>
                         <a class="btn btn-danger" href="#">Delete</a>
                     </td>
+
                 </tr>
+
+
+
             </tbody>
         </table>
 
@@ -88,9 +104,7 @@
                 <li class="paginate_button page-item "><a href="#" aria-controls="example2" data-dt-idx="4" tabindex="0" class="page-link">4</a></li>
                 <li class="paginate_button page-item "><a href="#" aria-controls="example2" data-dt-idx="5" tabindex="0" class="page-link">5</a></li>
                 <li class="paginate_button page-item "><a href="#" aria-controls="example2" data-dt-idx="6" tabindex="0" class="page-link">6</a></li>
-                <li class="paginate_button page-item next" id="example2_next">
-                    <a href="#" aria-controls="example2" data-dt-idx="7" tabindex="0" class="page-link">Next</a>
-                </li>
+                <li class="paginate_button page-item next" id="example2_next"><a href="#" aria-controls="example2" data-dt-idx="7" tabindex="0" class="page-link">Next</a></li>
             </ul>
         </div>
 
@@ -100,15 +114,19 @@
 
 
 
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
 
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
-    <!-- /.control-sidebar -->
+
+
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+</aside>
+<!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
 

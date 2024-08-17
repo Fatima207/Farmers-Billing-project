@@ -16,7 +16,6 @@
             <!-- /.container-fluid -->
         </section>
 
-
         <!-- for first -->
         <div class="card-body" style='justify-content: space-between;'>
             <!-- Date -->

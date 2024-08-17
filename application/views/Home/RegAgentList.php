@@ -6,147 +6,190 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
-                <div class="row mb-2">
+                <div class="row  mb-2 my-3">
                     <div class="col-sm-6">
                         <h1>Agents list</h1>
                     </div>
+                    <div style="margin-left:550px;">
+                        <a class="btn btn-success " href="#">Export</a>
+                    </div>
+                    <div class="form-group mt-2" style="margin-left:995px;">
+                            <div class="input-group input-group-lg">
+                                <input type="search" class="form-control form-control-lg " style="width:200px;" placeholder="search for anything" value="">
+                                <div class="input-group-append">
+                                    <button type="submit" class="btn btn-lg btn-default">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
 
                 </div>
-            </div>
-            <!-- /.container-fluid -->
-        </section>
+      </div>
+    <!-- /.container-fluid -->
+    </section>
 
-        <!-- Main content -->
+    <!-- Main content -->
 
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Code</th>
-                    <th>Address</th>
-                    <th>Contact Number</th>
-                    <th>Whatsapp Number</th>
-                    <th>Action</th>
+    <table class="table table-striped table-hover">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Code</th>
+                <th>Address</th>
+                <th>Contact Number</th>
+                <th>Whatsapp Number</th>
+                <th>Action</th>
 
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        Yaa
-                    </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    Yaa
+                </td>
 
-                    <td>
-                        ya@gmail.com
-                    </td>
+                <td>
+                    ya@gmail.com
+                </td>
 
-                    <td>
-                        20
-                    </td>
+                <td>
+                    20
+                </td>
 
-                    <td>
-                        fsgg
-                    </td>
+                <td>
+                    fsgg
+                </td>
 
-                    <td>
-                        2043561265
-                    </td>
+                <td>
+                    2043561265
+                </td>
 
-                    <td>
-                        2043561265
-                    </td>
+                <td>
+                    2043561265
+                </td>
 
-                    <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
-                    </td>
+                <td>
+                    <a class="btn btn-success" href="#">Edit</a>
+                    <a class="btn btn-danger" href="#">Delete</a>
+                </td>
 
-                </tr>
+            </tr>
 
-                <tr>
-                    <td>
-                        sdf
-                    </td>
+            <tr>
+                <td>
+                    sdf
+                </td>
 
-                    <td>
-                        sd@gmail.com
-                    </td>
+                <td>
+                    sd@gmail.com
+                </td>
 
-                    <td>
-                        30
-                    </td>
+                <td>
+                    30
+                </td>
 
-                    <td>
-                        fwfg
-                    </td>
+                <td>
+                    fwfg
+                </td>
 
-                    <td>
-                        3032456787
-                    </td>
+                <td>
+                    3032456787
+                </td>
 
-                    <td>
-                        3012345465
-                    </td>
-
-
-                    <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
-                    </td>
-
-                </tr>
-
-                <tr>
-                    <td>
-                        ghag
-                    </td>
-
-                    <td>
-                        dd@gmail.com
-                    </td>
-
-                    <td>
-                        40
-                    </td>
-
-                    <td>
-                        dfsigb
-                    </td>
-
-                    <td>
-                        3012455667
-                    </td>
-
-                    <td>
-                        3056677889
-                    </td>
+                <td>
+                    3012345465
+                </td>
 
 
-                    <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
-                    </td>
+                <td>
+                    <a class="btn btn-success" href="#">Edit</a>
+                    <a class="btn btn-danger" href="#">Delete</a>
+                </td>
 
-                </tr>
+            </tr>
 
-            </tbody>
-        </table>
+            <tr>
+                <td>
+                    ghag
+                </td>
+
+                <td>
+                    dd@gmail.com
+                </td>
+
+                <td>
+                    40
+                </td>
+
+                <td>
+                    dfsigb
+                </td>
+
+                <td>
+                    3012455667
+                </td>
+
+                <td>
+                    3056677889
+                </td>
 
 
+                <td>
+                    <a class="btn btn-success" href="#">Edit</a>
+                    <a class="btn btn-danger" href="#">Delete</a>
+                </td>
+
+            </tr>
+
+        </tbody>
+    </table>
+    <!-- pagination -->
 
 
+    <div class="col-lg-100 d-flex justify-content-between">
+        <div class="dataTables_info " style="margin-top:10px;" id="example2_info" role="status" aria-live="polite">Showing 1 to 10 of 11 entries</div>
 
+        <div class="col mx-1" style="padding-left:580px; margin-top:10px;">
+            <!-- select -->
+            <label>Rows per page:</label>
+            <select class="">
+                <option>10</option>
+                <option>15</option>
+                <option>20</option>
+                <option>25</option>
+                <option>30</option>
 
-        <!-- /.content -->
+            </select>
+        </div>
+
+        <ul class="pagination">
+            <li class="paginate_button page-item previous disabled" id="example2_previous"><a href="#" aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li>
+            <li class="paginate_button page-item active"><a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">1</a></li>
+            <li class="paginate_button page-item "><a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0" class="page-link">2</a></li>
+            <li class="paginate_button page-item "><a href="#" aria-controls="example2" data-dt-idx="3" tabindex="0" class="page-link">3</a></li>
+            <li class="paginate_button page-item "><a href="#" aria-controls="example2" data-dt-idx="4" tabindex="0" class="page-link">4</a></li>
+            <li class="paginate_button page-item "><a href="#" aria-controls="example2" data-dt-idx="5" tabindex="0" class="page-link">5</a></li>
+            <li class="paginate_button page-item "><a href="#" aria-controls="example2" data-dt-idx="6" tabindex="0" class="page-link">6</a></li>
+            <li class="paginate_button page-item next" id="example2_next"><a href="#" aria-controls="example2" data-dt-idx="7" tabindex="0" class="page-link">Next</a></li>
+        </ul>
     </div>
-    <!-- /.content-wrapper -->
 
-    <!-- Control Sidebar -->
-    <aside class="control-sidebar control-sidebar-dark">
-        <!-- Control sidebar content goes here -->
-    </aside>
-    <!-- /.control-sidebar -->
+
+
+
+
+
+    <!-- /.content -->
+</div>
+<!-- /.content-wrapper -->
+
+<!-- Control Sidebar -->
+<aside class="control-sidebar control-sidebar-dark">
+    <!-- Control sidebar content goes here -->
+</aside>
+<!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
 

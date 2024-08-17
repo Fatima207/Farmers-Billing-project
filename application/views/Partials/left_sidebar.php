@@ -292,13 +292,13 @@
 						</a>
 						<ul class="nav nav-treeview">
 							<li class="nav-item">
-								<a href="#" class="nav-link">
+								<a href="<?php echo base_url() ?>index.php/Home/ExpCategories" class="nav-link">
 									<i class="far fa-circle nav-icon"></i>
 									<p>Create Category</p>
 								</a>
 							</li>
 							<li class="nav-item">
-								<a href="#" class="nav-link">
+								<a href="<?php echo base_url() ?>index.php/Home/ExpCatgList" class="nav-link">
 									<i class="far fa-circle nav-icon"></i>
 									<p>View All</p>
 								</a>
@@ -318,13 +318,13 @@
 				</a>
 				<ul class="nav nav-treeview">
 					<li class="nav-item">
-						<a href="#" class="nav-link">
+						<a href="<?php echo base_url() ?>index.php/Home/ExpDaybook" class="nav-link">
 							<i class="far fa-circle nav-icon"></i>
 							<p>New Daybook</p>
 						</a>
 					</li>
 					<li class="nav-item">
-						<a href="#" class="nav-link">
+						<a href="<?php echo base_url() ?>index.php/Home/ExpDaybookList" class="nav-link">
 							<i class="far fa-circle nav-icon"></i>
 							<p>View All</p>
 						</a>
@@ -349,7 +349,7 @@
 				</a>
 				<ul class="nav nav-treeview">
 					<li class="nav-item">
-						<a href="#" class="nav-link">
+						<a href="<?php echo base_url() ?>index.php/Home/ProfitLoss" class="nav-link">
 							<i class="nav-icon fas fa-circle"></i>
 							<p>
 								Profit/Loss Account
@@ -370,19 +370,19 @@
 						</a>
 						<ul class="nav nav-treeview">
 							<li class="nav-item">
-								<a href="#" class="nav-link">
+								<a href="<?php echo base_url() ?>index.php/Home/FarmerLedger" class="nav-link">
 									<i class="far fa-circle nav-icon"></i>
 									<p>Farmer Ledger</p>
 								</a>
 							</li>
 							<li class="nav-item">
-								<a href="#" class="nav-link">
+								<a href="<?php echo base_url() ?>index.php/Home/AgentLedger" class="nav-link">
 									<i class="far fa-circle nav-icon"></i>
 									<p>Agent Ledger</p>
 								</a>
 							</li>
 							<li class="nav-item">
-								<a href="#" class="nav-link">
+								<a href="<?php echo base_url() ?>index.php/Home/RetailerLedger" class="nav-link">
 									<i class="far fa-circle nav-icon"></i>
 									<p>Retailer Ledger</p>
 								</a>
@@ -393,7 +393,7 @@
 				</ul>
 				<ul class="nav nav-treeview">
 					<li class="nav-item">
-						<a href="#" class="nav-link">
+						<a href="<?php echo base_url() ?>index.php/Home/PaymentData" class="nav-link">
 							<i class="nav-icon fas fa-circle"></i>
 							<p>Payment Data
 							</p>

@@ -6,101 +6,77 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
-                <div class="row  mb-2 my-3">
+                <div class="row my-3">
                     <div class="col-sm-6">
-                        <h1>Products list</h1>
+
                     </div>
-                    <div style="margin-left:550px;">
-                        <a class="btn btn-success " href="#">Export</a>
-                    </div>
-                    <div class="form-group mt-2" style="margin-left:995px;">
-                            <div class="input-group input-group-lg">
-                                <input type="search" class="form-control form-control-lg " style="width:200px;" placeholder="search for anything" value="">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-lg btn-default">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
 
                 </div>
-      </div>
+            </div>
             <!-- /.container-fluid -->
         </section>
 
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th>Action</th>
+        <section class="content">
+            <div class="container-fluid">
+                <div class="row justify-content-center align-items-center bg-light mt-3">
+                    <!-- left column -->
+                    <div class="col-md-6">
+                        <!-- general form elements -->
+                        <div class="card card-primary mt-5">
 
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        Yaa
-                    </td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+                            <!-- /.card-header -->
+                            <!-- form start -->
+                            <form>
+                                <div class="card-body"  style="width:600px;">
+                                    <div class="form-group" >
+                                        <label for="exampleInputName1">companies</label>
 
+                                        <!-- <label>Rows per page:</label> -->
+                                        <select class="form-control" placeholder="Companies"   style="height:55px;">
+                                            <option>Companies </option>
+                                            <option>random </option>
+                                            <option>random </option>
+                                            <option>random </option>
+                                            <option>random </option>
 
-        <!-- pagination -->
+                                        </select>
+                                        <!-- <input type="name" class="form-control" id="exampleInputName1" placeholder="Enter email"> -->
+                                    </div>
+
+                                    <!-- Date and time range -->
+                                    <div class="form-group">
 
 
-        <div class="col-lg-100 d-flex justify-content-between">
-            <div class="dataTables_info " style="margin-top:10px;" id="example2_info" role="status" aria-live="polite">Showing 1 to 10 of 11 entries</div>
+                                        <div class="input-group"> 
+                                            <div class="input-group-prepend"   style="height:55px;">
+                                                <span class="input-group-text"><i class="far fa-clock"></i></span>
+                                            </div>
+                                            <input type="text" class="form-control float-right"   style="height:55px;" id="reservationtime" required>
+                                        </div>
 
-            <div class="col mx-1" style="padding-left:580px; margin-top:10px;">
-                <!-- select -->
-                <label>Rows per page:</label>
-                <select class="">
-                    <option>10</option>
-                    <option>15</option>
-                    <option>20</option>
-                    <option>25</option>
-                    <option>30</option>
+                                        <!-- /.input group -->
+                                    </div>
 
-                </select>
+                                    <!-- button add -->
+                                    <a class="btn btn-dark " href="#" style="float:right; width:100px;">search</a>
+
+                                </div>
+                                <!-- button add -->
+
+
+
+                                <!-- /.card-body -->
+
+
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
             </div>
 
-            <ul class="pagination">
-                <li class="paginate_button page-item previous disabled" id="example2_previous"><a href="#" aria-controls="example2" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li>
-                <li class="paginate_button page-item active"><a href="#" aria-controls="example2" data-dt-idx="1" tabindex="0" class="page-link">1</a></li>
-                <li class="paginate_button page-item "><a href="#" aria-controls="example2" data-dt-idx="2" tabindex="0" class="page-link">2</a></li>
-                <li class="paginate_button page-item "><a href="#" aria-controls="example2" data-dt-idx="3" tabindex="0" class="page-link">3</a></li>
-                <li class="paginate_button page-item "><a href="#" aria-controls="example2" data-dt-idx="4" tabindex="0" class="page-link">4</a></li>
-                <li class="paginate_button page-item "><a href="#" aria-controls="example2" data-dt-idx="5" tabindex="0" class="page-link">5</a></li>
-                <li class="paginate_button page-item "><a href="#" aria-controls="example2" data-dt-idx="6" tabindex="0" class="page-link">6</a></li>
-                <li class="paginate_button page-item next" id="example2_next">
-                    <a href="#" aria-controls="example2" data-dt-idx="7" tabindex="0" class="page-link">Next</a>
-                </li>
-            </ul>
-        </div>
+        </section>
 
-
-
-
-
-
-
-        <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
 

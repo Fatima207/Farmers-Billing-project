@@ -368,4 +368,185 @@ class Home extends CI_Controller
 		$this->load->view('Home/BillingRetailerlist.php');
 		$this->load->view('Partials/footer');
 	}
+	public function ExpCategories()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/ExpCategories.php');
+		$this->load->view('Partials/footer');
+	}
+
+	public function ExpCatgList()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/ExpcatgList.php');
+		$this->load->view('Partials/footer');
+	}
+	public function ExpDaybook()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/ExpDaybook.php');
+		$this->load->view('Partials/footer');
+	}
+	public function ExpDaybookList()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/ExpDaybookList.php');
+		$this->load->view('Partials/footer');
+	}
+	public function ProfitLoss()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/ProfitLoss.php');
+		$this->load->view('Partials/footer');
+	}
+	public function FarmerLedger()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/FarmerLedger.php');
+		$this->load->view('Partials/footer');
+	}
+	public function AgentLedger()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/AgentLedger.php');
+		$this->load->view('Partials/footer');
+	}
+	public function RetailerLedger()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/RetailerLedger.php');
+		$this->load->view('Partials/footer');
+	}
+	public function PaymentData()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/PaymentData.php');
+		$this->load->view('Partials/footer');
+	}
 }
