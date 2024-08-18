@@ -8,7 +8,7 @@
             <div class="container-fluid">
                 <div class="row my-3">
                     <div class="col-sm-6">
-                        <h1>Add Category</h1>
+                        <h1>Add Daybook</h1>
                     </div>
 
                 </div>
@@ -30,7 +30,7 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="exampleInputName1">Expenses by</label>
-                                        <input type="name" class="form-control" id="exampleInputName1" placeholder="Enter email">
+                                        <input type="name" class="form-control" id="exampleInputName1" placeholder= "">
                                     </div>
 
 

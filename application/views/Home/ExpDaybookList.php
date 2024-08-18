@@ -14,18 +14,18 @@
                         <a class="btn btn-success " href="#">Export</a>
                     </div>
                     <div class="form-group mt-2" style="margin-left:995px;">
-                            <div class="input-group input-group-lg">
-                                <input type="search" class="form-control form-control-lg " style="width:200px;" placeholder="search for anything" value="">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-lg btn-default">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
+                        <div class="input-group input-group-lg">
+                            <input type="search" class="form-control form-control-lg " style="width:200px;" placeholder="search for anything" value="">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-lg btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
                             </div>
                         </div>
+                    </div>
 
                 </div>
-      </div>
+            </div>
             <!-- /.container-fluid -->
         </section>
 
@@ -36,6 +36,7 @@
                 <tr>
                     <th>Expense by</th>
                     <th>Amount</th>
+
                     <th>Company</th>
                     <th>Category</th>
                     <th>Expense Date</th>
@@ -59,7 +60,7 @@
                     <td>
                         fsgg
                     </td>
-                    
+
                     <td>
                         fsgg
                     </td>

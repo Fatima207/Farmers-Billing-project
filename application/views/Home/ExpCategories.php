@@ -41,11 +41,11 @@
 										<input type="number" name="Amount" id="amount" required="" placeholder="Enter Qty" class="form-control">
 									</div>
 									<div class="form-group">
-										<label>Expense Date</label>
+										<label>Expense Date & Time</label>
 										<div class="input-group date" id="reservationdate" data-target-input="nearest">
 											<input type="text" class="form-control datetimepicker-input" data-target="#reservationdate" />
 											<div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-												<div class="input-group-text"><i class="fa fa-calendar"></i></div>
+												<div class="input-group-text "><i class="fa fa-calendar"></i></div>
 											</div>
 
 

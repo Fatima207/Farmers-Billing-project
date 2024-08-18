@@ -546,7 +546,47 @@ class Home extends CI_Controller
 			exit;
 		}
 		$this->load->view('Partials/header');
-		$this->load->view('Home/PaymentData.php');
+		$this->load->view('Home/ReportPayment.php');
+		$this->load->view('Partials/footer');
+	}
+	public function ReptDaybook()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/ReptDaybook.php');
+		$this->load->view('Partials/footer');
+	}
+	public function ReptDaybooklist()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/ReptDaybooklist.php');
 		$this->load->view('Partials/footer');
 	}
 }

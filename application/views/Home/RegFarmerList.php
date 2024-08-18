@@ -17,9 +17,9 @@
             <div class="input-group input-group-lg">
               <input type="search" class="form-control form-control-lg " style="width:200px;" placeholder="search for anything" value="">
               <div class="input-group-append">
-                <button type="submit" class="btn btn-lg btn-default">
-                  <i class="fa fa-search"></i>
-                </button>
+            
+                  <i class="fa fa-search">Add ew Payment</i>
+                
               </div>
             </div>
           </div>
