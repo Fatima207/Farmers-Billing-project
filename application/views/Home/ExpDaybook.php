@@ -26,11 +26,11 @@
 
                             <!-- /.card-header -->
                             <!-- form start -->
-                            <form>
+                            <form action="<?= base_url('index.php/Home/ExpDaybook') ?>" method="post">
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="exampleInputName1">Expenses by</label>
-                                        <input type="name" class="form-control" id="exampleInputName1" placeholder= "">
+                                        <input type="name" class="form-control" id="exampleInputName1" placeholder= "" name="expense_by">
                                     </div>
 
 
@@ -42,17 +42,16 @@
                                     <div class="form-group">
                                         <label>Expense Date</label>
                                         <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                            <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate">
+                                            <input type="text" name="Expense_date" class="form-control datetimepicker-input" data-target="#reservationdate">
                                             <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                             </div>
                                         </div>
                                     </div>
-
                                     <!-- select -->
                                     <div class="form-group">
                                         <label>Companies</label>
-                                        <select class="form-control">
+                                        <select name="Company" class="form-control">
                                             <option>option 1</option>
                                             <option>option 2</option>
                                             <option>option 3</option>
@@ -64,7 +63,7 @@
                                     <!-- select -->
                                     <div class="form-group">
                                         <label>Categories</label>
-                                        <select class="form-control">
+                                        <select name="Category" class="form-control">
                                             <option>stationary</option>
 
                                         </select>
@@ -73,7 +72,7 @@
 
 
                                     <!-- button add -->
-                                    <a class="btn btn-dark" href="#" style="float:right;">Add</a>
+                                    <button type="submit"class="btn btn-dark" href="#" style="float:right;">Add</button>
                                 </div>
 
 

@@ -26,8 +26,9 @@
 
                             <!-- /.card-header -->
                             <!-- form start -->
-                            <form>
+                            <form action="<?= base_url('index.php/Home/ProfitLossList') ?>" method="post">
                                 <div class="card-body"  style="width:600px;">
+                                    
                                     <div class="form-group" >
                                         <label for="exampleInputName1">companies</label>
 
@@ -40,7 +41,6 @@
                                             <option>random </option>
 
                                         </select>
-                                        <!-- <input type="name" class="form-control" id="exampleInputName1" placeholder="Enter email"> -->
                                     </div>
 
                                     <!-- Date and time range -->
@@ -58,8 +58,8 @@
                                     </div>
 
                                     <!-- button add -->
-                                    <a class="btn btn-dark " href="#" style="float:right; width:100px;">search</a>
-
+                                    <button type="submit"class="btn btn-dark" href="#" style="float:right;">Search</button>
+                               
                                 </div>
                                 <!-- button add -->
 

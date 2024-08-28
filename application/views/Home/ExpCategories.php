@@ -26,24 +26,24 @@
 
 							<!-- /.card-header -->
 							<!-- form start -->
-							<form>
+							<form  action="<?= base_url('index.php/Home/ExpCategories') ?>" method="post">
 								<div class="card-body">
 									<div class="form-group">
 										<label for="exampleInputName1">Name</label>
-										<input type="name" class="form-control" id="exampleInputName1" placeholder="Enter email">
+										<input type="name" class="form-control" id="exampleInputName1" placeholder="Enter Name"  name="name">
 									</div>
 									<div class="form-group">
 										<label>Description</label>
-										<textarea class="form-control" rows="3" placeholder="Enter ..."></textarea>
+										<textarea class="form-control" rows="3" placeholder="Enter ..." name="description"></textarea>
 									</div>
 									<div class="form-group">
 										<label for="Amount" class="">Amount</label><br>
-										<input type="number" name="Amount" id="amount" required="" placeholder="Enter Qty" class="form-control">
+										<input type="number" required="" placeholder="Enter Qty" name="amount" class="form-control">
 									</div>
 									<div class="form-group">
 										<label>Expense Date & Time</label>
 										<div class="input-group date" id="reservationdate" data-target-input="nearest">
-											<input type="text" class="form-control datetimepicker-input" data-target="#reservationdate" />
+											<input type="text" class="form-control datetimepicker-input" name="expense_date" data-target="#reservationdate" />
 											<div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
 												<div class="input-group-text "><i class="fa fa-calendar"></i></div>
 											</div>
@@ -56,7 +56,7 @@
 								<!-- button add -->
 								
                                     <!-- button add -->
-                                    <a class="btn btn-dark" href="#" style="float:right;">Add</a>
+                                    <button class="btn btn-dark" href="#" style="float:right;">Add</button>
                                 
 
 

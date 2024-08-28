@@ -73,5 +73,6 @@ class CI_Model {
 		//	most likely a typo in your model code.
 		return get_instance()->$key;
 	}
+	 
 
 }

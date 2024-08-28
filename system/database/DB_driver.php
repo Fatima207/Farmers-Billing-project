@@ -690,6 +690,7 @@ abstract class CI_DB_driver {
 				}
 
 				// Display errors
+			
 				return $this->display_error(array('Error Number: '.$error['code'], $error['message'], $sql));
 			}
 
@@ -1482,11 +1483,8 @@ abstract class CI_DB_driver {
 	 */
 	protected function _insert($table, $keys, $values)
 	{
-		return 'INSERT INTO '.$table.' ('.implode(', ', $keys).') VALUES ('.implode(', ', $values).')';
+		 return 'INSERT INTO '.$table.' ('.implode(', ', $keys).') VALUES ('.implode(', ', $values).')';
 	}
-
-	// --------------------------------------------------------------------
-
 	/**
 	 * Generate an update string
 	 *

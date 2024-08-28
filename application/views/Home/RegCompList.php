@@ -6,6 +6,16 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
+
+                <?php if ($this->session->flashdata('msg') != null) { ?>
+                    <div class="alert alert-success alert-dismissible">
+                        <?php $msg = $this->session->flashdata('msg'); ?>
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-check"></i> Alert!</h5>
+                        <?php echo $msg['show_msg']; ?>
+                    </div>
+                <?php } ?>       
+
                 <div class="row">
                     <div class="col-sm-6">
                         <h1>Companies list</h1>
@@ -14,18 +24,18 @@
                         <a class="btn btn-success " href="#">Export</a>
                     </div>
                     <div class="form-group mt-2" style="margin-left:995px;">
-                            <div class="input-group input-group-lg">
-                                <input type="search" class="form-control form-control-lg " style="width:200px;" placeholder="search for anything" value="">
-                                <div class="input-group-append">
-                                    <button type="submit" class="btn btn-lg btn-default">
-                                        <i class="fa fa-search"></i>
-                                    </button>
-                                </div>
+                        <div class="input-group input-group-lg">
+                            <input type="search" class="form-control form-control-lg " style="width:200px;" placeholder="search for anything" value="">
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-lg btn-default">
+                                    <i class="fa fa-search"></i>
+                                </button>
                             </div>
                         </div>
+                    </div>
 
                 </div>
-      </div>
+            </div>
             <!-- /.container-fluid -->
         </section>
 
@@ -40,117 +50,46 @@
                     <th>Address</th>
                     <th>Contact Number</th>
                     <th>Whatsapp Number</th>
+                    <th>Manager</th>
                     <th>Action</th>
 
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td>
-                        Yaa
-                    </td>
 
-                    <td>
-                        ya@gmail.com
-                    </td>
+                    <?php
+                    $query = $this->db->get('reg_companies');
+                    foreach ($query->result() as $row): ?>
 
-                    <td>
-                        20
-                    </td>
+                        <td><?php echo $row->name; ?></td>
+                        <td><?php echo $row->email; ?></td>
+                        <td><?php echo $row->code; ?></td>
+                        <td><?php echo $row->address; ?></td>
+                        <td><?php echo $row->contact_number; ?></td>
+                        <td><?php echo $row->whatsapp_number; ?></td>
+                        <td><?php echo $row->manager_name; ?></td>
+                        <td>
+                            <a class="btn btn-success" href="#">Edit</a>
+                            <a class="btn btn-danger" href="#">Delete</a>
+                        </td>
 
-                    <td>
-                        fsgg
-                    </td>
 
-                    <td>
-                        2043561265
-                    </td>
-
-                    <td>
-                        2043561265
-                    </td>
-
-                    <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
-                    </td>
 
                 </tr>
 
-                <tr>
-                    <td>
-                        sdf
-                    </td>
-
-                    <td>
-                        sd@gmail.com
-                    </td>
-
-                    <td>
-                        30
-                    </td>
-
-                    <td>
-                        fwfg
-                    </td>
-
-                    <td>
-                        3032456787
-                    </td>
-
-                    <td>
-                        3012345465
-                    </td>
-
-
-                    <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
-                    </td>
-
-                </tr>
-
-                <tr>
-                    <td>
-                        ghag
-                    </td>
-
-                    <td>
-                        dd@gmail.com
-                    </td>
-
-                    <td>
-                        40
-                    </td>
-
-                    <td>
-                        dfsigb
-                    </td>
-
-                    <td>
-                        3012455667
-                    </td>
-
-                    <td>
-                        3056677889
-                    </td>
-
-
-                    <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
-                    </td>
-
-                </tr>
+            <?php
+                    endforeach;
+            ?>
 
             </tbody>
         </table>
 
 
-<!-- pagination -->
+        <!-- pagination -->
 
 
-<div class="col-lg-100 d-flex justify-content-between">
+        <div class="col-lg-100 d-flex justify-content-between">
             <div class="dataTables_info " style="margin-top:10px;" id="example2_info" role="status" aria-live="polite">Showing 1 to 10 of 11 entries</div>
 
             <div class="col mx-1" style="padding-left:580px; margin-top:10px;">

@@ -26,23 +26,23 @@
 
                             <!-- /.card-header -->
                             <!-- form start -->
-                            <form>
+                            <form action="<?= base_url('index.php/Home/ReptDaybook') ?>" method="post">
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="exampleInputName1">Expenses by</label>
-                                        <input type="name" class="form-control" id="exampleInputName1" placeholder="">
+                                        <input type="name" class="form-control" id="exampleInputName1" placeholder="" name="expenses_by">
                                     </div>
 
 
                                     <div class="form-group">
                                         <label for="Amount" class="">Amount</label><br>
-                                        <input type="number" name="Amount" id="amount" required="" placeholder="Enter Qty" class="form-control">
+                                        <input type="number" name="amount" id="amount" required="" placeholder="Enter Qty" class="form-control">
                                     </div>
 
                                     <div class="form-group">
                                         <label>Expense Date</label>
                                         <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                            <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate">
+                                            <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate" name="expense_date">
                                             <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
                                                 <div class="input-group-text"><i class="fa fa-calendar"></i></div>
                                             </div>
@@ -52,7 +52,7 @@
                                     <!-- select -->
                                     <div class="form-group">
                                         <label>Companies</label>
-                                        <select class="form-control">
+                                        <select class="form-control" name="companies">
                                             <option>option 1</option>
                                             <option>option 2</option>
                                             <option>option 3</option>
@@ -64,7 +64,7 @@
                                     <!-- select -->
                                     <div class="form-group">
                                         <label>Categories</label>
-                                        <select class="form-control">
+                                        <select class="form-control" name="categories">
                                             <option>stationary</option>
 
                                         </select>
@@ -73,7 +73,7 @@
 
 
                                     <!-- button add -->
-                                    <a class="btn btn-dark" href="#" style="float:right;">Add</a>
+                                    <button type="submit" class="btn btn-dark" href="#" style="float:right;">Add</button>
                                 </div>
 
 

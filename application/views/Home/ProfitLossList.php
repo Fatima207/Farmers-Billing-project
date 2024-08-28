@@ -16,7 +16,7 @@
                 <?php } ?>    
                 <div class="row mb-2 my-3">
                     <div class="col-sm-6">
-                        <h1>Daybook List</h1>
+                        <h1>List</h1>
                     </div>
                     <div style="margin-left:550px;">
                         <a class="btn btn-success " href="#">Export</a>
@@ -42,29 +42,29 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th>Expense by</th>
-                    <th>Amount</th>
-                    <th>Company</th>
-                    <th>Category</th>
-                    <th>Expense Date</th>
-                    <th>Action</th>
+                    <th>Date</th>
+                    <th>Purchase Amount</th>
+                    <th>Retailers Amount</th>
+                    <th>Agents Amount</th>
+                    <th>Net Sales Amount</th>
+                    <th>Expense Amount</th>
+                    <th>Profit/Loss</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                 <?php
-                    $query = $this->db->get('add_daybook');
+                    $query = $this->db->get('profit/loss');
                     foreach ($query->result() as $row): ?>
 
-                        <td><?php echo $row->expense_by; ?></td>
-                        <td><?php echo $row->Amount; ?></td>
-                        <td><?php echo $row->Company; ?></td>
-                        <td><?php echo $row->Category; ?></td>
-                        <td><?php echo $row->Expense_date; ?></td>
-                        <td>
-                            <a class="btn btn-success" href="#">Edit</a>
-                            <a class="btn btn-danger" href="#">Delete</a>
-                        </td>
+                        <td><?php echo $row->date; ?></td>
+                        <td><?php echo $row->purchase_amount; ?></td>
+                        <td><?php echo $row->retailers_amount; ?></td>
+                        <td><?php echo $row->agents_amount; ?></td>
+                        <td><?php echo $row->netsales_amount; ?></td>
+                        <td><?php echo $row->expense_amount; ?></td>
+                        <td><?php echo $row->profit_loss; ?></td>
+                       
 
                 </tr>
 

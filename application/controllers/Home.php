@@ -7,96 +7,112 @@ class Home extends CI_Controller
 		parent::__construct();
 		$this->load->model('Home_model');
 	}
-
 	public function index()
 	{
-		$this->load->view('Home/index');
+		$this->load->model('Home_model');
+
+		$RegCompList = $this->Home_model->save_company();
+		$this->load->view('Home/RegCompList', ['reg_companies' => $RegCompList]);
+
+
+		$RegAgentList = $this->Home_model->save_agent();
+		$this->load->view('Home/RegAgentList', ['reg_agents' => $RegAgentList]);
+
+		$RegFarmerList = $this->Home_model->save_farmer();
+		$this->load->view('Home/RegFarmerList', ['farmers' => $RegFarmerList]);
+
+		$RegRetailers = $this->Home_model->save_Retailer();
+		$this->load->view('Home/RegRetailerList', ['reg_retailers' => $RegRetailers]);
+
+		$AddProduct = $this->Home_model->save_product();
+		$this->load->view('Home/AddProductList', ['add_products' => $AddProduct]);
+
+		$AddCategories = $this->Home_model->save_categories();
+		$this->load->view('Home/ExpCatgList', ['add_categories' => $AddCategories]);
+
+		$ExpDaybook = $this->Home_model->save_daybook();
+		$this->load->view('Home/ExpDaybookList', ['add_daybook' => $ExpDaybook]);
+
+		$ProfitLoss = $this->Home_model->save_profitloss();
+		$this->load->view('Home/ProfitLossList', ['profit/loss' => $ProfitLoss]);
+
+
+		$this->load->view('Partials/header');
+		$this->load->view('Partials/footer');
 	}
+
 	public function Test()
 	{
 		$this->load->view('Home/test');
 	}
-
-
-	// public function mainfunc()
-	// {
-	// 	if ($this->input->post()) {
-	// 		//have post
-	// 		$data = array(
-	// 			'name' => $this->input->post("name")
-	// 			//'name' =>'description')
-	// 		);
-	// 		//echo $this->input->post("name");
-	// 		$resp = $this->Home_model->save($data);
-	// 		// if($resp>0){
-
-	// 		// }
-
-	// 		exit;
-	// 	}
-
-
-
-	public function AddFarmer()
-	{
-
+	
+	
+    public function AddFarmer()
+	 {
 		if ($this->input->post()) {
-			//have post
+			//have 
 			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
+				'name' => $this->input->post("name"),
+				'email' => $this->input->post("email"),
+				'code' => $this->input->post("code"),
+				'contact_number' => $this->input->post("contact_number"),
+				'whatsapp_number' => $this->input->post("whatsapp_number"),
+				'address' => $this->input->post("address"),
+				// 'added_by' => $this->input->post("added_by"),
+				'added_at' => date('Y-m-d h:i:s'),
+				//  'updated_by' => $this->input->post("updated_by"),
+				'updated_at' => date('Y-m-d h:i:s'),
 			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
-			exit;
+			$resp = $this->Home_model->save_farmer($data);
+			if ($resp) {
+				$this->session->set_flashdata('msg', array('show_msg' => 'Registration made successfully !', 'type' => 'success'));
+			} else {
+				$this->session->set_flashdata('msg', array('show_msg' => 'It seems you didn\'t change anything !', 'type' => 'warning'));
+			}
+			redirect(site_url('index.php/Home/FarmerList'));
+		
+			
 		}
 		$this->load->view('Partials/header');
 		$this->load->view('Home/RegFarmer');
 		$this->load->view('Partials/footer');
 	}
+
 	public function FarmerList()
 	{
-		//this->load->model('Home_model');
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
-			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
-			exit;
-		}
-
+	
+		
 		$this->load->view('Partials/header');
 		$this->load->view('Home/RegFarmerList');
 		$this->load->view('Partials/footer');
 	}
-
-
 	public function AddAgent()
 	{
 		if ($this->input->post()) {
 			//have post
+			//have post
+			// echo 11;
+			// exit;
 			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
+				'name' => $this->input->post("name"),
+				'email' => $this->input->post("email"),
+				'code' => $this->input->post("code"),
+				'contact_number' => $this->input->post("contact_number"),
+				'whatsapp_number' => $this->input->post("whatsapp_number"),
+				'address' => $this->input->post("address"),
+				// 'added_by' => $this->input->post("added_by"),
+				'added_at' => date('Y-m-d h:i:s'),
+				//  'updated_by' => $this->input->post("updated_by"),
+				'updated_at' => date('Y-m-d h:i:s'),
 			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
+			$resp = $this->Home_model->save_agent($data);
 
-			// }
-
-			exit;
+			if ($resp) {
+				$this->session->set_flashdata('msg', array('show_msg' => 'Registration made successfully !', 'type' => 'success'));
+			} else {
+				$this->session->set_flashdata('msg', array('show_msg' => 'It seems you didn\'t change anything !', 'type' => 'warning'));
+			}
+			redirect(site_url('index.php/Home/AgentList'));
 		}
 		$this->load->view('Partials/header');
 		$this->load->view('Home/RegAgent');
@@ -104,38 +120,48 @@ class Home extends CI_Controller
 	}
 	public function AgentList()
 	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
-			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
-			exit;
-		}
+		//have post
+		// echo 11;
+		// exit;
 		$this->load->view('Partials/header');
 		$this->load->view('Home/RegAgentList');
 		$this->load->view('Partials/footer');
 	}
+	public function RegAgentList()
+	{
+
+		$this->load->view('Partials/header');
+		$this->load->view('Home/RegAgentList');
+		$this->load->view('Partials/footer');
+	}
+
 
 	public function AddRetailer()
 	{
 		if ($this->input->post()) {
 			//have post
 			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
+				'name' => $this->input->post("name"),
+				'email' => $this->input->post("email"),
+				'code' => $this->input->post("code"),
+				'contact_number' => $this->input->post("contact_number"),
+				'whatsapp_number' => $this->input->post("whatsapp_number"),
+				'address' => $this->input->post("address"),
+				// 'added_by' => $this->input->post("added_by"),
+				'added_at' => date('Y-m-d h:i:s'),
+				//  'updated_by' => $this->input->post("updated_by"),
+				'updated_at' => date('Y-m-d h:i:s'),
 			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
+			$resp = $this->Home_model->save_retailer($data);
 
-			// }
+			if ($resp) {
+				$this->session->set_flashdata('msg', array('show_msg' => 'Registration made successfully !', 'type' => 'success'));
+			} else {
+				$this->session->set_flashdata('msg', array('show_msg' => 'It seems you didn\'t change anything !', 'type' => 'warning'));
+			}
+			redirect(site_url('index.php/Home/RetailerList'));
+
+
 
 			exit;
 		}
@@ -145,20 +171,6 @@ class Home extends CI_Controller
 	}
 	public function RetailerList()
 	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
-			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
-			exit;
-		}
 		$this->load->view('Partials/header');
 		$this->load->view('Home/RegRetailerList');
 		$this->load->view('Partials/footer');
@@ -170,43 +182,51 @@ class Home extends CI_Controller
 
 		if ($this->input->post()) {
 			//have post
+			//echo 11;
+			//exit;
 			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
+				'name' => $this->input->post("name"),
+				'email' => $this->input->post("email"),
+				'code' => $this->input->post("code"),
+				'contact_number' => $this->input->post("contact_number"),
+				'whatsapp_number' => $this->input->post("whatsapp_number"),
+				'manager_name' =>  $this->input->post("manager_name"),
+				'choose_file' =>  $this->input->post("choose_file"),
+				'address' => $this->input->post("address"),
+				// 'added_by' => $this->input->post("added_by"),
+				'added_at' => date('Y-m-d h:i:s'),
+				//  'updated_by' => $this->input->post("updated_by"),
+				'updated_at' => date('Y-m-d h:i:s'),
 			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
 
-			// }
-
-			exit;
+			$resp = $this->Home_model->save_company($data);
+			if ($resp) {
+				$this->session->set_flashdata('msg', array('show_msg' => 'Registration made successfully !', 'type' => 'success'));
+			} else {
+				$this->session->set_flashdata('msg', array('show_msg' => 'It seems you didn\'t change anything !', 'type' => 'warning'));
+			}
+			redirect(site_url('index.php/Home/CompanyList'));
 		}
 		$this->load->view('Partials/header');
 		$this->load->view('Home/RegComp');
 		$this->load->view('Partials/footer');
 	}
+
+
 	public function CompanyList()
 	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
-			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
 
-			// }
-
-			exit;
-		}
 		$this->load->view('Partials/header');
 		$this->load->view('Home/RegCompList');
 		$this->load->view('Partials/footer');
 	}
+	public function RegCompList()
+	{
 
+		$this->load->view('Partials/header');
+		$this->load->view('Home/RegCompList');
+		$this->load->view('Partials/footer');
+	}
 
 	public function AddProduct()
 	{
@@ -217,12 +237,13 @@ class Home extends CI_Controller
 				//'name' =>'description')
 			);
 			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
-			exit;
+			$resp = $this->Home_model->save_product($data);
+			if ($resp) {
+				$this->session->set_flashdata('msg', array('show_msg' => 'Product added successfully !', 'type' => 'success'));
+			} else {
+				$this->session->set_flashdata('msg', array('show_msg' => 'It seems you didn\'t change anything !', 'type' => 'warning'));
+			}
+			redirect(site_url('index.php/Home/ProductList'));
 		}
 		$this->load->view('Partials/header');
 		$this->load->view('Home/AddProduct');
@@ -230,22 +251,10 @@ class Home extends CI_Controller
 	}
 	public function ProductList()
 	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
-			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
 
-			// }
 
-			exit;
-		}
 		$this->load->view('Partials/header');
-		$this->load->view('Home/AddProductlist');
+		$this->load->view('Home/AddProductList');
 		$this->load->view('Partials/footer');
 	}
 	public function NewFarmersBilling()
@@ -365,7 +374,7 @@ class Home extends CI_Controller
 			exit;
 		}
 		$this->load->view('Partials/header');
-		$this->load->view('Home/BillingRetailerlist.php');
+		$this->load->view('Home/BillingRetailerlist');
 		$this->load->view('Partials/footer');
 	}
 	public function ExpCategories()
@@ -373,38 +382,32 @@ class Home extends CI_Controller
 		if ($this->input->post()) {
 			//have post
 			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
+				'name' => $this->input->post("name"),
+				'description' => $this->input->post("description"),
+				'amount' => $this->input->post("amount"),
+				'expense_date' => $this->input->post("expense_date"),
+				// 'added_by' => $this->input->post("added_by"),
+				'added_at' => date('Y-m-d h:i:s'),
+				//  'updated_by' => $this->input->post("updated_by"),
+				'updated_at' => date('Y-m-d h:i:s'),
 			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
 
-			// }
-
-			exit;
+			$resp = $this->Home_model->save_categories($data);
+			if ($resp) {
+				$this->session->set_flashdata('msg', array('show_msg' => 'Category added successfully !', 'type' => 'success'));
+			} else {
+				$this->session->set_flashdata('msg', array('show_msg' => 'It seems you didn\'t change anything !', 'type' => 'warning'));
+			}
+			redirect(site_url('index.php/Home/ExpCatgList'));
 		}
 		$this->load->view('Partials/header');
-		$this->load->view('Home/ExpCategories.php');
+		$this->load->view('Home/ExpCategories');
 		$this->load->view('Partials/footer');
 	}
 
 	public function ExpCatgList()
 	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
-			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
 
-			// }
-
-			exit;
-		}
 		$this->load->view('Partials/header');
 		$this->load->view('Home/ExpcatgList.php');
 		$this->load->view('Partials/footer');
@@ -414,59 +417,73 @@ class Home extends CI_Controller
 		if ($this->input->post()) {
 			//have post
 			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
+				'expense_by' => $this->input->post("expense_by"),
+				'Amount' => $this->input->post("Amount"),
+				'Company' => $this->input->post("Company"),
+				'Category' => $this->input->post("Category"),
+				'Expense_date' => $this->input->post("Expense_date"),
+				// 'added_by' => $this->input->post("added_by"),
+				'added_at' => date('Y-m-d h:i:s'),
+				//  'updated_by' => $this->input->post("updated_by"),
+				'updated_at' => date('Y-m-d h:i:s'),
 			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
-			exit;
+			$resp = $this->Home_model->save_daybook($data);
+			if ($resp) {
+				$this->session->set_flashdata('msg', array('show_msg' => 'Registration made successfully !', 'type' => 'success'));
+			} else {
+				$this->session->set_flashdata('msg', array('show_msg' => 'It seems you didn\'t change anything !', 'type' => 'warning'));
+			}
+			redirect(site_url('index.php/Home/ExpDaybookList'));
 		}
 		$this->load->view('Partials/header');
-		$this->load->view('Home/ExpDaybook.php');
+		$this->load->view('Home/ExpDaybook');
 		$this->load->view('Partials/footer');
 	}
 	public function ExpDaybookList()
 	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
-			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
 
-			// }
 
-			exit;
-		}
 		$this->load->view('Partials/header');
-		$this->load->view('Home/ExpDaybookList.php');
+		$this->load->view('Home/ExpDaybookList');
 		$this->load->view('Partials/footer');
 	}
 	public function ProfitLoss()
 	{
 		if ($this->input->post()) {
+			echo "11";
+			exit;
 			//have post
 			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
+				'date' => $this->input->post("date"),
+				'purchase_amount' => $this->input->post("purchase_amount"),
+				'retailers_amount' => $this->input->post("retailers_amount"),
+				'agents_amount' => $this->input->post("agents_amount"),
+				'netsales_amount' => $this->input->post("netsales_amount"),
+				'expense_amount' => $this->input->post("expense_amount"),
+				'profit_loss' => $this->input->post("profit_loss"),
+				// 'added_by' => $this->input->post("added_by"),
+				'added_at' => date('Y-m-d h:i:s'),
+				//  'updated_by' => $this->input->post("updated_by"),
+				'updated_at' => date('Y-m-d h:i:s'),
 			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
 
-			// }
-
-			exit;
+			$resp = $this->Home_model->save_profitloss($data);
+			if ($resp) {
+				$this->session->set_flashdata('msg', array('show_msg' => 'Category added successfully !', 'type' => 'success'));
+			} else {
+				$this->session->set_flashdata('msg', array('show_msg' => 'It seems you didn\'t change anything !', 'type' => 'warning'));
+			}
+			redirect(site_url('index.php/Home/ProfitLossList'));
 		}
 		$this->load->view('Partials/header');
-		$this->load->view('Home/ProfitLoss.php');
+		$this->load->view('Home/ProfitLoss');
+		$this->load->view('Partials/footer');
+	}
+
+	public function ProfitLossList()
+	{
+		$this->load->view('Partials/header');
+		$this->load->view('Home/ProfitLossList');
 		$this->load->view('Partials/footer');
 	}
 	public function FarmerLedger()
@@ -475,13 +492,9 @@ class Home extends CI_Controller
 			//have post
 			$data = array(
 				'name' => $this->input->post("name")
-				//'name' =>'description')
 			);
-			//echo $this->input->post("name");
 			$resp = $this->Home_model->save($data);
-			// if($resp>0){
 
-			// }
 
 			exit;
 		}
@@ -554,22 +567,38 @@ class Home extends CI_Controller
 		if ($this->input->post()) {
 			//have post
 			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
+				'expenses_by' => $this->input->post("expenses_by"),
+				'amount' => $this->input->post("amount"),
+				'companies' => $this->input->post("companies"),
+				'categories' => $this->input->post("categories"),
+				'expense_date' => $this->input->post("expense_date"),
+				// 'added_by' => $this->input->post("added_by"),
+				'added_at' => date('Y-m-d h:i:s'),
+				//  'updated_by' => $this->input->post("updated_by"),
+				'updated_at' => date('Y-m-d h:i:s'),
 			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
-			exit;
+			$resp = $this->Home_model->save_reportdaybook($data);
+			if ($resp) {
+				$this->session->set_flashdata('msg', array('show_msg' => 'Registration made successfully !', 'type' => 'success'));
+			} else {
+				$this->session->set_flashdata('msg', array('show_msg' => 'It seems you didn\'t change anything !', 'type' => 'warning'));
+			}
+			redirect(site_url('index.php/Home/ReptDaybooklist'));
 		}
 		$this->load->view('Partials/header');
 		$this->load->view('Home/ReptDaybook.php');
 		$this->load->view('Partials/footer');
 	}
 	public function ReptDaybooklist()
+	{
+
+
+		$this->load->view('Partials/header');
+		$this->load->view('Home/ReptDaybooklist.php');
+		$this->load->view('Partials/footer');
+	}
+
+	public function LogoutPage()
 	{
 		if ($this->input->post()) {
 			//have post
@@ -586,7 +615,88 @@ class Home extends CI_Controller
 			exit;
 		}
 		$this->load->view('Partials/header');
-		$this->load->view('Home/ReptDaybooklist.php');
+		$this->load->view('Home/LogoutPage.php');
+		$this->load->view('Partials/footer');
+	}
+	public function AdminDashboard()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/AdminDashboard.php');
+		$this->load->view('Partials/footer');
+	}
+	public function profile()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/profile.php');
+		$this->load->view('Partials/footer');
+	}
+	public function Document()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/Document.php');
+		$this->load->view('Partials/footer');
+	}
+
+	public function Register()
+	{
+		if ($this->input->post()) {
+			//have post
+			$data = array(
+				'name' => $this->input->post("name")
+				//'name' =>'description')
+			);
+			//echo $this->input->post("name");
+			$resp = $this->Home_model->save($data);
+			// if($resp>0){
+
+			// }
+
+			exit;
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/Register.php');
 		$this->load->view('Partials/footer');
 	}
 }

@@ -1,8 +1,10 @@
 <div class="wrapper">
 	<?php $this->load->view('partials/left_sidebar') ?>
 	<!-- Content Wrapper. Contains page content -->
+
 	<div class="content-wrapper">
 		<!-- Content Header (Page header) -->
+
 		<section class="content-header">
 			<div class="container-fluid">
 				<div class="row mb-2">
@@ -18,6 +20,7 @@
 		<!-- Main content -->
 		<section class="content">
 			<div class="container-fluid">
+
 				<!-- SELECT2 EXAMPLE--->
 				<div class="card card-default">
 					<div class="card-header">
@@ -39,106 +42,107 @@
 						</div>
 					</div>
 					<!-- /.card-header -->
-					<div class="card-body">
-						<div class="row">
-							<div class="col-md-6">
-								<label>Name</label>
-								<div class="form-group">
-									<input type="text" class="form-control" name="name">
+					<form action="<?= base_url('index.php/Home/AddCompany') ?>" method="post">
+						<div class="card-body">
+							<div class="row">
+								<div class="col-md-6">
+									<label>Name</label>
+									<div class="form-group">
+										<input type="text" class="form-control" name="name">
+									</div>
 								</div>
-							</div>
-							<!-- /.col -->
-							<div class="col-md-6">
-								<label>Email</label>
-								<div class="form-group">
-									<input type="text" class="form-control" name="Email">
+								<!-- /.col -->
+								<div class="col-md-6">
+									<label>Email</label>
+									<div class="form-group">
+										<input type="text" class="form-control" name="email">
+
+									</div>
+									<!-- /.form-group -->
 								</div>
-								<!-- /.form-group -->
-							</div>
-							<!-- /.col -->
-							<div class="col-md-6">
-								<label>Code</label>
-								<div class="form-group">
-									<input type="text" class="form-control" name="code">
+								<!-- /.col -->
+								<div class="col-md-6">
+									<label>Code</label>
+									<div class="form-group">
+										<input type="text" class="form-control" name="code">
+
+									</div>
+									<!-- /.form-group -->
 								</div>
-								<!-- /.form-group -->
-							</div>
 
-							<div class="col-md-6">
-								<label>Contact Number</label>
-								<div class="form-group">
-									<input type="text" class="form-control" name="Contact Number">
+								<div class="col-md-6">
+									<label>Contact Number</label>
+									<div class="form-group">
+										<input type="text" class="form-control" name="contact_number">
+
+									</div>
+									<!-- /.form-group -->
 								</div>
-								<!-- /.form-group -->
-							</div>
 
-							<div class="col-md-6">
-								<label>Whatsapp Number</label>
-								<div class="form-group">
-									<input type="text" class="form-control" name="Whatsapp Number">
+								<div class="col-md-6">
+									<label>Whatsapp Number</label>
+									<div class="form-group">
+										<input type="text" class="form-control" name="whatsapp_number">
+
+									</div>
+									<!-- /.form-group -->
 								</div>
-								<!-- /.form-group -->
-							</div>
 
-							<div class="col-md-6">
-								<label>Manager Name</label>
-								<div class="form-group">
-									<input type="text" class="form-control" name="Whatsapp Number">
+								<div class="col-md-6">
+									<label>Manager Name</label>
+									<div class="form-group">
+										<input type="text" class="form-control" name="manager_name">
+
+									</div>
+									<!-- /.form-group -->
 								</div>
-								<!-- /.form-group -->
-							</div>
 
 
-							<div class="form-group">
-								<!-- <label for="customFile">Custom File</label> -->
+								<div class="form-group col-md-6">
+									<label for="ChooseFile ">Choose File</label>
 
-								<div class="custom-file">
-									<input type="file" class="custom-file-input" id="customFile">
-									<label class="custom-file-label" for="customFile">Choose file</label>
+									<div class="custom-file px-1 py-1" style="border:1px solid #dfdfdf; border-radius:5px;">
+										<input type="file" id="avatar" name="choose_file">
+
+
+									</div>
 								</div>
-							</div>
-
-
-
-							
-
-
-							<div class="col-md-6">
-								<label>Address</label>
-								<div class="form-group">
-									<input type="text" class="form-control" name="Address">
+								
+								<div class="col-md-6">
+									<label>Address</label>
+									<div class="form-group">
+										<input type="text" class="form-control" name="address">
+									</div>
+									<!-- /.form-group -->
 								</div>
-								<!-- /.form-group -->
+								<br><br>
+								<button type="submit" class="btn btn-block btn-primary btn-sm">Register</button>
 							</div>
-							<button type="button" class="btn btn-block btn-primary btn-sm">Register</button>
-						</div>
-						<!-- /.row -->
+							<!-- /.row -->
 
 
-						<div class="row">
-							<div class="col-12 col-sm-6">
-
-								<!-- /.form-group -->
-							</div>
-							<!-- /.col -->
-							<div class="col-12 col-sm-6">
-								<div class="form-group">
-									<label></label>
+							<div class="row">
+								<div class="col-12 col-sm-6">
 
 									<!-- /.form-group -->
 								</div>
 								<!-- /.col -->
-							</div>
-							<!-- /.row -->
-						</div>
+								<div class="col-12 col-sm-6">
+									<div class="form-group">
+										<label></label>
 
-						<!-- /.card-body -->
-						<!-- <div class="card-footer">
-							Visit
-							<a href="https://select2.github.io/">Select2 documentation</a> for
-							more examples and information about the plugin.
-						</div> -->
-					</div>
+										<!-- /.form-group -->
+									</div>
+									<!-- /.col -->
+								</div>
+								<!-- /.row -->
+							</div>
+
+						
+						</div> 
+						</div>
+					</form>
+
 
 				</div>
 				<!-- /.container-fluid -->

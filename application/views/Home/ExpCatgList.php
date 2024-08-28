@@ -6,6 +6,15 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
+            <?php if ($this->session->flashdata('msg') != null) { ?>
+                    <div class="alert alert-success alert-dismissible">
+                        <?php $msg = $this->session->flashdata('msg'); ?>
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-check"></i> Alert!</h5>
+                        <?php echo $msg['show_msg']; ?>
+                    </div>
+                <?php } ?>       
+
                 <div class="row mb-2 my-3">
                     <div class="col-sm-6">
                         <h1>Categories List</h1>
@@ -43,28 +52,27 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>
-                        Yaa
-                    </td>
+                   
+                <?php
+                    $query = $this->db->get('add_categories');
+                    foreach ($query->result() as $row): ?>
 
-                    <td>
-                        ya@gmail.com
-                    </td>
+                        <td><?php echo $row->name; ?></td>
+                        <td><?php echo $row->description; ?></td>
+                        <td><?php echo $row->amount; ?></td>
+                        <td><?php echo $row->expense_date; ?></td>
+                        <td>
+                            <a class="btn btn-success" href="#">Edit</a>
+                            <a class="btn btn-danger" href="#">Delete</a>
+                        </td>
 
-                    <td>
-                        20
-                    </td>
 
-                    <td>
-                        fsgg
-                    </td>
-
-                    <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
-                    </td>
 
                 </tr>
+
+            <?php
+                    endforeach;
+            ?>
 
 
 

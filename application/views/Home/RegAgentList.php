@@ -6,6 +6,15 @@
         <!-- Content Header (Page header) -->
         <section class="content-header">
             <div class="container-fluid">
+
+            <?php if ($this->session->flashdata('msg') != null) { ?>
+                    <div class="alert alert-success alert-dismissible">
+                        <?php $msg = $this->session->flashdata('msg'); ?>
+                        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                        <h5><i class="icon fas fa-check"></i> Alert!</h5>
+                        <?php echo $msg['show_msg']; ?>
+                    </div>
+                <?php } ?>    
                 <div class="row  mb-2 my-3">
                     <div class="col-sm-6">
                         <h1>Agents list</h1>
@@ -46,102 +55,27 @@
         </thead>
         <tbody>
             <tr>
-                <td>
-                    Yaa
-                </td>
+        <?php
+          $query = $this->db->get('reg_agents');
+          foreach ($query->result() as $row): ?>
+          
 
-                <td>
-                    ya@gmail.com
-                </td>
+            <td><?php echo $row->name; ?></td>
+            <td><?php echo $row->email; ?></td>
+            <td><?php echo $row->code; ?></td>
+            <td><?php echo $row->contact_number; ?></td>
+            <td><?php echo $row->whatsapp_number; ?></td>
+            <td><?php echo $row->address; ?></td>
+            <td>
+              <a class="btn btn-success">Edit</a>
 
-                <td>
-                    20
-                </td>
+              <a class="btn btn-danger"  href="#">Delete</a>
+            </td>
+        </tr>
 
-                <td>
-                    fsgg
-                </td>
-
-                <td>
-                    2043561265
-                </td>
-
-                <td>
-                    2043561265
-                </td>
-
-                <td>
-                    <a class="btn btn-success" href="#">Edit</a>
-                    <a class="btn btn-danger" href="#">Delete</a>
-                </td>
-
-            </tr>
-
-            <tr>
-                <td>
-                    sdf
-                </td>
-
-                <td>
-                    sd@gmail.com
-                </td>
-
-                <td>
-                    30
-                </td>
-
-                <td>
-                    fwfg
-                </td>
-
-                <td>
-                    3032456787
-                </td>
-
-                <td>
-                    3012345465
-                </td>
-
-
-                <td>
-                    <a class="btn btn-success" href="#">Edit</a>
-                    <a class="btn btn-danger" href="#">Delete</a>
-                </td>
-
-            </tr>
-
-            <tr>
-                <td>
-                    ghag
-                </td>
-
-                <td>
-                    dd@gmail.com
-                </td>
-
-                <td>
-                    40
-                </td>
-
-                <td>
-                    dfsigb
-                </td>
-
-                <td>
-                    3012455667
-                </td>
-
-                <td>
-                    3056677889
-                </td>
-
-
-                <td>
-                    <a class="btn btn-success" href="#">Edit</a>
-                    <a class="btn btn-danger" href="#">Delete</a>
-                </td>
-
-            </tr>
+      <?php
+          endforeach;
+      ?>
 
         </tbody>
     </table>
