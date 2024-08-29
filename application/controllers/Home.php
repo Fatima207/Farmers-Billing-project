@@ -10,6 +10,8 @@ class Home extends CI_Controller
 	public function index()
 	{
 		$this->load->model('Home_model');
+		// $this->load->library("common");
+		
 
 		$RegCompList = $this->Home_model->save_company();
 		$this->load->view('Home/RegCompList', ['reg_companies' => $RegCompList]);
@@ -19,7 +21,7 @@ class Home extends CI_Controller
 		$this->load->view('Home/RegAgentList', ['reg_agents' => $RegAgentList]);
 
 		$RegFarmerList = $this->Home_model->save_farmer();
-		$this->load->view('Home/RegFarmerList', ['farmers' => $RegFarmerList]);
+		$this->load->view('Home/RegFarmerList', ['reg_farmers' => $RegFarmerList]);
 
 		$RegRetailers = $this->Home_model->save_Retailer();
 		$this->load->view('Home/RegRetailerList', ['reg_retailers' => $RegRetailers]);
@@ -45,47 +47,119 @@ class Home extends CI_Controller
 	{
 		$this->load->view('Home/test');
 	}
+
+
+	public function AddFarmer()
+	{
+		// if (isset($_POST['add'])) {
+		// 	$this->load->library('form_validation');
+		// 	$this->form_validation->set_rules('name', 'Name');
+		// 	$this->form_validation->set_rules('email', 'Email');
+		// 	$this->form_validation->set_rules('code', 'Code');
+		// 	$this->form_validation->set_rules('contact_number', 'Contact Number');
+		// 	$this->form_validation->set_rules('whatsapp_number', 'Whatsapp Number');
+		// 	$this->form_validation->set_rules('address', 'Address');
+		// 	$this->form_validation->set_error_delimiters('<div class="error">', '</div>');
+		// 	if ($this->form_validation->run()) {
+
+				if ($this->input->post()) {
+					//have post
+					$data = array(
+						'name' => $this->input->post("name"),
+						'email' => $this->input->post("email"),
+						'code' => $this->input->post("code"),
+						'contact_number' => $this->input->post("contact_number"),
+						'whatsapp_number' => $this->input->post("whatsapp_number"),
+						'address' => $this->input->post("address"),
+						// 'added_by' => $this->input->post("added_by"),
+						'added_at' => date('Y-m-d h:i:s'),
+						//  'updated_by' => $this->input->post("updated_by"),
+						'updated_at' => date('Y-m-d h:i:s'),
+					);
+					$resp = $this->Home_model->save_farmer($data);
+
+					if ($resp) {
+						$this->session->set_flashdata('msg', array('show_msg' => 'Registration made successfully !', 'type' => 'success'));
+					} else {
+						$this->session->set_flashdata('msg', array('show_msg' => 'It seems you didn\'t change anything !', 'type' => 'warning'));
+					}
+					redirect(site_url('index.php/Home/FarmerList'));
+
+
+
+					exit;
+				}
+
+				$this->load->view('Partials/header');
+				$this->load->view('Home/RegFarmer');
+				$this->load->view('Partials/footer');
+			}
+		
 	
-	
-    public function AddFarmer()
-	 {
-		if ($this->input->post()) {
-			//have 
-			$data = array(
+	public function FarmerList()
+	{
+
+
+		$this->load->view('Partials/header');
+		$this->load->view('Home/RegFarmerList');
+		$this->load->view('Partials/footer');
+	}
+
+	public function edit_RegisterFarmer($id)
+	{
+		$this->load->view('Partials/header');
+
+		$this->load->model('Home_model');
+		$data['reg_farmers'] = $this->Home_model->edit_RegisterFarmer($id);
+
+		$this->load->view('Home/editRegisterFarmer', $data);
+		$this->load->view('Partials/footer');
+	}
+
+	public function update_RegisterFarmer($id)
+	{
+		// $this->form_validation->set_rules('name', 'Name');
+		// $this->form_validation->set_rules('email', 'Email');
+		// $this->form_validation->set_rules('code', 'Code');
+		// $this->form_validation->set_rules('contact_number', 'Contact Number');
+		// $this->form_validation->set_rules('whatsapp_number', 'Whatsapp Number');
+		// $this->form_validation->set_rules('address', 'Address');
+		// if ($this->form_validate->run()):
+			$data = [
 				'name' => $this->input->post("name"),
 				'email' => $this->input->post("email"),
 				'code' => $this->input->post("code"),
 				'contact_number' => $this->input->post("contact_number"),
 				'whatsapp_number' => $this->input->post("whatsapp_number"),
 				'address' => $this->input->post("address"),
-				// 'added_by' => $this->input->post("added_by"),
-				'added_at' => date('Y-m-d h:i:s'),
-				//  'updated_by' => $this->input->post("updated_by"),
-				'updated_at' => date('Y-m-d h:i:s'),
-			);
-			$resp = $this->Home_model->save_farmer($data);
-			if ($resp) {
-				$this->session->set_flashdata('msg', array('show_msg' => 'Registration made successfully !', 'type' => 'success'));
-			} else {
-				$this->session->set_flashdata('msg', array('show_msg' => 'It seems you didn\'t change anything !', 'type' => 'warning'));
-			}
+
+			];
+			$resp =$this->Home_model->update_RegisterFarmer($data, $id);
+
+
+					if ($resp) {
+						$this->session->set_flashdata('msg', array('show_msg' => 'Field Updated successfully !', 'type' => 'success'));
+					} else {
+						$this->session->set_flashdata('msg', array('show_msg' => 'It seems you didn\'t change anything !', 'type' => 'warning'));
+					}
+			$this->load->model('Home_model');
+			// redirect(base_url('reg_farmers'));
 			redirect(site_url('index.php/Home/FarmerList'));
-		
-			
-		}
-		$this->load->view('Partials/header');
-		$this->load->view('Home/RegFarmer');
-		$this->load->view('Partials/footer');
+
+
+		// else:
+		// 	$this->edit($id);
+
+		// endif;
+	}
+	public function delete_RegisterFarmer($id){
+		$this->load->model('Home_model');
+		$this->Home_model->delete_RegisterFarmer($id);
+redirect(site_url('index.php/Home/FarmerList'));
 	}
 
-	public function FarmerList()
-	{
-	
-		
-		$this->load->view('Partials/header');
-		$this->load->view('Home/RegFarmerList');
-		$this->load->view('Partials/footer');
-	}
+
+
 	public function AddAgent()
 	{
 		if ($this->input->post()) {
@@ -134,7 +208,7 @@ class Home extends CI_Controller
 		$this->load->view('Home/RegAgentList');
 		$this->load->view('Partials/footer');
 	}
-
+	
 
 	public function AddRetailer()
 	{

@@ -5,13 +5,25 @@ class Home_model extends CI_Model
   {
 
     $this->db->set($data);
-    $this->db->insert('farmers', $data);
+    $this->db->insert('reg_farmers', $data);
 
     return $this->db->insert_id();
 
-
-
   }
+  public function edit_RegisterFarmer($id){
+$query = $this->db->get_where('reg_farmers',['id' => $id]);
+return $query->row();
+  }
+
+  public function update_RegisterFarmer($data, $id){
+   return $this->db->update('reg_farmers',$data, ['id' => $id]);
+  }
+
+  public function delete_RegisterFarmer($id){
+   return $this->db->delete('reg_farmers', ['id' => $id]);
+  }
+
+
  
   public function save_agent($data)
   {

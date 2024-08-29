@@ -20,6 +20,7 @@
 		<!-- Main content -->
 		<section class="content">
 			<div class="container-fluid">
+                
 
 				<!-- SELECT2 EXAMPLE--->
 				<div class="card card-default">
@@ -40,20 +41,20 @@
 						</div>
 					</div>
 					<!-- /.card-header -->
-					<form action="<?= base_url('index.php/Home/AddFarmer') ?>" method="post">
+					<form action="<?= base_url('index.php/Home/RegFarmerList/update_RegisterFarmer/'.$reg_farmers->id) ?>" method="post">
 						<div class="card-body">
 							<div class="row">
 								<div class="col-md-6">
 									<label>Name</label>
 									<div class="form-group">
-										<input type="text" class="form-control" name="name">
+										<input type="text" class="form-control" name="name" value="<?= $reg_farmers->name ?>">
 									</div>
 								</div>
 								<!-- /.col -->
 								<div class="col-md-6">
 									<label>Email</label>
 									<div class="form-group">
-										<input type="text" class="form-control" name="email">
+										<input type="text" class="form-control" name="email"  value="<?= $reg_farmers->email?>" >
 
 									</div>
 									<!-- /.form-group -->
@@ -62,7 +63,7 @@
 								<div class="col-md-6">
 									<label>Code</label>
 									<div class="form-group">
-										<input type="text" class="form-control" name="code">
+										<input type="text" class="form-control" name="code" value="<?= $reg_farmers->code?>">
 
 									</div>
 									<!-- /.form-group -->
@@ -71,7 +72,7 @@
 								<div class="col-md-6">
 									<label>Contact Number</label>
 									<div class="form-group">
-										<input type="text" class="form-control" name="contact_number">
+										<input type="text" class="form-control" name="contact_number" value="<?= $reg_farmers->contact_number?>">
 
 									</div>
 									<!-- /.form-group -->
@@ -80,7 +81,7 @@
 								<div class="col-md-6">
 									<label>Whatsapp Number</label>
 									<div class="form-group">
-										<input type="text" class="form-control" name="whatsapp_number">
+										<input type="text" class="form-control" name="whatsapp_number" value="<?= $reg_farmers->whatsapp_number?>">
 
 									</div>
 									<!-- /.form-group -->
@@ -92,7 +93,7 @@
 								<div class="col-md-6">
 									<label>Address</label>
 									<div class="form-group">
-										<input type="text" class="form-control" name="address">
+										<input type="text" class="form-control" name="address" value="<?= $reg_farmers->address?>">
 									</div>
 									<!-- /.form-group -->
 								</div>

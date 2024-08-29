@@ -53,4 +53,12 @@ $route['default_controller'] = 'welcome';
 $route['404_override'] = '';
 $route['translate_uri_dashes'] = FALSE;
 
-$route['home/Regfarmer/(:any)'] = 'home/Regfarmer/$1';
+
+
+// $route['reg_farmer'] = 'frontend/Home/index';
+// $route['Home/add'] = 'Home/edit/AddFarmer';
+// $route['Home/store'] = 'Home/edit/FarmerList';
+$route['Home/RegFarmerList/edit_RegisterFarmer/(:any)'] = 'Home/edit_RegisterFarmer/$1';
+$route['Home/RegFarmerList/update_RegisterFarmer/(:any)'] = 'Home/update_RegisterFarmer/$1';
+$route['Home/RegFarmerList/delete_RegisterFarmer/(:any)'] = 'Home/delete_RegisterFarmer/$1';
+
