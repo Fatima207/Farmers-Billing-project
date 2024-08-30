@@ -24,15 +24,15 @@
 
 
 
-        <form action="<?= base_url('index.php/Home/AddProduct') ?>" method="post" class=" justify-content-center align-items-center">
-
+        <form action="<?= base_url('index.php/Home/ProductList/update_Product/'.$add_products->id) ?>" method="post">
+						
 
 
             <div class="row justify-content-center  align-items-center bg-light">
                 <div class="col-md-6">
                     <label>Fish</label>
                     <div class="form-group">
-                        <input type="text" class="form-control" name="name" >
+                        <input type="text" class="form-control" name="name"  value="<?= $add_products->name ?>">
                     </div>
                     
                     <button type="submit" class="btn btn-block btn-dark btn-sm" style="width:50px;">Add</button>

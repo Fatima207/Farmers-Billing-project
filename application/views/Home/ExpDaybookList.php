@@ -53,7 +53,7 @@
             <tbody>
                 <tr>
                 <?php
-                    $query = $this->db->get('add_daybook');
+                    $query = $this->db->get('expense_daybook');
                     foreach ($query->result() as $row): ?>
 
                         <td><?php echo $row->expense_by; ?></td>
@@ -62,8 +62,8 @@
                         <td><?php echo $row->Category; ?></td>
                         <td><?php echo $row->Expense_date; ?></td>
                         <td>
-                            <a class="btn btn-success" href="#">Edit</a>
-                            <a class="btn btn-danger" href="#">Delete</a>
+                            <a class="btn btn-success" href="<?php echo base_url('index.php/Home/ExpDaybookList/edit_ExpenseDaybook/' .$row->id)?>">Edit</a>
+                            <a href="<?php echo base_url('index.php/Home/ExpDaybookList/delete_ExpenseDaybook/' .$row->id)?>"class="btn btn-danger">Delete</a>
                         </td>
 
                 </tr>

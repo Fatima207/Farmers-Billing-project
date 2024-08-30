@@ -61,10 +61,10 @@
                         <td></td>
                         <td></td>
                         <td></td>
-                        <td></td>
+                        <td></td>                
                         <td>
-                            <a class="btn btn-success" href="#">Edit</a>
-                            <a class="btn btn-danger" href="#">Delete</a>
+                            <a class="btn btn-success" href="<?php echo base_url('index.php/Home/ProductList/edit_Product/' .$row->id)?>">Edit</a>
+                            <a href="<?php echo base_url('index.php/Home/ProductList/delete_Product/' .$row->id)?>"class="btn btn-danger">Delete</a>
                         </td>
 
                 </tr>

@@ -69,10 +69,12 @@
                         <td><?php echo $row->contact_number; ?></td>
                         <td><?php echo $row->whatsapp_number; ?></td>
                         <td><?php echo $row->manager_name; ?></td>
+                        
                         <td>
-                            <a class="btn btn-success" href="#">Edit</a>
-                            <a class="btn btn-danger" href="#">Delete</a>
+                            <a class="btn btn-success" href="<?php echo base_url('index.php/Home/RegCompanyList/edit_RegisterCompany/' .$row->id)?>">Edit</a>
+                            <a href="<?php echo base_url('index.php/Home/RegCompanyList/delete_RegisterCompany/' .$row->id)?>"class="btn btn-danger">Delete</a>
                         </td>
+
 
 
 

@@ -10,6 +10,10 @@ class Home_model extends CI_Model
     return $this->db->insert_id();
 
   }
+  // ----Registration-------
+  
+
+  // Farmer section
   public function edit_RegisterFarmer($id){
 $query = $this->db->get_where('reg_farmers',['id' => $id]);
 return $query->row();
@@ -22,7 +26,62 @@ return $query->row();
   public function delete_RegisterFarmer($id){
    return $this->db->delete('reg_farmers', ['id' => $id]);
   }
+  // Agents section
+  public function edit_RegisterAgent($id){
+$query = $this->db->get_where('reg_agents',['id' => $id]);
+return $query->row();
+  }
 
+  public function update_RegisterAgent($data, $id){
+   return $this->db->update('reg_agents',$data, ['id' => $id]);
+  }
+
+  public function delete_RegisterAgent($id){
+   return $this->db->delete('reg_agents', ['id' => $id]);
+  }
+// Retailers section
+  public function edit_RegisterRetailer($id){
+$query = $this->db->get_where('reg_retailers',['id' => $id]);
+return $query->row();
+  }
+
+  public function update_RegisterRetailer($data, $id){
+   return $this->db->update('reg_retailers',$data, ['id' => $id]);
+  }
+
+  public function delete_RegisterRetailer($id){
+   return $this->db->delete('reg_retailers', ['id' => $id]);
+  }
+
+  // for companies
+  public function edit_RegisterCompany($id){
+$query = $this->db->get_where('reg_companies',['id' => $id]);
+return $query->row();
+  }
+
+  public function update_RegisterCompany($data, $id){
+   return $this->db->update('reg_companies',$data, ['id' => $id]);
+  }
+
+  public function delete_RegisterCompany($id){
+   return $this->db->delete('reg_companies', ['id' => $id]);
+  }
+
+
+  // --------Products----------
+
+public function edit_Product($id){
+$query = $this->db->get_where('add_products',['id' => $id]);
+return $query->row();
+  }
+
+  public function update_Product($data, $id){
+   return $this->db->update('add_products',$data, ['id' => $id]);
+  }
+
+  public function delete_Product($id){
+   return $this->db->delete('add_products', ['id' => $id]);
+  }
 
  
   public function save_agent($data)
@@ -71,12 +130,44 @@ return $query->row();
 
     return $this->db->insert_id();
   }
+
+
+
+  // --------categories----------
+
+  public function edit_ExpenseCategories($id){
+    $query = $this->db->get_where('add_categories',['id' => $id]);
+    return $query->row();
+      }
+    
+      public function update_ExpenseCategories($data, $id){
+       return $this->db->update('add_categories',$data, ['id' => $id]);
+      }
+    
+      public function delete_ExpenseCategories($id){
+       return $this->db->delete('add_categories', ['id' => $id]);
+      }
+      // expense Daybook
+  public function edit_ExpenseDaybook($id){
+    $query = $this->db->get_where('expense_daybook',['id' => $id]);
+    return $query->row();
+      }
+    
+      public function update_ExpenseDaybook($data, $id){
+       return $this->db->update('expense_daybook',$data, ['id' => $id]);
+      }
+    
+      public function delete_ExpenseDaybook($id){
+       return $this->db->delete('expense_daybook', ['id' => $id]);
+      }
+
+
   public function save_daybook($data)
   {
-    $query = $this->db->get('add_daybook');
+    $query = $this->db->get('expense_daybook');
 
     $this->db->set($data);
-    $this->db->insert('add_daybook', $data);
+    $this->db->insert('expense_daybook', $data);
 
     return $this->db->insert_id();
   }
@@ -99,7 +190,21 @@ return $query->row();
     return $this->db->insert_id();
   }
 
+  // report dayboook
+
   
+  public function edit_ReportDaybook($id){
+    $query = $this->db->get_where('reports_daybook',['id' => $id]);
+    return $query->row();
+      }
+    
+      public function update_ReportDaybook($data, $id){
+       return $this->db->update('reports_daybook',$data, ['id' => $id]);
+      }
+    
+      public function delete_ReportDaybook($id){
+       return $this->db->delete('reports_daybook', ['id' => $id]);
+      }
 
  
 

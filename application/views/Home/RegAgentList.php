@@ -66,11 +66,12 @@
             <td><?php echo $row->contact_number; ?></td>
             <td><?php echo $row->whatsapp_number; ?></td>
             <td><?php echo $row->address; ?></td>
+           
             <td>
-              <a class="btn btn-success">Edit</a>
+                            <a class="btn btn-success" href="<?php echo base_url('index.php/Home/RegAgentList/edit_RegisterAgent/' .$row->id)?>">Edit</a>
+                            <a href="<?php echo base_url('index.php/Home/RegAgentList/delete_RegisterAgent/' .$row->id)?>"class="btn btn-danger">Delete</a>
+                        </td>
 
-              <a class="btn btn-danger"  href="#">Delete</a>
-            </td>
         </tr>
 
       <?php

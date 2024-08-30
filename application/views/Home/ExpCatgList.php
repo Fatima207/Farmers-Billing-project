@@ -62,8 +62,8 @@
                         <td><?php echo $row->amount; ?></td>
                         <td><?php echo $row->expense_date; ?></td>
                         <td>
-                            <a class="btn btn-success" href="#">Edit</a>
-                            <a class="btn btn-danger" href="#">Delete</a>
+                            <a class="btn btn-success" href="<?php echo base_url('index.php/Home/ExpCatgList/edit_ExpenseCategories/' .$row->id)?>">Edit</a>
+                            <a href="<?php echo base_url('index.php/Home/ExpCatgList/delete_ExpenseCategories/' .$row->id)?>"class="btn btn-danger">Delete</a>
                         </td>
 
 

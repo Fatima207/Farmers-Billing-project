@@ -61,9 +61,10 @@
                         <td><?php echo $row->companies; ?></td>
                         <td><?php echo $row->categories; ?></td>
                         <td><?php echo $row->expense_date; ?></td>
+                       
                         <td>
-                            <a class="btn btn-success" href="#">Edit</a>
-                            <a class="btn btn-danger" href="#">Delete</a>
+                            <a class="btn btn-success" href="<?php echo base_url('index.php/Home/ReptDaybooklist/edit_ReportDaybook/' .$row->id)?>">Edit</a>
+                            <a href="<?php echo base_url('index.php/Home/ReptDaybooklist/delete_ReportDaybook/' .$row->id)?>"class="btn btn-danger">Delete</a>
                         </td>
 
                 </tr>
