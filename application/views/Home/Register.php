@@ -26,7 +26,7 @@
         <div class="card">
             <div class="card-body">
 
-            <form action="#" method="post">
+            <form action="<?php echo base_url("index.php/Home/Register")?>" method="post">
                 <div class="form-group  ">
                     <label for="Name" class="">Name</label>
                     <input type="text" name="Amount" placeholder="Name" class="form-control ">

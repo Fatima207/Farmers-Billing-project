@@ -30,7 +30,7 @@
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="exampleInputName1">Expenses by</label>
-                                        <input type="name" class="form-control" id="exampleInputName1" placeholder= "" name="expense_by">
+                                        <input type="name" class="form-control" id="exampleInputName1" placeholder="" name="expense_by">
                                     </div>
 
 
@@ -49,22 +49,31 @@
                                         </div>
                                     </div>
                                     <!-- select -->
+
                                     <div class="form-group">
                                         <label>Companies</label>
-                                        <select name="Company" class="form-control">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                            <option>option 3</option>
-                                            <option>option 4</option>
-                                            <option>option 5</option>
+                                        <select name="Company" id="Company" class="form-control">
+
+                                            <option value="" default hidden>Companies</option>
+                                            <?php foreach ($RegCompanyList as $reg) {
+
+                                            ?>
+                                                <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>
+                                            <?php } ?>
                                         </select>
                                     </div>
+
 
                                     <!-- select -->
                                     <div class="form-group">
                                         <label>Categories</label>
                                         <select name="Category" class="form-control">
-                                            <option>stationary</option>
+                                            <option value="" default hidden>Categories</option>
+                                            <?php foreach ($ExpCategoryList as $reg) {
+
+                                            ?>
+                                                <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>
+                                            <?php } ?>
 
                                         </select>
                                     </div>
@@ -72,7 +81,7 @@
 
 
                                     <!-- button add -->
-                                    <button type="submit"class="btn btn-dark" href="#" style="float:right;">Add</button>
+                                    <button type="submit" class="btn btn-dark" href="#" style="float:right;">Add</button>
                                 </div>
 
 
@@ -122,6 +131,35 @@
 <script src="<?= base_url() ?>assets/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="<?= base_url() ?>assets/dist/js/demo.js"></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $('reg_companies').change(function() {
+            var id = $(this).val();
+            $.ajax({
+                url: "<?php echo site_url('Home/get_company'); ?>",
+                method: "POST",
+                data: {
+                    id: id
+                },
+                async: true,
+                dataType: 'json',
+                success: function(data) {
+
+                    var html = '';
+                    var i;
+                    for (i = 0; i < data.length; i++) {
+                        html += '<option value=' + data[i].id + '>' + data[i].name + '</option>';
+                    }
+                    $('#sub_category').html(html);
+
+                }
+            });
+            return false;
+        });
+
+    });
+</script>
 <!-- Page script -->
 <script>
     $(function() {

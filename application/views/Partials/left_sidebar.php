@@ -33,11 +33,11 @@
 			class="nav nav-sidebar flex-row"
 			data-widget="treeview"
 			role="menu"
-			data-accordion="false">
+			data-accordion="false"> -->
 
 
 			<li class="nav-item has-treeview">
-				image admin 
+				<!-- image admin   -->
 				<div class="user-panel mt-3 pb-3 mb-3 d-flex">
 					<div class="image">
 						<img
@@ -45,14 +45,14 @@
 							class="img-circle elevation-2"
 							alt="User Image" />
 					</div>
-					NAME ADMIN 
+					<!-- NAME ADMIN  -->
 					<a href="#" class="d-block nav-link active">
 						<p>Deepak
 							<i class="right fas fa-angle-left"></i>
 						</p>
 					</a>
 
-					options inside deepak 
+					<!-- options inside deepak  -->
 				<ul class="nav nav-treeview ">
 					<li class="nav-item">
 						<a href="<?php echo base_url() ?>index.php/Home/Document" class="nav-link">
@@ -67,7 +67,7 @@
 				</ul>
 				</div>
 			</li>
-		</ul> -->
+		<!-- </ul> -->
 
 		<!-- Sidebar Menu -->
 		<nav class="mt-2">
@@ -75,7 +75,7 @@
 				class="nav nav-pills nav-sidebar flex-column"
 				data-widget="treeview"
 				role="menu"
-				data-accordion="false">
+				data-accordion="false"> 
 				<!-- Add icons to the links using the .nav-icon class
                    with font-awesome or any other icon font library -->
 

@@ -54,6 +54,7 @@
                             <option>option 5</option>
                         </select>
                     </div>
+                    
                 </div>
 
             </div>
@@ -71,7 +72,7 @@
                         <table class="table table-head-fixed text-nowrap">
                             <thead>
                                 <tr>
-                                    <th>farmer Name</th>
+                                    <th>Farmer Name</th>
                                     <th>Farmer code</th>
                                     <th>Address</th>
                                     <th>Contact Number</th>
@@ -81,18 +82,33 @@
                             <tbody>
 
                                 <tr>
-                                    <td>183</td>
-                                    <td>John Doe</td>
-                                    <td>11-7-2014</td>
-                                    <td>657489322</td>
+
+
+
+        <!-- find the name and id of farmers from the list that got matched with farmers options
+                                     and then show that full row in the table...-->
+
+                                    <?php $query = $this->db->get('reg_farmers');
+                                        foreach ($query->result() as $row): ?>
+
+
+                                            <td><?php echo $row->name; ?></td>
+                                            <td><?php echo $row->code; ?></td>
+                                            <td><?php echo $row->address; ?></td>
+                                            <td><?php echo $row->contact_number; ?></td>
+
                                 </tr>
+
+                            <?php
+                                        endforeach;
+                            ?>
                             </tbody>
 
                         </table>
 
                     </div>
                     <!-- /.card-body -->
-<!-- previous -->
+                    <!-- previous -->
                     <div class="card-body  table-responsive p-0" style="flex-shrink:2;border:1px solid black;">
                         <label style='padding-right:100px;'>Previous Dues Amount</label>
                         <span>Rs</span>
@@ -117,8 +133,6 @@
                         <option>option 2</option>
                         <option>option 3</option>
                         <option>option 4</option>
-
-
                     </select>
                 </div>
             </div>
@@ -247,38 +261,6 @@
 
 
         </div>
-
-
-
-
-        <!-- 
-
-        <div class="flex flex-row " style="column-gap:40px;">
-
-           
-            <div class="w-25">
-                <label>Payment Status</label>
-                <select class="">
-                    <option>completed</option>
-                    <option>pending</option>
-                </select>
-                 <label>Payment mode</label>
-                <label for="qty" class="">cash</label>
-                <input type="number" name="qty" id="1" required="" placeholder="Enter Qty" class="w-25">
-                <label for="price" class="">Price</label>
-                <input type="number" name="price" id="2" required="" placeholder="Enter Price" class="w-25" value="">
-                <label class="">Amount: Rs 0</label>
-            </div>
-
-
-
-
-            <a class="btn btn-danger" href="#">-</a>
-        </div>
- -->
-
-
-
 
 
 

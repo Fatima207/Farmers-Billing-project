@@ -95,3 +95,13 @@ $route['Home/ExpDaybookList/delete_ExpenseDaybook/(:any)'] = 'Home/delete_Expens
 $route['Home/ReptDaybooklist/edit_ReportDaybook/(:any)'] = 'Home/edit_ReportDaybook/$1';
 $route['Home/ReptDaybooklist/delete_ReportDaybook/(:any)'] = 'Home/delete_ReportDaybook/$1';
 $route['Home/ReptDaybooklist/update_ReportDaybook/(:any)'] = 'Home/update_ReportDaybook/$1';
+
+// $route['login']['GET'] = 'Home/index';
+
+
+
+
+
+
+
+

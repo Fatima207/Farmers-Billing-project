@@ -19,7 +19,7 @@
 <body class="hold-transition login-page" style="background-color:#fffafa ;">
   <div class="login-box" style="margin-left:580px; margin-top:150px;">
     <div class="login-logo">
-      <a href="<?php echo base_url() ?>index.php/Home/Document"><img src="<?= base_url() ?>assets/dist/img/laravel3.png" alt="Laravel"></a>
+      <a href="<?php echo base_url("index.php/Home/LogoutPage") ?>index.php/Home/Document"><img src="<?= base_url() ?>assets/dist/img/laravel3.png" alt="Laravel"></a>
 
     </div>
     <!-- /.login-logo -->
@@ -54,7 +54,7 @@
             </div>
             <!-- /.col -->
             <div class="col-4 ">
-              <button type="submit" class="btn btn-dark btn-block">Log In</button>
+              <button type="submit" value="Login" class="btn btn-dark btn-block">Log In</button>
             </div>
             <!-- /.col -->
           </div>

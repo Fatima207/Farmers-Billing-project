@@ -26,11 +26,11 @@
 
                             <!-- /.card-header -->
                             <!-- form start -->
-                            <form action="<?= base_url('index.php/Home/update_ReportDaybook/'.$reports_daybook->id)  ?>" method="post">
+                            <form action="<?= base_url('index.php/Home/update_ReportDaybook/' . $reports_daybook->id)  ?>" method="post">
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="exampleInputName1">Expenses by</label>
-                                        <input type="name" class="form-control" id="exampleInputName1" placeholder= "" name="expenses_by"  value="<?= $reports_daybook->expenses_by ?>">
+                                        <input type="name" class="form-control" id="exampleInputName1" placeholder="" name="expenses_by" value="<?= $reports_daybook->expenses_by ?>">
                                     </div>
 
 
@@ -48,17 +48,28 @@
                                             </div>
                                         </div>
                                     </div>
+                                 
+
                                     <!-- select -->
                                     <div class="form-group">
-                                        <label>Companies</label>
-                                        <select name="companies" class="form-control" value="<?= $reports_daybook->companies ?>">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                            <option>option 3</option>
-                                            <option>option 4</option>
-                                            <option>option 5</option>
+                                        <label for="name-in" class="col-md-6 label-heading">Companies</label>
+                                        <?php //pr($extra); 
+                                        ?>
+                                        <select name="companies" class="form-control">
+                                            <option value="0">Main Category</option>
+                                            <!-- $query = $this->db->get('reports_daybook');     -->
+                                            <?php foreach ($reg_companies as $company) { ?>
+
+                                                <option <?php if ($company['id'] == $reports_daybook['id']) {
+                                                            echo 'selected';
+                                                        } ?> value="<?php echo $company['id'] ?>"> <?php echo $company['name'] ?> </option>
+                                            <?php } ?>
                                         </select>
                                     </div>
+
+
+
+
 
                                     <!-- select -->
                                     <div class="form-group">
@@ -72,7 +83,7 @@
 
 
                                     <!-- button add -->
-                                    <button type="submit"class="btn btn-dark" href="#" style="float:right;">Add</button>
+                                    <button type="submit" class="btn btn-dark" href="#" style="float:right;">Add</button>
                                 </div>
 
 

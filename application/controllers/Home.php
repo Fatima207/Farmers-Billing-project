@@ -1,21 +1,28 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
+
+use Dompdf\Dompdf;
+use Dompdf\Options;
+
+
 class Home extends CI_Controller
 {
 	function __construct()
 	{
 		parent::__construct();
 		$this->load->model('Home_model');
+
+		$this->load->library('session');
+		$this->load->library('form_validation');
 	}
 	public function index()
 	{
-		$this->load->model('Home_model');
-		// $this->load->library("common");
-
+		$this->load->view('Partials/header');
+		// $this->load->view('Home/login');
+		$this->load->view('Partials/footer');
 
 		$RegCompList = $this->Home_model->save_company();
 		$this->load->view('Home/RegCompList', ['reg_companies' => $RegCompList]);
-
 
 		$RegAgentList = $this->Home_model->save_agent();
 		$this->load->view('Home/RegAgentList', ['reg_agents' => $RegAgentList]);
@@ -37,20 +44,51 @@ class Home extends CI_Controller
 
 		$ProfitLoss = $this->Home_model->save_profitloss();
 		$this->load->view('Home/ProfitLossList', ['profit/loss' => $ProfitLoss]);
-
-
-		$this->load->view('Partials/header');
-		$this->load->view('Partials/footer');
 	}
 
 	public function Test()
 	{
 		$this->load->view('Home/test');
 	}
+	public function login()
+	{
+		$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email');
+		$this->form_validation->set_rules('password', 'Passsword', 'trim|required');
+		if ($this->form_validation->run() == FALSE) {
+		} else {
+			$data = [
+				'email' => $this->input->post("email"),
+				'password' => $this->input->post("password"),
 
-// Registration 
+			];
 
-// Farmer section
+			$user = new Home_model;
+			$result = $user->loginUser($data);
+			if ($result != FALSE) {
+				echo
+				$auth_userdetails = [
+					'first_name'=>$result->first_name,
+					'last_name'=>$result->last_name,
+					'email'=>$result->email,
+				];
+				$this->session->set_userdata('authenticated', '1');
+				$this->session->set_userdata('auth_user', $auth_userdetails);
+				$this->session->set_flashdata('status', 'You are Loggedin successfully');
+				redirect(base_url('index.php/Home/AdminDashboard'));
+			} else {
+				$this->session->set_flashdata('status', 'Invalid Email Id or Password');
+				redirect(base_url('index.php/Home/login'));
+			}
+		}
+		$this->load->view('Partials/header');
+		$this->load->view('Home/login.php');
+		$this->load->view('Partials/footer');
+	}
+
+
+	// Registration 
+
+	// Farmer section
 	public function AddFarmer()
 	{
 
@@ -97,6 +135,8 @@ class Home extends CI_Controller
 		$this->load->view('Partials/footer');
 	}
 
+
+
 	public function edit_RegisterFarmer($id)
 	{
 		$this->load->view('Partials/header');
@@ -138,7 +178,7 @@ class Home extends CI_Controller
 		redirect(site_url('index.php/Home/FarmerList'));
 	}
 
-// Agents
+	// Agents
 
 	public function AddAgent()
 	{
@@ -226,7 +266,7 @@ class Home extends CI_Controller
 		redirect(site_url('index.php/Home/AgentList'));
 	}
 
-// Retailers
+	// Retailers
 	public function AddRetailer()
 	{
 		if ($this->input->post()) {
@@ -403,7 +443,7 @@ class Home extends CI_Controller
 	}
 
 
-// Product
+	// Product
 	public function AddProduct()
 	{
 		if ($this->input->post()) {
@@ -653,13 +693,13 @@ class Home extends CI_Controller
 	{
 		$data = [
 			'name' => $this->input->post("name"),
-				'description' => $this->input->post("description"),
-				'amount' => $this->input->post("amount"),
-				'expense_date' => $this->input->post("expense_date"),
-				// 'added_by' => $this->input->post("added_by"),
-				'added_at' => date('Y-m-d h:i:s'),
-				//  'updated_by' => $this->input->post("updated_by"),
-				'updated_at' => date('Y-m-d h:i:s'),
+			'description' => $this->input->post("description"),
+			'amount' => $this->input->post("amount"),
+			'expense_date' => $this->input->post("expense_date"),
+			// 'added_by' => $this->input->post("added_by"),
+			'added_at' => date('Y-m-d h:i:s'),
+			//  'updated_by' => $this->input->post("updated_by"),
+			'updated_at' => date('Y-m-d h:i:s'),
 
 		];
 		$resp = $this->Home_model->update_ExpenseCategories($data, $id);
@@ -687,6 +727,7 @@ class Home extends CI_Controller
 
 	public function ExpDaybook()
 	{
+
 		if ($this->input->post()) {
 			//have post
 			$data = array(
@@ -708,10 +749,19 @@ class Home extends CI_Controller
 			}
 			redirect(site_url('index.php/Home/ExpDaybookList'));
 		}
+		// 'countries' => $countries->result()
+		$data['RegCompanyList'] = $this->Home_model->get_companies();
+		$data['ExpCategoryList'] = $this->Home_model->get_categories();
+
+		//$data['RegCompanyList'] = $companies;
+		// $data = array(
+		// 	'RegCompanyList' => $companies
+		// );
 		$this->load->view('Partials/header');
-		$this->load->view('Home/ExpDaybook');
-		$this->load->view('Partials/footer');
+		$this->load->view('Home/ExpDaybook', $data);
+         $this->load->view('Partials/footer');
 	}
+
 	public function ExpDaybookList()
 	{
 
@@ -735,14 +785,14 @@ class Home extends CI_Controller
 	{
 		$data = [
 			'expense_by' => $this->input->post("expense_by"),
-				'Amount' => $this->input->post("Amount"),
-				'Company' => $this->input->post("Company"),
-				'Category' => $this->input->post("Category"),
-				'Expense_date' => $this->input->post("Expense_date"),
-				// 'added_by' => $this->input->post("added_by"),
-				'added_at' => date('Y-m-d h:i:s'),
-				//  'updated_by' => $this->input->post("updated_by"),
-				'updated_at' => date('Y-m-d h:i:s'),
+			'Amount' => $this->input->post("Amount"),
+			'Company' => $this->input->post("Company"),
+			'Category' => $this->input->post("Category"),
+			'Expense_date' => $this->input->post("Expense_date"),
+			// 'added_by' => $this->input->post("added_by"),
+			'added_at' => date('Y-m-d h:i:s'),
+			//  'updated_by' => $this->input->post("updated_by"),
+			'updated_at' => date('Y-m-d h:i:s'),
 
 		];
 		$resp = $this->Home_model->update_ExpenseDaybook($data, $id);
@@ -867,7 +917,7 @@ class Home extends CI_Controller
 		$this->load->view('Partials/footer');
 	}
 	// Payments section
-	
+
 	public function PaymentData()
 	{
 		if ($this->input->post()) {
@@ -911,8 +961,13 @@ class Home extends CI_Controller
 			}
 			redirect(site_url('index.php/Home/ReptDaybooklist'));
 		}
+		$data['ReptDaybooklist'] = $this->Home_model->get_companies();
+		$data['ExpCategorieslist'] = $this->Home_model->get_categories();
+
+
+
 		$this->load->view('Partials/header');
-		$this->load->view('Home/ReptDaybook.php');
+		$this->load->view('Home/ReptDaybook.php', $data);
 		$this->load->view('Partials/footer');
 	}
 	public function ReptDaybooklist()
@@ -924,7 +979,7 @@ class Home extends CI_Controller
 		$this->load->view('Partials/footer');
 	}
 
-public function edit_ReportDaybook($id)
+	public function edit_ReportDaybook($id)
 	{
 		$this->load->view('Partials/header');
 

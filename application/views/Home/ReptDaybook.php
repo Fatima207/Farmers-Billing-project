@@ -49,25 +49,32 @@
                                         </div>
                                     </div>
 
-                                    <!-- select -->
+
+
                                     <div class="form-group">
                                         <label>Companies</label>
-                                        <select class="form-control" name="companies">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                            <option>option 3</option>
-                                            <option>option 4</option>
-                                            <option>option 5</option>
+                                        <select name="Company" id="Company" class="form-control" >
+                                            <option value="" default hidden>Companies</option>
+                                            <?php foreach ($ReptDaybooklist as $reg) {
+
+                                            ?>
+                                                <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>
+                                            <?php } ?>
                                         </select>
                                     </div>
 
                                     <!-- select -->
                                     <div class="form-group">
                                         <label>Categories</label>
-                                        <select class="form-control" name="categories">
-                                            <option>stationary</option>
+                                        <select name="Company" id="Company" class="form-control">
+                                            <option value="" default hidden>Categories</option>
+                                            <?php foreach ($ExpCategorieslist as $reg) {
 
+                                            ?>
+                                                <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>
+                                            <?php } ?>
                                         </select>
+
                                     </div>
 
 
