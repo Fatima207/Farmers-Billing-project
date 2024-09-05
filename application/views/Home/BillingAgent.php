@@ -35,23 +35,27 @@
                     <div class="col-md-2">
                         <!-- select -->
                         <label>Select Agent</label>
-                        <select class="form-control">
-                            <option>option 1</option>
-                            <option>option 2</option>
-                            <option>option 3</option>
-                            <option>option 4</option>
-                            <option>option 5</option>
+                        <select name="" class="form-control">
+                            <option value="" default hidden>Agents</option>
+                            <?php foreach ($RegAgentList as $reg) {
+
+                            ?>
+                                <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>
+                            <?php } ?>
+
                         </select>
                     </div>
                     <div class="col-md-2">
                         <!-- select -->
                         <label>Select Companies</label>
-                        <select class="form-control">
-                            <option>option 1</option>
-                            <option>option 2</option>
-                            <option>option 3</option>
-                            <option>option 4</option>
-                            <option>option 5</option>
+                        <select name="" class="form-control">
+                            <option value="" default hidden>Companies</option>
+                            <?php foreach ($RegCompaniesList as $reg) {
+
+                            ?>
+                                <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>
+                            <?php } ?>
+
                         </select>
                     </div>
                 </div>
@@ -112,14 +116,14 @@
                 <!-- Select multiple-->
                 <div class="form-group">
                     <label>Select Products</label>
-                    <select multiple class="form-control" style="height:200px">
-                        <option>option 1</option>
-                        <option>option 2</option>
-                        <option>option 3</option>
-                        <option>option 4</option>
+                    <select multiple class="form-control">
+                             <?php foreach ($ProductList as $reg) {
 
+                            ?>
+                                <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>
+                            <?php } ?>
 
-                    </select>
+                        </select>
                 </div>
             </div>
             <!-- second section -->

@@ -67,9 +67,9 @@ class Home extends CI_Controller
 			if ($result != FALSE) {
 				echo
 				$auth_userdetails = [
-					'first_name'=>$result->first_name,
-					'last_name'=>$result->last_name,
-					'email'=>$result->email,
+					'first_name' => $result->first_name,
+					'last_name' => $result->last_name,
+					'email' => $result->email,
 				];
 				$this->session->set_userdata('authenticated', '1');
 				$this->session->set_userdata('auth_user', $auth_userdetails);
@@ -520,18 +520,17 @@ class Home extends CI_Controller
 			//have post
 			$data = array(
 				'name' => $this->input->post("name")
-				//'name' =>'description')
 			);
-			//echo $this->input->post("name");
 			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
 			exit;
 		}
+		$data['RegFarmerList'] = $this->Home_model->get_farmers();
+		$data['RegCompaniesList'] = $this->Home_model->get_companies();
+		$data['ProductList'] = $this->Home_model->get_products();
+		
+		
 		$this->load->view('Partials/header');
-		$this->load->view('Home/Billingfarmer');
+		$this->load->view('Home/Billingfarmer', $data);
 		$this->load->view('Partials/footer');
 	}
 	public function FarmersBillingList()
@@ -561,18 +560,16 @@ class Home extends CI_Controller
 			//have post
 			$data = array(
 				'name' => $this->input->post("name")
-				//'name' =>'description')
 			);
-			//echo $this->input->post("name");
 			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
 			exit;
 		}
+		$data['RegAgentList'] = $this->Home_model->get_agents();
+		$data['RegCompaniesList'] = $this->Home_model->get_companies();
+		$data['ProductList'] = $this->Home_model->get_products();
+
 		$this->load->view('Partials/header');
-		$this->load->view('Home/BillingAgent');
+		$this->load->view('Home/BillingAgent', $data);
 		$this->load->view('Partials/footer');
 	}
 	public function AgentsBillingList()
@@ -602,18 +599,17 @@ class Home extends CI_Controller
 			//have post
 			$data = array(
 				'name' => $this->input->post("name")
-				//'name' =>'description')
 			);
-			//echo $this->input->post("name");
 			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
 			exit;
 		}
+		$data['RegRetailersList'] = $this->Home_model->get_retailers();
+		$data['RegCompaniesList'] = $this->Home_model->get_companies();
+		$data['ProductList'] = $this->Home_model->get_products();
+
+
 		$this->load->view('Partials/header');
-		$this->load->view('Home/BillingRetailer.php');
+		$this->load->view('Home/BillingRetailer.php', $data);
 		$this->load->view('Partials/footer');
 	}
 	public function RetList()
@@ -759,7 +755,7 @@ class Home extends CI_Controller
 		// );
 		$this->load->view('Partials/header');
 		$this->load->view('Home/ExpDaybook', $data);
-         $this->load->view('Partials/footer');
+		$this->load->view('Partials/footer');
 	}
 
 	public function ExpDaybookList()
@@ -1112,13 +1108,9 @@ class Home extends CI_Controller
 			//have post
 			$data = array(
 				'name' => $this->input->post("name")
-				//'name' =>'description')
 			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
+			$resp = $this->Home_model->save_($data);
 
-			// }
 
 			exit;
 		}

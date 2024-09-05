@@ -70,12 +70,7 @@
 
             </tbody>
         </table>
-
-
-
-
-
-        <!-- /.content -->
+   <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
 

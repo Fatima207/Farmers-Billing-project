@@ -8,6 +8,78 @@
 
 <!-- jQuery -->
 <script src="<?= base_url() ?>assets/plugins/jquery/jquery.min.js"></script>
+
+<!-- <script>
+$(document).ready(function() {
+    $("#add").click(function() {
+    	var lastField = $("#buildyourform div:last");
+        var intId = (lastField && lastField.length && lastField.data("idx") + 1) || 1;
+        var fieldWrapper = $("<div class=\"fieldwrapper\" id=\"field" + intId + "\"/>");
+        fieldWrapper.data("idx", intId);
+        var fName = $("<input type=\"text\" class=\"fieldname\" />");
+        var fType = $("<select class=\"fieldtype\"><option value=\"checkbox\">kg</option><option value=\"textbox\">Text</option><option value=\"textarea\">Paragraph</option></select>");
+        
+        var removeButton = $("<input type=\"button\" class=\"remove\" value=\"-\" />");
+        removeButton.click(function() {
+            $(this).parent().remove();
+        });
+        fieldWrapper.append(fName);
+        fieldWrapper.append(fType);
+        fieldWrapper.append(removeButton);
+        $("#buildyourform").append(fieldWrapper);
+    });
+    $("#preview").click(function() {
+        $("#yourform").remove();
+        var fieldSet = $("<fieldset id=\"yourform\"><legend>Your Form</legend></fieldset>");
+        $("#buildyourform div").each(function() {
+            var id = "input" + $(this).attr("id").replace("field","");
+            var label = $("<label for=\"" + id + "\">" + $(this).find("input.fieldname").first().val() + "</label>");
+            var input;
+            switch ($(this).find("select.fieldtype").first().val()) {
+                case "checkbox":
+                    input = $("<input type=\"checkbox\" id=\"" + id + "\" name=\"" + id + "\" />");
+                    break;
+                case "textbox":
+                    input = $("<input type=\"text\" id=\"" + id + "\" name=\"" + id + "\" />");
+                    break;
+                case "textarea":
+                    input = $("<textarea id=\"" + id + "\" name=\"" + id + "\" ></textarea>");
+                    break;    
+            }
+            fieldSet.append(label);
+            fieldSet.append(input);
+        });
+        $("body").append(fieldSet);
+    });
+});
+</script> -->
+
+<script type="text/javascript">
+    $(document).ready(function(){
+
+        var html =  '<div class="flex flex-row "  id="table_field" style="column-gap:40px; "><label for="qty" class="">Qty</label><input type="number" name="qty" id="1" required="" placeholder="Enter Qty" style="width: 100px;"><label for="unit" class="">Unit</label><select name="unit" id="2" class=" "><option value="kg">kg</option> <option value="g">g</option><option value="pound">pound</option></select><label for="price" class="">Price</label><input type="number" name="price" id="2" required="" placeholder="Enter Price" style="width: 100px;"><label class="ml-2">Amount: Rs 0</label><a class=" btn btn-danger" href="#" id="remove" style="margin-left: 200px;" >-</a></div>'
+                   
+
+        var max=5;
+        var x = 1;
+        $('#add').click(function(){
+            if(x<=max){
+            $("#table_field").append(html);
+            x++;
+            }
+         
+        });
+        $("#table_field").on('click', '#remove', function(){
+            $(this).closest('div').remove();
+            x--;
+        });
+        
+    });
+
+
+</script>
+
+
 <!-- Bootstrap 4 -->
 <script src="<?= base_url() ?>assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Select2 -->

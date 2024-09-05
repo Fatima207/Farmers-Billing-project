@@ -1,17 +1,18 @@
 <?php
 class Home_model extends CI_Model
 {
-  public function loginUser($data){
-    
+  public function loginUser($data)
+  {
+
     $this->db->select('*');
     $this->db->where('email', $data['email']);
     $this->db->where('password', $data['password']);
-    $this->db->from('users'); 
+    $this->db->from('users');
     $this->db->limit(1);
-    $query=  $this->db->get();
-    if ($query->num_rows()==1) {
+    $query =  $this->db->get();
+    if ($query->num_rows() == 1) {
       return $query->row();
-    }else{
+    } else {
       return false;
     }
   }
@@ -158,7 +159,8 @@ class Home_model extends CI_Model
 
     return $this->db->insert_id();
   }
-  public function get_categories(){
+  public function get_categories()
+  {
     $query = $this->db->get('add_categories');
     return $query->result();
   }
@@ -203,20 +205,41 @@ class Home_model extends CI_Model
   public function save_daybook($data)
   {
     $query = $this->db->get('expense_daybook');
-    return $query->result();
-    
-    // new line for join
-    $this->db->where('expense_daybook.id', $data);  // new
-    $this->db->join('reg_companies', 'reg_companies.id = expense_daybook.id');  //new
-
     $this->db->set($data);
     $this->db->insert('expense_daybook', $data);
     return $this->db->insert_id();
   }
-  public function get_companies(){
+  public function get_companies()
+  {
     $query = $this->db->get('reg_companies');
     return $query->result();
   }
+
+
+  public function get_agents()
+  {
+    $query = $this->db->get('reg_agents');
+    return $query->result();
+  }
+
+  public function get_retailers()
+  {
+    $query = $this->db->get('reg_retailers');
+    return $query->result();
+  }
+
+  public function get_farmers()
+  {
+    $query = $this->db->get('reg_farmers');
+    return $query->result();
+  }
+
+  public function get_products()
+  {
+    $query = $this->db->get('add_products');
+    return $query->result();
+  }
+
 
 
 
@@ -231,13 +254,9 @@ class Home_model extends CI_Model
   }
   public function save_reportdaybook($data)
   {
-    $query = $this->db->get('reports_daybook');
-    $query_result = $query->result();
-    return $query_result;
 
     $this->db->set($data);
     $this->db->insert('reports_daybook', $data);
-
     return $this->db->insert_id();
   }
   function get_sub_category($category_id)

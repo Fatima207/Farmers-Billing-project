@@ -53,7 +53,7 @@
 
                                     <div class="form-group">
                                         <label>Companies</label>
-                                        <select name="Company" id="Company" class="form-control" >
+                                        <select name="companies" id="companies" class="form-control" >
                                             <option value="" default hidden>Companies</option>
                                             <?php foreach ($ReptDaybooklist as $reg) {
 
@@ -66,7 +66,7 @@
                                     <!-- select -->
                                     <div class="form-group">
                                         <label>Categories</label>
-                                        <select name="Company" id="Company" class="form-control">
+                                        <select name="categories" id="categories" class="form-control">
                                             <option value="" default hidden>Categories</option>
                                             <?php foreach ($ExpCategorieslist as $reg) {
 
