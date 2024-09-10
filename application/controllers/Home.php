@@ -47,7 +47,7 @@ class Home extends CI_Controller
 		$this->load->view('Home/test');
 	}
 	public function login()
-	{
+	{ 
 		$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email');
 		$this->form_validation->set_rules('password', 'Passsword', 'trim|required');
 		if ($this->form_validation->run() == FALSE) {
@@ -55,7 +55,6 @@ class Home extends CI_Controller
 			$data = [
 				'email' => $this->input->post("email"),
 				'password' => $this->input->post("password"),
-
 			];
 
 			$user = new Home_model;
@@ -68,20 +67,21 @@ class Home extends CI_Controller
 				$_SESSION['role']	= $result->role;
 
 				echo
-				$auth_userdetails = [
+				$auth_userdetails = array(
 					'first_name' => $result->first_name,
 					'last_name' => $result->last_name,
 					'email' => $result->email,
-				];
+					'role' => $result->role,
+				);
 				$this->session->set_userdata('authenticated', '1');
 				$this->session->set_userdata('auth_user', $auth_userdetails);
 				$this->session->set_flashdata('status', 'You are Loggedin successfully');
-				redirect(base_url("index.php/Home/AdminDashboard"));
-				// if ($result->role == "Admin") {
-				// 	redirect(base_url("index.php/Home/AdminDashboard"));
-				// } else if ($result->role == "SuperAdmin") {
-				// 	redirect(base_url("index.php/Home/SuperAdminDashboard"));
-				// }
+				// redirect(base_url("index.php/Home/AdminDashboard"));
+				if ($result->role == "admin") {
+					redirect(base_url("index.php/Home/AdminDashboard"));
+				} else if ($result->role == "super admin") {
+					redirect(base_url("index.php/Home/SuperAdminDashboard"));
+				}
 			} else {
 				$this->session->set_flashdata('status', 'Invalid Email Id or Password');
 				redirect(base_url('index.php/Home/login'));
@@ -91,35 +91,7 @@ class Home extends CI_Controller
 		$this->load->view('Home/login.php');
 		$this->load->view('Partials/footer');
 	}
-//demo 
-	// public function logind()
-	// {
-	// $data['error'] ="Invalid Login";
-	// $this->load->view('auth/header');
-	// if($this->input->post())
-	//    {
-	// 	 $user = $this->UserModel->login($this->input->post());
-	// 	if(count($user)>0)
-	// 	{
-	// 		$array = array(
-	// 					'client_id' => $user['client_id'],
-	// 					'email' => $user['email'],
-	// 					'password' => $user['password'],
-	// 					'username' => $user['username']
-	// 					 );
-	// 		$this->session->set_userdata($array);
-	// 		if($user['client_type_id'] == '1'){
-	// 			redirect(base_url('your_controller/admin_dashboard'));
-	// 		} else {
-	// 			redirect(base_url('your_controller/client_dashboard'));
-	// 		}
-	
-	// 	}
-	// 	else
-	// 	{
-	// 	 $data["error_message"]="Invalid User Name and Password combination";
-	// 	}
-	//    }
+
 	// Registration 
 	public function Register()
 	{
@@ -140,32 +112,38 @@ class Home extends CI_Controller
 				'role' => $this->input->post("role"),
 				'password' => $this->input->post("password"),
 			];
-
+			// $data = $userData = array(); 
+       
 			$userModel = new Home_model;
 
 			$r = $userModel->registerUser($data);
 
 			var_dump($r->role);
+			
 			if ($r != FALSE) {
-				
+
 				$_SESSION['first_name']	= $r->first_name;
 				$_SESSION['last_name']	= $r->last_name;
 				$_SESSION['email']	= $r->email;
 				$_SESSION['role']	= $r->role;
 
-				$sess_data = [
+				$sess_data = array(
 					'first_name' => $this->input->post("first_name"),
 					'last_name' => $this->input->post("last_name"),
 					'email' => $this->input->post("email"),
 					'role' => $this->input->post("role"),
 					'password' => $this->input->post("password"),
 					// 'loggedin'=>'loggedin'
-				];
-
-
+				);
 				$this->session->set_userdata($sess_data);
 
+				// if ($r->role == "admin") {
+				// 	redirect(base_url("index.php/Home/AdminDashboard"));
+				// } else if ($r->role == "super admin") {
+				// 	redirect(base_url("index.php/Home/SuperAdminDashboard"));
+				// }
 				redirect(base_url("index.php/Home/SuperAdminDashboard"));
+				
 			} else {
 				echo "User registered deny";
 			}

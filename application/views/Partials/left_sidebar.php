@@ -60,7 +60,7 @@
 						</a>
 					</li>
 					<li class="nav-item ">
-						<a href="<?php echo base_url() ?>index.php/Home/LogoutPage" class="nav-link ">
+						<a href="<?php echo base_url() ?>index.php/Home/login" class="nav-link ">
 							<p>Log Out</p>
 						</a>
 					</li>

@@ -8,7 +8,7 @@
 		
 		<section class="content-header mb-3">
 
-		<div style="height:100px;width:1300px; background-color:white;"><h2 class="pt-4 pl-5">Super Admin Dashboard</h2></div>
+		<div style="height:100px;width:1300px; background-color:white;"><h2 class="pt-4 pl-5"> <?php echo $this->session->userdata('role')?> Dashboard</h2></div>
 			<!-- /.container-fluid -->
 		</section>
 		<!-- Content Wrapper. Contains page content -->
@@ -21,7 +21,8 @@
 				<!-- Default box -->
 				<div class="card " style="width:900px;height:60px;">
 					<div class="card-body py-3"style="font-size:20px;" >
-						You're logged in as SuperAdmin !
+						You're logged in as <?php echo $this->session->userdata('role')?>
+						 !
 					</div>
 				</div>
 			</section>
