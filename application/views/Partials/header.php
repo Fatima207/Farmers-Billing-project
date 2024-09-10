@@ -8,6 +8,20 @@
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
+
+
+
+
+  <script>
+    function ddlselect() {
+      var d=document.getElementById('ddselect');
+      var displaytext=d.options[d.selectedIndex].text;
+      document.getElementById('txtvalue').value=displaytext;
+    }
+  </script>
+
+
+
   <!-- Font Awesome -->
   <link rel="stylesheet" href="<?= base_url() ?>assets/plugins/fontawesome-free/css/all.min.css">
   <!-- Ionicons -->
@@ -32,10 +46,9 @@
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 
   <link rel="stylesheet" href="//cdn.datatables.net/2.1.5/css/dataTables.dataTables.min.css">
+  
+
 </head>
-
-
-
 
 
 <body class="hold-transition sidebar-mini">

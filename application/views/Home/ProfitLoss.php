@@ -27,19 +27,20 @@
                             <!-- /.card-header -->
                             <!-- form start -->
                             <form action="<?= base_url('index.php/Home/ProfitLossList') ?>" method="post">
-                                <div class="card-body"  style="width:600px;">
-                                    
-                                    <div class="form-group" >
+                                <div class="card-body" style="width:600px;">
+
+                                    <div class="form-group">
                                         <label for="exampleInputName1">companies</label>
 
                                         <!-- <label>Rows per page:</label> -->
-                                        <select class="form-control" placeholder="Companies"   style="height:55px;">
-                                            <option>Companies </option>
-                                            <option>random </option>
-                                            <option>random </option>
-                                            <option>random </option>
-                                            <option>random </option>
+                                        <select name="Company" id="Company" class="form-control" style="height:55px;">
 
+                                            <option value="" default hidden>Companies</option>
+                                            <?php foreach ($RegCompanyList as $reg) {
+
+                                            ?>
+                                                <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>
+                                            <?php } ?>
                                         </select>
                                     </div>
 
@@ -47,19 +48,19 @@
                                     <div class="form-group">
 
 
-                                        <div class="input-group"> 
-                                            <div class="input-group-prepend"   style="height:55px;">
+                                        <div class="input-group">
+                                            <div class="input-group-prepend" style="height:55px;">
                                                 <span class="input-group-text"><i class="far fa-clock"></i></span>
                                             </div>
-                                            <input type="text" class="form-control float-right"   style="height:55px;" id="reservationtime" required>
+                                            <input type="text" class="form-control float-right" style="height:55px;" id="reservationtime" required>
                                         </div>
 
                                         <!-- /.input group -->
                                     </div>
 
                                     <!-- button add -->
-                                    <button type="submit"class="btn btn-dark" href="#" style="float:right;">Search</button>
-                               
+                                    <button type="submit" class="btn btn-dark" href="#" style="float:right;">Search</button>
+
                                 </div>
                                 <!-- button add -->
 

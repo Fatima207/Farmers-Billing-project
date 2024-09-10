@@ -1,10 +1,6 @@
 <?php
 defined('BASEPATH') or exit('No direct script access allowed');
 
-use Dompdf\Dompdf;
-use Dompdf\Options;
-
-
 class Home extends CI_Controller
 {
 	function __construct()
@@ -64,7 +60,13 @@ class Home extends CI_Controller
 
 			$user = new Home_model;
 			$result = $user->loginUser($data);
+			var_dump($result->role);
 			if ($result != FALSE) {
+				$_SESSION['first_name']	= $result->first_name;
+				$_SESSION['last_name']	= $result->last_name;
+				$_SESSION['email']	= $result->email;
+				$_SESSION['role']	= $result->role;
+
 				echo
 				$auth_userdetails = [
 					'first_name' => $result->first_name,
@@ -74,7 +76,12 @@ class Home extends CI_Controller
 				$this->session->set_userdata('authenticated', '1');
 				$this->session->set_userdata('auth_user', $auth_userdetails);
 				$this->session->set_flashdata('status', 'You are Loggedin successfully');
-				redirect(base_url('index.php/Home/AdminDashboard'));
+				redirect(base_url("index.php/Home/AdminDashboard"));
+				// if ($result->role == "Admin") {
+				// 	redirect(base_url("index.php/Home/AdminDashboard"));
+				// } else if ($result->role == "SuperAdmin") {
+				// 	redirect(base_url("index.php/Home/SuperAdminDashboard"));
+				// }
 			} else {
 				$this->session->set_flashdata('status', 'Invalid Email Id or Password');
 				redirect(base_url('index.php/Home/login'));
@@ -84,10 +91,90 @@ class Home extends CI_Controller
 		$this->load->view('Home/login.php');
 		$this->load->view('Partials/footer');
 	}
-
-
+//demo 
+	// public function logind()
+	// {
+	// $data['error'] ="Invalid Login";
+	// $this->load->view('auth/header');
+	// if($this->input->post())
+	//    {
+	// 	 $user = $this->UserModel->login($this->input->post());
+	// 	if(count($user)>0)
+	// 	{
+	// 		$array = array(
+	// 					'client_id' => $user['client_id'],
+	// 					'email' => $user['email'],
+	// 					'password' => $user['password'],
+	// 					'username' => $user['username']
+	// 					 );
+	// 		$this->session->set_userdata($array);
+	// 		if($user['client_type_id'] == '1'){
+	// 			redirect(base_url('your_controller/admin_dashboard'));
+	// 		} else {
+	// 			redirect(base_url('your_controller/client_dashboard'));
+	// 		}
+	
+	// 	}
+	// 	else
+	// 	{
+	// 	 $data["error_message"]="Invalid User Name and Password combination";
+	// 	}
+	//    }
 	// Registration 
+	public function Register()
+	{
+		$this->form_validation->set_rules('first_name', 'First Name', 'trim|required');
+		$this->form_validation->set_rules('last_name', 'Last Name', 'trim|required');
+		$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email');
+		$this->form_validation->set_rules('password', 'Password', 'required');
+		$this->form_validation->set_rules('role', 'Role', 'required');
+		$this->form_validation->set_rules('cinfirm_password', 'Confirm Password', 'required|matches[password]');
 
+		if ($this->form_validation->run() == FALSE) {
+		} else {
+
+			$data = [
+				'first_name' => $this->input->post("first_name"),
+				'last_name' => $this->input->post("last_name"),
+				'email' => $this->input->post("email"),
+				'role' => $this->input->post("role"),
+				'password' => $this->input->post("password"),
+			];
+
+			$userModel = new Home_model;
+
+			$r = $userModel->registerUser($data);
+
+			var_dump($r->role);
+			if ($r != FALSE) {
+				
+				$_SESSION['first_name']	= $r->first_name;
+				$_SESSION['last_name']	= $r->last_name;
+				$_SESSION['email']	= $r->email;
+				$_SESSION['role']	= $r->role;
+
+				$sess_data = [
+					'first_name' => $this->input->post("first_name"),
+					'last_name' => $this->input->post("last_name"),
+					'email' => $this->input->post("email"),
+					'role' => $this->input->post("role"),
+					'password' => $this->input->post("password"),
+					// 'loggedin'=>'loggedin'
+				];
+
+
+				$this->session->set_userdata($sess_data);
+
+				redirect(base_url("index.php/Home/SuperAdminDashboard"));
+			} else {
+				echo "User registered deny";
+			}
+		}
+
+		$this->load->view('Partials/header');
+		$this->load->view('Home/Register.php');
+		$this->load->view('Partials/footer');
+	}
 	// Farmer section
 	public function AddFarmer()
 	{
@@ -527,8 +614,13 @@ class Home extends CI_Controller
 		$data['RegFarmerList'] = $this->Home_model->get_farmers();
 		$data['RegCompaniesList'] = $this->Home_model->get_companies();
 		$data['ProductList'] = $this->Home_model->get_products();
-		
-		
+		// $_REQUEST=$this->input->request();
+
+		// $data['EmpList'] = $this->Home_model->get_Employee($_REQUEST);
+
+		// echo json_encode($data);
+
+
 		$this->load->view('Partials/header');
 		$this->load->view('Home/Billingfarmer', $data);
 		$this->load->view('Partials/footer');
@@ -840,8 +932,10 @@ class Home extends CI_Controller
 			}
 			redirect(site_url('index.php/Home/ProfitLossList'));
 		}
+		$data['RegCompanyList'] = $this->Home_model->get_companies();
+
 		$this->load->view('Partials/header');
-		$this->load->view('Home/ProfitLoss');
+		$this->load->view('Home/ProfitLoss', $data);
 		$this->load->view('Partials/footer');
 	}
 
@@ -862,12 +956,12 @@ class Home extends CI_Controller
 				'name' => $this->input->post("name")
 			);
 			$resp = $this->Home_model->save($data);
-
-
-			exit;
 		}
+		$data['RegCompanyList'] = $this->Home_model->get_companies();
+		$data['RegFarmerList'] = $this->Home_model->get_farmers();
+
 		$this->load->view('Partials/header');
-		$this->load->view('Home/FarmerLedger.php');
+		$this->load->view('Home/FarmerLedger.php', $data);
 		$this->load->view('Partials/footer');
 	}
 	// Agent Ledger
@@ -881,14 +975,13 @@ class Home extends CI_Controller
 			);
 			//echo $this->input->post("name");
 			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
-			exit;
 		}
+		$data['RegCompanyList'] = $this->Home_model->get_companies();
+		$data['RegAgentList'] = $this->Home_model->get_agents();
+
+
 		$this->load->view('Partials/header');
-		$this->load->view('Home/AgentLedger.php');
+		$this->load->view('Home/AgentLedger.php', $data);
 		$this->load->view('Partials/footer');
 	}
 	// Retailer Ledger
@@ -902,14 +995,13 @@ class Home extends CI_Controller
 			);
 			//echo $this->input->post("name");
 			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
-			exit;
 		}
+		$data['RegCompanyList'] = $this->Home_model->get_companies();
+		$data['RegRetailerList'] = $this->Home_model->get_retailers();
+
+
 		$this->load->view('Partials/header');
-		$this->load->view('Home/RetailerLedger.php');
+		$this->load->view('Home/RetailerLedger.php', $data);
 		$this->load->view('Partials/footer');
 	}
 	// Payments section
@@ -1043,24 +1135,19 @@ class Home extends CI_Controller
 	}
 	public function AdminDashboard()
 	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
-			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
 
-			// }
-
-			exit;
-		}
 		$this->load->view('Partials/header');
 		$this->load->view('Home/AdminDashboard.php');
 		$this->load->view('Partials/footer');
 	}
+	public function SuperAdminDashboard()
+	{
+
+		$this->load->view('Partials/header');
+		$this->load->view('Home/SuperAdminDasboard.php');
+		$this->load->view('Partials/footer');
+	}
+
 	public function profile()
 	{
 		if ($this->input->post()) {
@@ -1099,23 +1186,6 @@ class Home extends CI_Controller
 		}
 		$this->load->view('Partials/header');
 		$this->load->view('Home/Document.php');
-		$this->load->view('Partials/footer');
-	}
-
-	public function Register()
-	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-			);
-			$resp = $this->Home_model->save_($data);
-
-
-			exit;
-		}
-		$this->load->view('Partials/header');
-		$this->load->view('Home/Register.php');
 		$this->load->view('Partials/footer');
 	}
 }

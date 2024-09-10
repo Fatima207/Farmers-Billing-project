@@ -76,8 +76,9 @@ $(document).ready(function() {
         
     });
 
-
 </script>
+
+
 
 
 <!-- Bootstrap 4 -->
@@ -113,6 +114,36 @@ $(document).ready(function() {
     document.getElementById("print-button").addEventListener("click", function() {
         window.print();
     });
+</script>
+<script type="text/javascript">
+    $(document).ready(function(){ 
+     $("#employee").change(function() {
+       var id=$(this).find(":selected").val();
+       var dataString='empid=' + id;
+       $.ajax({
+        url:'<?= base_url('index.php/Home/NewFarmersBilling') ?>',
+        dataType:'json',
+        data:dataString,
+        cache:false,
+        success:function(empData){
+            if(empData){
+                $("#errormassage").addclass('hidden').text("");
+                $("#recordListing").removeClass('hidden');
+                $("#id").text('empData.id');
+                $("#name").text('empData.name');
+                $("#code").text('empData.code');
+                $("#address").text('empData.address');
+                $("#contact_number").text('empData.contact_number');
+                
+            }
+            else{
+                $('#recordListing').addClass('hidden');
+                $("#errorMassage").removeClass('hidden').text("No record found!");
+            }
+        }
+       })
+    });
+})
 </script>
 <script>
     $(function() {

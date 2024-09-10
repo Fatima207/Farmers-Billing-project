@@ -24,7 +24,8 @@
 			</div>
 			</a>	
 			<div class="info">
-				<a href="<?php echo base_url() ?>index.php/Home/AdminDashboard" class="d-block">Admin Dashboard
+				<a href="#" class="d-block"><?php echo $this->session->userdata('role')?>
+				Dashboard
 				</a>
 			</div>
 
@@ -33,9 +34,7 @@
 			class="nav nav-sidebar flex-row"
 			data-widget="treeview"
 			role="menu"
-			data-accordion="false"> -->
-
-
+			data-accordion="false">  -->
 			<li class="nav-item has-treeview">
 				<!-- image admin   -->
 				<div class="user-panel mt-3 pb-3 mb-3 d-flex">
@@ -47,8 +46,9 @@
 					</div>
 					<!-- NAME ADMIN  -->
 					<a href="#" class="d-block nav-link active">
-						<p>Deepak
-							<i class="right fas fa-angle-left"></i>
+						<p>		
+					 <?php echo $this->session->userdata('first_name')?>
+						<i class="right fas fa-angle-left"></i>
 						</p>
 					</a>
 

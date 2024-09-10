@@ -41,14 +41,15 @@
                             <?php foreach ($RegFarmerList as $reg) { ?>
                                 <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>
                             <?php } ?>
+                            
 
                         </select>
                     </div>
                     <div class="col-md-2">
                         <!-- select -->
                         <label>Select Companies</label>
-                        <select name="" class="form-control">
-                            <option value="" default hidden>companies</option>
+                        <select name="" id="employee" class="form-control">
+                            <option value="" selected="selected" default hidden>companies</option>
                             <?php foreach ($RegCompaniesList as $reg) { ?>
                                 <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>
                             <?php } ?>
@@ -70,7 +71,7 @@
                 <div class="card" style="display:flex;flex-direction:row;">
                     <!-- /.card-header -->
                     <div class="card-body table-responsive p-0" style="height: 100px; border:1px solid black;margin-right: 7px;">
-                        <table class="table table-head-fixed text-nowrap">
+                        <table class="table table-head-fixed text-nowrap" id="recordListing">
                             <thead>
                                 <tr>
                                     <th>Farmer Name</th>
@@ -86,21 +87,15 @@
                                     <!-- find the name and id of farmers from the list that got matched with farmers options
                                      and then show that full row in the table...-->
 
-                                    <?php
-                                    // $id = 1;
-                                    // $this->db->select('*')->from('reg_farmers')->where('id', $id);
-                                    $query = $this->db->get('reg_farmers');
-                                    foreach ($query->result() as $row): ?>
-                                        <td><?php echo $row->name; ?></td>
-                                        <td><?php echo $row->code; ?></td>
-                                        <td><?php echo $row->address; ?></td>
-                                        <td><?php echo $row->contact_number; ?></td>
+                                   
+                                        <td id="name"></td>
+                                        <td id="code"></td>
+                                        <td id="address"></td>
+                                        <td id="contact_number"></td>
 
                                 </tr>
 
-                            <?php
-                                    endforeach;
-                            ?>
+                           
                             </tbody>
 
                         </table>
@@ -128,7 +123,7 @@
                 <div class="form-group">
                     <label>Select Products</label>
 
-                    <select multiple class="form-control" >
+                    <select multiple class="form-control" id="ddselect">
 
                         <?php foreach ($ProductList as $reg) {
 
@@ -143,7 +138,7 @@
             <div class="card card-row card-primary mx-2 text-sm font-small" style="height:550px; width:725px; border:1px solid black;border-radius:8px;">
 
                 <div class="card-body ">
-                    <label for="">katla</label>
+                    <label for="" id="txtvalue">katla</label>
                     <a class="btn btn-success mr-5" href="#" id="add">+</a>
                     <label class="mx-5">Total Amount: Rs </label>
                     <label class="ml-5">Total Quantity: </label>
@@ -173,7 +168,6 @@
             <div class="card card-row card-primary font-small text-sm" style="border:1px solid black;border-radius:8px;">
 
                 <div class="card-body">
-
                     <p class="text-center">Final total: Rs 0</p>
                     <label for="qty" class="">Comission in %</label>
                     <input type="number" name="qty" id="1" required="" class="w-25"><br>
@@ -228,8 +222,6 @@
         </div>
         
         <!-- for main div section -->
-
-
 
 
         <label for="qty" class="font-small text-sm  ml-5 px-5">Total Quantity:0</label>

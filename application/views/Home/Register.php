@@ -28,56 +28,67 @@
 
             <form action="<?php echo base_url("index.php/Home/Register")?>" method="post">
                 <div class="form-group  ">
-                    <label for="Name" class="">Name</label>
-                    <input type="text" name="Amount" placeholder="Name" class="form-control ">
+                    <label for="first_name" class="" name="first_name">First Name</label>
+                    <input type="text" name="first_name" placeholder="Name" class="form-control">
                     <span class="fas fa-user " style="  float: right;
         margin-right: 6px;
         margin-top: -25px;
         position: relative;
         z-index: 2;
-        color: black;"></span>
+        color: black;"></span> <small><?php echo form_error('first_name')?></small>
+
 
                 </div>
+                <div class="form-group  ">
+                    <label for="last_name" class="" name="last_name">Last Name</label>
+                    <input type="text" name="last_name" placeholder="last Name" class="form-control ">
+                    <small><?php echo form_error('last_name')?></small>
 
-
-
+                </div>
                 <div class="form-group">
-                    <label for="Email" class="">Email</label><br>
-                    <input type="text" name="Email" placeholder="Email" class="form-control">
+                    <label for="email" class="">Email</label><br>
+                    <input type="email" name="email" placeholder="Email" class="form-control">
                     <span class="fas fa-envelope " style="  float: right;
         margin-right: 6px;
         margin-top: -25px;
         position: relative;
         z-index: 2;
         color: black;"></span>
+         <small><?php echo form_error('email')?></small>
+
                 </div>
 
                 <div class="form-group">
                     <label>Role</label>
-                    <select class="form-control">
-                        <option>Admin</option>
-                        <option>Super Admin</option>
+                    <select class="form-control"  name="role">
+                        <option value="admin">Admin</option>
+                        <option value="super admin">Super Admin</option>
                     </select>
                 </div>
+
                 <div class="form-group">
-                    <label for="Password" class="">Password</label><br>
-                    <input type="text" name="Password" placeholder="Password" class="form-control">
+                    <label for="password" class="">Password</label><br>
+                    <input type="password" name="password" placeholder="Password" class="form-control">
                      <span class="fas fa-lock " style="  float: right;
         margin-right: 6px;
         margin-top: -25px;
         position: relative;
         z-index: 2;
         color: black;"></span>
+         <small><?php echo form_error('password')?></small>
+
                 </div>
+
                 <div class="form-group">
-                    <label for="Confirm Password" class="">Confirm Password</label><br>
-                    <input type="text" name="Confirm Password" placeholder="Confirm Password" class="form-control">
+                    <label for="password" class="" >Confirm Password</label><br>
+                    <input type="password" name="cinfirm_password" placeholder="Confirm Password" class="form-control">
                      <span class="fas fa-lock " style="  float: right;
         margin-right: 6px;
         margin-top: -25px;
         position: relative;
         z-index: 2;
         color: black;"></span>
+          <small><?php echo form_error('cinfirm_password')?></small>
 
                 </div>
                 <div class="col-4 "  style="float:right;">
@@ -86,7 +97,7 @@
 
 </form>
 <p class="mb-1 text-center mt-4 ml-5">
-          <a href="<?php echo base_url() ?>index.php/Home/LogoutPage"   style="color:black;" ><u>Already Registered ?</u></a>
+          <a href="<?php echo base_url() ?>index.php/Home/Login"   style="color:black;" ><u>Already Registered ?</u></a>
         </p>
             </div>
 

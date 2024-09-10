@@ -3,7 +3,6 @@ class Home_model extends CI_Model
 {
   public function loginUser($data)
   {
-
     $this->db->select('*');
     $this->db->where('email', $data['email']);
     $this->db->where('password', $data['password']);
@@ -16,6 +15,37 @@ class Home_model extends CI_Model
       return false;
     }
   }
+  public function registerUser($data){
+    
+    $this->db->set($data);
+    $this->db->insert('users', $data);
+    return $this->db->insert_id();
+  }
+  public function get_Employee()
+ { 
+  $name='';
+  $value='';
+  $relatedUsers = '';
+        if(isset($_REQUEST['empid']) && $_REQUEST['empid']['value']!='') {
+            $name = $_REQUEST['empid']['field'];
+            $value = $_REQUEST['empid']['value'];
+            $relatedUsers = $this->user_model->get_Employee($name, $value);
+            echo json_encode($relatedUsers);
+          } else {
+              $relatedUsers = $this->user_model->get_Employee($name=NULL, $value=NULL);
+              echo json_encode($relatedUsers);
+          }
+  // $response = array();
+  // if(isset($_REQUEST['empid'])){ 
+  //   $this->db->select('*');
+  //   $this->db->where('id', $_REQUEST['empid']);
+  //   $this->db->from('reg_farmers');
+  //   $resultSet =  $this->db->get();
+  //   $response = $resultSet->result_array();
+  // }
+  // return $response;
+ 
+ }
 
   public function save_farmer($data)
   {
@@ -214,8 +244,6 @@ class Home_model extends CI_Model
     $query = $this->db->get('reg_companies');
     return $query->result();
   }
-
-
   public function get_agents()
   {
     $query = $this->db->get('reg_agents');

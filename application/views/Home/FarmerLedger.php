@@ -11,7 +11,7 @@
 
                     </div>
                     <div class="col-sm-6">
-                       
+
                     </div>
                 </div>
             </div>
@@ -23,7 +23,7 @@
             <div class="container-fluid">
                 <!-- SELECT2 EXAMPLE--->
                 <div class="card card-default pt-4 mt-5">
-                
+
                     <!-- /.card-header -->
                     <form action="<?= base_url('index.php/Home/AddAgent') ?>" method="post">
 
@@ -31,28 +31,32 @@
                             <div class="row">
                                 <!-- first field  -->
                                 <div class="col-md-6">
-                                    <label>companies</label>
                                     <div class="form-group ">
-                                        <select class="form-control">
+                                        <label>companies</label>
+                                        <select name="Company" id="Company" class="form-control">
 
-                                            <option>random </option>
-                                            <option>random </option>
-                                            <option>random </option>
-                                            <option>random </option>
+                                            <option value="" default hidden>Companies</option>
+                                            <?php foreach ($RegCompanyList as $reg) {
+
+                                            ?>
+                                                <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>
+                                            <?php } ?>
                                         </select>
 
                                     </div>
                                 </div>
                                 <!-- second field -->
                                 <div class="col-md-6">
-                                    <label>Farmer</label>
                                     <div class="form-group">
-                                        <select class="form-control">
+                                        <label>Farmer</label>
+                                        <select name="Farmer" id="Farmer" class="form-control">
 
-                                            <option>random </option>
-                                            <option>random </option>
-                                            <option>random </option>
-                                            <option>random </option>
+                                            <option value="" default hidden>Farmers</option>
+                                            <?php foreach ($RegFarmerList as $reg) {
+
+                                            ?>
+                                                <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>
+                                            <?php } ?>
                                         </select>
                                     </div>
                                 </div>
@@ -91,7 +95,7 @@
                                 <div class="input-group input-group-lg">
                                     <input type="search" class="form-control form-control-lg " style="width:180px; height:40px" placeholder="search for anything" value="">
                                     <div class="input-group-append" style=" height:40px">
-                                        <button type="submit" class="btn btn-lg btn-default" >
+                                        <button type="submit" class="btn btn-lg btn-default">
                                             <i class="fa fa-search"></i>
                                         </button>
                                     </div>
@@ -101,7 +105,7 @@
                         <div class="text-center">
                             <h6>There are no records to display</h6>
                         </div>
-                        <table style="margin-left:800px; font-weight:bold"> 
+                        <table style="margin-left:800px; font-weight:bold">
                             <tr>
                                 <td style="padding:8px;">Total</td>
                                 <td style="padding:8px">Rs</td>
