@@ -96,7 +96,12 @@ $route['Home/ReptDaybooklist/edit_ReportDaybook/(:any)'] = 'Home/edit_ReportDayb
 $route['Home/ReptDaybooklist/delete_ReportDaybook/(:any)'] = 'Home/delete_ReportDaybook/$1';
 $route['Home/ReptDaybooklist/update_ReportDaybook/(:any)'] = 'Home/update_ReportDaybook/$1';
 
-// $route['login']['GET'] = 'Home/index';
+
+// $route["(:any)"] = "Home/index/$1";
+
+// $route["(:any)/(:any)"] = "Home/index/$1";
+
+// $route["(:any)/(:any)/(:any)"] = "Home/index/$1";
 
 
 

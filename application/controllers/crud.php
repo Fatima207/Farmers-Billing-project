@@ -14,4 +14,4 @@ class Crud extends CI_Controller{
 
 
 
-?>
+?> 

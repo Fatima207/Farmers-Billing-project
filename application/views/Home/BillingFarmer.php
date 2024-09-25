@@ -82,8 +82,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-
-                                <tr>
+                             <tr>
                                     <!-- find the name and id of farmers from the list that got matched with farmers options
                                      and then show that full row in the table...-->
 
@@ -149,7 +148,7 @@
                         <label for="unit" class="">Unit</label>
                         <select name="unit" id="2" class=" " >
                             <option value="kg">kg</option>
-                            <option value="g">g</option>
+                            <option value="g">g</option> 
                             <option value="pound">pound</option>
                         </select>
                         <label for="price" class="">Price</label>

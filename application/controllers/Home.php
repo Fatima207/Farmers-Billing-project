@@ -11,8 +11,10 @@ class Home extends CI_Controller
 		$this->load->library('session');
 		$this->load->library('form_validation');
 	}
-	public function index()
+	public function index($any="")
 	{
+		$data = [];
+		$this->load->view('/vue_initialize', $data);
 		$this->load->view('Partials/header');
 		// $this->load->view('Home/login');
 		$this->load->view('Partials/footer');
@@ -1164,6 +1166,13 @@ class Home extends CI_Controller
 		}
 		$this->load->view('Partials/header');
 		$this->load->view('Home/Document.php');
+		$this->load->view('Partials/footer');
+	}
+	public function new()
+	{
+		
+		$this->load->view('Partials/header');
+		$this->load->view('Home/new.php');
 		$this->load->view('Partials/footer');
 	}
 }

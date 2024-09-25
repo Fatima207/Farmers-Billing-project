@@ -1,19 +1,18 @@
 <body class="hold-transition login-page" style="background-color:#fffafa ;">
-  <div class="login-box" style="margin-left:580px; margin-top:150px;">
+  <div class="login-box container d-flex-row align-items-center justify-content-center" >
   
 <div class="login-logo">
       <a href="#"><img src="<?= base_url() ?>assets/dist/img/laravel3.png" alt="Laravel"></a>
 
     </div>
-    <div class="card">
-   
+    <div class="card">   
     <?php if ($this->session->flashdata('status')) { ?>
                     <div class="alert alert-success">
                     <?= $this->session->flashdata('status');?>
                      <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                     </div>
                 <?php } ?> 
-      <div class="card-body login-card-body">
+      <div class="card-body">
         <form action="<?php echo base_url('index.php/Home/login')?>" method="post">
             <label for="email">Email</label><br>
           <div class="input-group mb-3">

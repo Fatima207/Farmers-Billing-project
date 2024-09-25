@@ -8,7 +8,7 @@
 
     <!-- login and register options  -->
     <div style="float:right;margin-right:8px;">
-      <a href="<?= base_url() ?>index.php/Home/LogoutPage" class="mx-3"  style="color:black;">Log in</a>
+      <a href="<?= base_url() ?>index.php/Home/login" class="mx-3"  style="color:black;">Log in</a>
       <a href="<?= base_url() ?>index.php/Home/Register" style="color:black;">Register</a>
     </div>
     <div class="login-logo">

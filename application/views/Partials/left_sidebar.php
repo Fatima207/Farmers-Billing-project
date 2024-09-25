@@ -1,73 +1,40 @@
+<nav class="main-header navbar navbar-expand navbar-white navbar-light">
+	<!-- Left navbar links -->
+	<ul class="navbar-nav">
+		<li class="nav-item">
+			<a class="nav-link" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
+		</li>
+		<li class="nav-item d-none d-sm-inline-block">
+			<a href="SuperAdminDashboard" class="nav-link">Home</a>
+		</li>
+
+	</ul>
+
+
+</nav>
+
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
 
-	<!-- Brand Logo -->
-	<!-- <a href="<?= base_url() ?>assets/index3.html" class="brand-link">
-				<img
-					src="<?= base_url() ?>assets/dist/img/AdminLTELogo.png"
-					alt="AdminLTE Logo"
-					class="brand-image img-circle elevation-3"
-					style="opacity: 0.8"
-				/>
-				<span class="brand-text font-weight-light">Admin Dashboard</span>
-			</a> 
-
-	<!-- sidebar -->
 	<div class="sidebar">
 		<!-- Sidebar user (optional) -->
 		<div class="user-panel mt-3 pb-3 mb-3 d-flex">
-		<a  href="<?php echo base_url() ?>index.php/Home/Document">
-		<div class="image">
-				<img
-					src="<?= base_url() ?>assets/dist/img/laravel3.png"
-					class="img-circle elevation-2"
-					alt="User Image" />
-			</div>
-			</a>	
+			<a href="<?php echo base_url() ?>index.php/Home/Document">
+				<div class="image">
+					<img
+						src="<?= base_url() ?>assets/dist/img/laravel3.png"
+						class="img-circle elevation-2"
+						alt="User Image" />
+				</div>
+			</a>
 			<div class="info">
-				<a href="#" class="d-block"><?php echo $this->session->userdata('role')?>
-				Dashboard
+				<a href="#" class="d-block"><?php echo $this->session->userdata('role') ?>
+					Dashboard
 				</a>
 			</div>
 
 		</div>
-		<!-- <ul
-			class="nav nav-sidebar flex-row"
-			data-widget="treeview"
-			role="menu"
-			data-accordion="false">  -->
-			<li class="nav-item has-treeview">
-				<!-- image admin   -->
-				<div class="user-panel mt-3 pb-3 mb-3 d-flex">
-					<div class="image">
-						<img
-							src="<?= base_url() ?>assets/dist/img/avatar5.png"
-							class="img-circle elevation-2"
-							alt="User Image" />
-					</div>
-					<!-- NAME ADMIN  -->
-					<a href="#" class="d-block nav-link active">
-						<p>		
-					 <?php echo $this->session->userdata('first_name')?>
-						<i class="right fas fa-angle-left"></i>
-						</p>
-					</a>
 
-					<!-- options inside deepak  -->
-				<ul class="nav nav-treeview ">
-					<li class="nav-item">
-						<a href="<?php echo base_url() ?>index.php/Home/Document" class="nav-link">
-							<p>profile</p>
-						</a>
-					</li>
-					<li class="nav-item ">
-						<a href="<?php echo base_url() ?>index.php/Home/login" class="nav-link ">
-							<p>Log Out</p>
-						</a>
-					</li>
-				</ul>
-				</div>
-			</li>
-		<!-- </ul> -->
+
 
 		<!-- Sidebar Menu -->
 		<nav class="mt-2">
@@ -75,11 +42,40 @@
 				class="nav nav-pills nav-sidebar flex-column"
 				data-widget="treeview"
 				role="menu"
-				data-accordion="false"> 
+				data-accordion="false">
 				<!-- Add icons to the links using the .nav-icon class
                    with font-awesome or any other icon font library -->
 
+				<li class="nav-item">
+					<div class="user-panel mt-3 pb-3 mb-3 d-flex">
+						<div class="image">
+							<img
+								src="<?= base_url() ?>assets/dist/img/avatar5.png"
+								class="img-circle elevation-2"
+								alt="User Image" />
+						</div>
+						<a href="#" class="nav-link">
+							<p>
+								<?php echo $this->session->userdata('first_name') ?>
+								<i class="fas fa-angle-left right"></i>
+							</p>
+						</a>
+					</div>
+					<ul class="nav nav-treeview" style="display: none;">
+						<li class="nav-item">
+							<a href="<?php echo base_url() ?>index.php/Home/Document" class="nav-link">
+								<p>profile</p>
+							</a>
+						</li>
+						<li class="nav-item ">
+							<a href="<?php echo base_url() ?>index.php/Home/login" class="nav-link ">
+								<p>Log Out</p>
+							</a>
+						</li>
 
+					</ul>
+
+				</li>
 
 
 				<!--registrations-->
@@ -232,7 +228,7 @@
 						<i class="far fa-circle nav-icon"></i>
 						<p>Billing <i class="right fas fa-angle-left"></i></p>
 					</a>
-					<!-- for farmers -->
+					<!-- for billing farmers -->
 					<ul class="nav nav-treeview">
 						<li class="nav-item">
 							<a href="#" class="nav-link">
@@ -259,7 +255,9 @@
 							</ul>
 						</li>
 						<!-- for agents -->
-
+					</ul>
+					<!-- for billing agent  -->
+					<ul class="nav nav-treeview">
 						<li class="nav-item">
 							<a href="#" class="nav-link">
 								<i class="nav-icon fas fa-circle"></i>
@@ -284,25 +282,97 @@
 
 							</ul>
 						</li>
+						<!-- for agents -->
+					</ul>
+					<!-- for billing retailers  -->
+					<ul class="nav nav-treeview">
+						<li class="nav-item">
+							<a href="#" class="nav-link">
+								<i class="nav-icon fas fa-circle"></i>
+								<p>
+									Retailers
+									<i class="right fas fa-angle-left"></i>
+								</p>
+							</a>
+							<ul class="nav nav-treeview">
+								<li class="nav-item">
+									<a href="<?php echo base_url() ?>index.php/Home/RetBilling" class="nav-link">
+										<i class="far fa-circle nav-icon"></i>
+										<p>New Billing</p>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="<?php echo base_url() ?>index.php/Home/RetList" class="nav-link">
+										<i class="far fa-circle nav-icon"></i>
+										<p>View All</p>
+									</a>
+								</li>
+
+							</ul>
+						</li>
+						<!-- for agents -->
+					</ul>
 				</li>
-				<!-- fro retailers -->
+				
+				
+				<!-- closing all three stuffs  -->
+				</li>
+				</li>
+
+
+				</li>
+
+				<!-- expenses`   -->
+
+				<li class="nav-item">
+					<a href="#" class="nav-link active">
+						<i class="far fa-circle nav-icon"></i>
+						<p>Expenses <i class="right fas fa-angle-left"></i></p>
+					</a>
+					<ul class="nav nav-treeview">
+						<li class="nav-item">
+							<a href="#" class="nav-link">
+								<i class="nav-icon fas fa-circle"></i>
+								<p>
+									Categories
+									<i class="right fas fa-angle-left"></i>
+								</p>
+							</a>
+							<ul class="nav nav-treeview">
+								<li class="nav-item">
+									<a href="<?php echo base_url() ?>index.php/Home/ExpCategories" class="nav-link">
+										<i class="far fa-circle nav-icon"></i>
+										<p>Create Category</p>
+									</a>
+								</li>
+								<li class="nav-item">
+									<a href="<?php echo base_url() ?>index.php/Home/ExpCatgList" class="nav-link">
+										<i class="far fa-circle nav-icon"></i>
+										<p>View All</p>
+									</a>
+								</li>
+
+							</ul>
+						</li>
+				</li>
+
 				<li class="nav-item">
 					<a href="#" class="nav-link">
 						<i class="nav-icon fas fa-circle"></i>
 						<p>
-							Retailers
+							Daybook
 							<i class="right fas fa-angle-left"></i>
 						</p>
 					</a>
 					<ul class="nav nav-treeview">
 						<li class="nav-item">
-							<a href="<?php echo base_url() ?>index.php/Home/RetBilling" class="nav-link">
+							<a href="<?php echo base_url() ?>index.php/Home/ExpDaybook" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
-								<p>New Billing</p>
+								<p>New Daybook</p>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a href="<?php echo base_url() ?>index.php/Home/RetList" class="nav-link">
+							<a href="<?php echo base_url() ?>index.php/Home/ExpDaybookList" class="nav-link">
 								<i class="far fa-circle nav-icon"></i>
 								<p>View All</p>
 							</a>
@@ -311,73 +381,9 @@
 					</ul>
 				</li>
 				</li>
+
 				</li>
-
-			</ul>
-			</li>
-
-			<!-- expenses`   -->
-
-			<li class="nav-item">
-				<a href="#" class="nav-link active">
-					<i class="far fa-circle nav-icon"></i>
-					<p>Expenses <i class="right fas fa-angle-left"></i></p>
-				</a>
-				<ul class="nav nav-treeview">
-					<li class="nav-item">
-						<a href="#" class="nav-link">
-							<i class="nav-icon fas fa-circle"></i>
-							<p>
-								Categories
-								<i class="right fas fa-angle-left"></i>
-							</p>
-						</a>
-						<ul class="nav nav-treeview">
-							<li class="nav-item">
-								<a href="<?php echo base_url() ?>index.php/Home/ExpCategories" class="nav-link">
-									<i class="far fa-circle nav-icon"></i>
-									<p>Create Category</p>
-								</a>
-							</li>
-							<li class="nav-item">
-								<a href="<?php echo base_url() ?>index.php/Home/ExpCatgList" class="nav-link">
-									<i class="far fa-circle nav-icon"></i>
-									<p>View All</p>
-								</a>
-							</li>
-
-						</ul>
-					</li>
-			</li>
-
-			<li class="nav-item">
-				<a href="#" class="nav-link">
-					<i class="nav-icon fas fa-circle"></i>
-					<p>
-						Daybook
-						<i class="right fas fa-angle-left"></i>
-					</p>
-				</a>
-				<ul class="nav nav-treeview">
-					<li class="nav-item">
-						<a href="<?php echo base_url() ?>index.php/Home/ExpDaybook" class="nav-link">
-							<i class="far fa-circle nav-icon"></i>
-							<p>New Daybook</p>
-						</a>
-					</li>
-					<li class="nav-item">
-						<a href="<?php echo base_url() ?>index.php/Home/ExpDaybookList" class="nav-link">
-							<i class="far fa-circle nav-icon"></i>
-							<p>View All</p>
-						</a>
-					</li>
-
-				</ul>
-			</li>
-			</li>
-
-			</li>
-			</li>
+				</li>
 
 			</ul>
 			</li>

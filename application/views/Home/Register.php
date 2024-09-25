@@ -17,7 +17,7 @@
 </head>
 
 <body class="hold-transition login-page" style="background-color:#fffafa ;">
-    <div class="login-box" style="margin-left:580px; margin-top:100px;">
+    <div class="login-box  container d-flex-row align-items-center justify-content-center">
         <div class="login-logo">
             <a href="<?php echo base_url() ?>index.php/Home/Document"><img src="<?= base_url() ?>assets/dist/img/laravel3.png" alt="Laravel"></a>
 
@@ -42,6 +42,12 @@
                 <div class="form-group  ">
                     <label for="last_name" class="" name="last_name">Last Name</label>
                     <input type="text" name="last_name" placeholder="last Name" class="form-control ">
+                    <span class="fas fa-user " style="  float: right;
+        margin-right: 6px;
+        margin-top: -25px;
+        position: relative;
+        z-index: 2;
+        color: black;"></span>
                     <small><?php echo form_error('last_name')?></small>
 
                 </div>
@@ -64,6 +70,7 @@
                         <option value="admin">Admin</option>
                         <option value="super admin">Super Admin</option>
                     </select>
+                    
                 </div>
 
                 <div class="form-group">
