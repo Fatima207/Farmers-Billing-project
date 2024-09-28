@@ -44,6 +44,10 @@
                             
 
                         </select>
+                        <div id="app">
+        <!-- Pass the table data as a prop to Vue -->
+        <dropdown :options='<?= json_encode($tableData) ?>'></dropdown>
+    </div>
                     </div>
                     <div class="col-md-2">
                         <!-- select -->
@@ -244,7 +248,7 @@
 
             <label for="qty" class="font-small text-sm  mx-5 px-5">Total Dues Rs0
             </label>
-            <button type="button" class="btn btn-primary btn-sm ml-5" style="width: 100px;">Print & Save</button>
+            <button type="button" class="btn btn-primary btn-sm ml-5" id="print-button" style="width: 100px;">Print & Save</button>
             <button type="button" class="btn btn-dark btn-sm ml-3" style="width: 60px;">Save</button>
 
 

@@ -86,11 +86,8 @@
           </div>
         </div>
         <div class="col py-3">
-
-
-
           <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-            <!-- Left navbar links -->
+            <!-- upper  navbar links -->
             <ul class="navbar-nav">
               <li class="nav-item">
                 <a class="nav-link" data-widget="pushmenu" href="#" role="button">
@@ -131,6 +128,7 @@
                       {{ farmer.name }}
                     </option>
                   </select>
+                 
                 </div>
 
                 <div class="col-md-2">
@@ -375,9 +373,18 @@
             </div>
 
           </div>
+
         </div>
       </div>
     </div>
+
+
+
+
+
+
+
+
     <!-- our former code  -->
     <div class="container-fluid">
       <div class="row flex-nowrap">

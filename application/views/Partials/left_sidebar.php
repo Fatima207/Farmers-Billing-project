@@ -231,6 +231,7 @@
 					<!-- for billing farmers -->
 					<ul class="nav nav-treeview">
 						<li class="nav-item">
+						<!-- <a href="/vue-bill/#/HomeView" class="nav-link"> -->
 							<a href="#" class="nav-link">
 								<i class="nav-icon fas fa-circle"></i>
 								<p>
@@ -240,7 +241,7 @@
 							</a>
 							<ul class="nav nav-treeview">
 								<li class="nav-item">
-									<a href="<?php echo base_url() ?>index.php/Home/NewFarmersBilling" class="nav-link">
+									<a href="http://localhost:8080/#/BillingFarmer" class="nav-link">
 										<i class="far fa-circle nav-icon"></i>
 										<p>New Billing</p>
 									</a>

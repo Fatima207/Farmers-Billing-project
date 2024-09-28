@@ -22,12 +22,14 @@
     "@vuelidate/validators": "^2.0.4",
     "bootstrap": "^5.3.3",
     "core-js": "^3.8.3",
+    "flatpickr": "^4.6.13",
     "jquery": "^3.7.1",
     "normalize.css": "^8.0.1",
     "popper.js": "^1.16.1",
     "vue": "^3.2.13",
     "vue-adminlte": "^0.0.6",
     "vue-dropdowns": "^1.1.2",
+    "vue-flatpickr-component": "^11.0.5",
     "vue-router": "^4.0.3"
   },
   "devDependencies": {

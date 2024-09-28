@@ -175,6 +175,8 @@ class Home extends CI_Controller
 			);
 			$resp = $this->Home_model->save_farmer($data);
 
+			// $farmers = $this->FarmerModel->getFarmersList();
+			// echo json_encode($resp);
 			if ($resp) {
 				$this->session->set_flashdata('msg', array('show_msg' => 'Registration made successfully !', 'type' => 'success'));
 			} else {
