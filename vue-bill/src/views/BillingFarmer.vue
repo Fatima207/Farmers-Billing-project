@@ -314,288 +314,306 @@
 
         </ul>
       </nav>
-      <br>
 
-      <!-- billing page main content  -->
-      <div class="card-body" style='justify-content: space-between;'>
-        <!-- Date -->
-        <div class="form-group">
-          <div class="row" style='justify-content: space-between;'>
-            <!-- for date  -->
-            <div class="col-md-2">
-              <label><b>Invoice Date:</b></label>
-              <div class="input-group">
-                <!-- Calendar Icon as a trigger -->
-                <div class="input-group-append">
-                  <div class="input-group">
-                    <!-- Date Picker Input -->
-                    <input type="text" class="form-control" ref="datepicker" placeholder="Select Date" />
-                    <!-- Calendar Icon that triggers the date picker -->
-                    <div class="input-group-append" @click="openDatePicker">
-                      <span class="input-group-text" style="cursor: pointer;">
-                        <FIcons :icon="['fas', 'calendar']" style="height:23px;" />
-                      </span>
+      <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1>New Farmer Billing</h1>
+              </div>
+
+            </div>
+          </div>
+          <!-- /.container-fluid -->
+        </section>
+
+
+        <!-- billing page main content  -->
+        <div class="card-body" style='justify-content: space-between;'>
+
+          <!-- Date -->
+          <div class="form-group">
+            <div class="row" style='justify-content: space-between;'>
+              <!-- for date  -->
+              <div class="col-md-2">
+                <label><b>Invoice Date:</b></label>
+                <div class="input-group">
+                  <!-- Calendar Icon as a trigger -->
+                  <div class="input-group-append">
+                    <div class="input-group">
+                      <!-- Date Picker Input -->
+                      <input type="text" class="form-control" ref="datepicker" placeholder="Select Date" />
+                      <!-- Calendar Icon that triggers the date picker -->
+                      <div class="input-group-append" @click="openDatePicker">
+                        <span class="input-group-text" style="cursor: pointer;">
+                          <FIcons :icon="['fas', 'calendar']" style="height:23px;" />
+                        </span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <!-- for farmers  -->
-            <!-- select -->
-            <div class="col-md-2">
-              <label>Select Farmers</label>
-              <select v-model="selectedFarmer" >
-                <!-- <option value="" disabled>Select a Farmer</option> -->
-                <!-- Loop through RegFarmerList to display options -->
-                <option v-for="farmer in RegFarmerList" :key="farmer.id" :value="farmer.id">
-                  {{ farmer.name }}
-                </option>
-              </select>
+              <!-- for farmers  -->
+              <!-- select -->
+              <div class="col-md-2">
+                <label>Select Farmers</label>
+                <select v-model="selectedFarmer">
+                  <!-- <option value="" disabled>Select a Farmer</option> -->
+                  <!-- Loop through RegFarmerList to display options -->
+                  <option v-for="farmer in RegFarmerList" :key="farmer.id" :value="farmer.id">
+                    {{ farmer.name }}
+                  </option>
+                </select>
 
-            </div>
+              </div>
 
-            <!-- select -->
-            <!-- for company -->
-            <div class="col-md-2">
-              <label>Select Company</label>
-              <select v-model="selectedCompany">
-                <!-- <option value="" hidden>Companies</option> -->
-                <option v-for="company in RegFarmerList" :key="company.id" :value="company.id">
-                  {{ company.name }}
-                </option>
-              </select>
-            </div>
-            <br>
-            <br>
-            <br>
+              <!-- select -->
+              <!-- for company -->
+              <div class="col-md-2">
+                <label>Select Company</label>
+                <select v-model="selectedCompany">
+                  <!-- <option value="" hidden>Companies</option> -->
+                  <option v-for="company in RegFarmerList" :key="company.id" :value="company.id">
+                    {{ company.name }}
+                  </option>
+                </select>
+              </div>
+              <br>
+              <br>
+              <br>
 
-            <div class="row" style="padding-left:10px;">
-              <div class="col-12">
-                <div class="card" style="display:flex;flex-direction:row;">
-                  <!-- /.card-header -->
-                  <div class="card-body table-responsive p-0"
-                    style="height: 100px; border:1px solid black;margin-right: 7px;">
-                    <table class="table table-head-fixed text-nowrap" id="recordListing">
-                      <thead>
-                        <tr>
-                          <th>Farmer Name</th>
-                          <th>Farmer code</th>
-                          <th>Address</th>
-                          <th>Contact Number</th>
+              <div class="row" style="padding-left:10px;">
+                <div class="col-12">
+                  <div class="card" style="display:flex;flex-direction:row;">
+                    <!-- /.card-header -->
+                    <div class="card-body table-responsive p-0"
+                      style="height: 100px; border:1px solid black;margin-right: 7px;">
+                      <table class="table table-head-fixed text-nowrap" id="recordListing">
+                        <thead>
+                          <tr>
+                            <th>Farmer Name</th>
+                            <th>Farmer code</th>
+                            <th>Address</th>
+                            <th>Contact Number</th>
 
-                        </tr>
-                      </thead>
-                      <tbody>
+                          </tr>
+                        </thead>
+                        <tbody>
 
-                        <tr>
-                          <!-- find the name and id of farmers from the list that got matched with farmers options
+                          <tr>
+                            <!-- find the name and id of farmers from the list that got matched with farmers options
                                      and then show that full row in the table...-->
 
 
-                          <td id="name"></td>
-                          <td id="code"></td>
-                          <td id="address"></td>
-                          <td id="contact_number"></td>
+                            <td id="name"></td>
+                            <td id="code"></td>
+                            <td id="address"></td>
+                            <td id="contact_number"></td>
 
-                        </tr>
+                          </tr>
 
 
-                      </tbody>
+                        </tbody>
 
-                    </table>
+                      </table>
 
-                  </div>
-                  <!-- /.card-body -->
-                  <!-- previous -->
-                  <div class="card-body  table-responsive p-0" style="flex-shrink:2;border:1px solid black;">
-                    <label style='padding-right:100px;'>Previous Dues Amount</label>
-                    <span>Rs</span>
-                  </div>
-                </div>
-                <!-- /.card -->
-              </div>
-              <!-- column -->
-            </div>
-            <br>
-            <br>
-            <br>
-            <br>
-            <br>
-            <div class="row" style="padding-left:15px">
-
-              <!-- first section  -->
-              <div style="width:200px;">
-                <!-- Select multiple-->
-                <div class="form-group">
-                  <label>Select Products</label>
-
-                  <select v-model="selectedProducts" multiple class="form-control" id="ddselect">
-                    <option v-for="product in RegFarmerList" :key="product.id" :value="product.id">
-                      {{ product.name }}
-                    </option>
-                  </select>
-                </div>
-              </div>
-              <br>
-              <br>
-              <br>
-              <br>
-              <br>
-
-              <!-- second section -->
-              <div class="card card-row card-primary mx-2 text-sm font-small"
-                style="height:550px; width:855px; border:1px solid black;border-radius:8px;">
-
-                <div class="card-body ">
-                  <label for="" id="txtvalue">katla</label>
-                  <!-- <a class="btn btn-success mr-5" href="#" id="add">+</a> -->
-                  <button @click="addField" id="add" class="btn btn-success mr-5">+</button>
-
-                  <label class="mx-5">Total Amount: Rs {{ totalAmount }}</label>
-                  <label class="ml-5">Total Quantity: {{ totalQuantity }}</label>
-
-                  <div>
-                    <!-- Button to add more fields -->
-
-                    <div v-for="(field, index) in fields" :key="index" class="flex flex-row"
-                      style="column-gap:40px; margin-top:10px;">
-                      <label for="qty">Qty</label>
-                      <input type="number" v-model="field.qty" required placeholder="Enter Qty" style="width: 100px;">
-
-                      <label for="unit">Unit</label>
-                      <select v-model="field.unit">
-                        <option value="kg">kg</option>
-                        <option value="g">g</option>
-                        <option value="pound">pound</option>
-                      </select>
-
-                      <label for="price">Price</label>
-                      <input type="number" v-model="field.price" required placeholder="Enter Price"
-                        style="width: 100px;">
-
-                      <label class="ml-2">Amount: Rs {{ calculateAmount(field.price, field.qty) }}</label>
-
-                      <button @click="removeField(index)" class="btn btn-danger" style="margin-left: 200px;">-</button>
+                    </div>
+                    <!-- /.card-body -->
+                    <!-- previous -->
+                    <div class="card-body  table-responsive p-0" style="flex-shrink:2;border:1px solid black;">
+                      <label style='padding-right:100px;'>Previous Dues Amount</label>
+                      <span>Rs</span>
                     </div>
                   </div>
-
-
-
-                  <hr>
+                  <!-- /.card -->
                 </div>
+                <!-- column -->
               </div>
-              <!-- third section -->
-              <div class="card card-row card-primary font-small text-sm"
-                style="border:1px solid black;border-radius:8px;width:350px;">
-                <div class="card-body">
-                  <p class="text-center">Final total: Rs {{ totalAmount }}</p>
+              <br>
+              <br>
+              <br>
+              <br>
+              <br>
+              <div class="row" style="padding-left:15px">
 
-                  <!-- Commission input -->
-                  <label for="commission" class="">Commission in %</label>
-                  <input type="number" v-model.number="commissionPercentage" placeholder="0" class="w-25" /><br>
+                <!-- first section  -->
+                <div style="width:200px;">
+                  <!-- Select multiple-->
+                  <div class="form-group">
+                    <label>Select Products</label>
 
-                  <!-- Commission amount dynamically calculated -->
-                  <label class="font-small">Commission amount: Rs {{ commissionAmount }}</label>
-
-                  <p class="text-center mr-5">Charges</p>
-
-                  <div class="text-center">
-                    <!-- Charges fields -->
-                    <span>
-                      <label for="arhat" class="">Arhat coolie :</label>
-                      <label for="britty" class="pl-5">Britty</label><br>
-                      <input type="number" v-model.number="arhatCoolie" placeholder="0" class="w-25 mx-3" />
-                      <input type="number" v-model.number="britty" placeholder="0" class="w-25" /><br>
-                    </span>
-                    <span>
-                      <label for="dan" class="">Dan :</label>
-                      <label for="jeepFair" class="pl-5">Jeep fair :</label><br>
-                      <input type="number" v-model.number="dan" placeholder="0" class="w-25 mx-3" />
-                      <input type="number" v-model.number="jeepFair" placeholder="0" class="w-25" /><br>
-                    </span>
-                    <span>
-                      <label for="railCoolie" class="">Rail Coolie :</label>
-                      <label for="iceLeaf" class="pl-5">Ice leaf :</label><br>
-                      <input type="number" v-model.number="railCoolie" placeholder="0" class="w-25 mx-3" />
-                      <input type="number" v-model.number="iceLeaf" placeholder="0" class="w-25" /><br>
-                    </span>
-
-                    <!-- Union and Misc Expenses -->
-                    <span>
-                      <label for="union" class="">Union :</label>
-                      <label for="miscExp" class="pl-5">Misc Exp. :</label><br>
-                      <input type="number" v-model.number="union" placeholder="0" class="w-25 mx-3" />
-                      <input type="number" v-model.number="miscExp" placeholder="0" class="w-25" /><br>
-                    </span>
-
-                    <!-- Market Expenses -->
-                    <span>
-                      <label for="marketExp" class="">Market Exp. :</label><br>
-                      <input type="number" v-model.number="marketExp" placeholder="0" class="w-25 mx-3" />
-                    </span>
-
-
-                    <!-- Additional charges fields go here -->
-                  </div>
-
-                  <!-- Total charged amount and Grand Total -->
-                  <label for="totalCharged" style="font-size:20px;">Total charged amount: Rs {{ totalCharged
-                    }}</label><br>
-
-                  <div class="text-center">
-                    <button>
-                      <label for="grandTotal">Grand Total: Rs {{ grandTotal }}</label><br>
-                      <label for="roundedOffAmount">Rounded off amount: Rs {{ roundedTotal }}</label><br>
-                    </button>
+                    <select v-model="selectedProducts" multiple class="form-control" id="ddselect">
+                      <option v-for="product in RegFarmerList" :key="product.id" :value="product.id">
+                        {{ product.name }}
+                      </option>
+                    </select>
                   </div>
                 </div>
-              </div>
-              <div class="d-flex align-items-center justify-content-start gap-3 mt-3" style="margin-left:150px;">
-                <label for="qty" class="font-small text-sm px-5">Total Quantity: {{ totalQuantity }}</label>
-                <label for="qty" class="font-small text-sm px-3">Total Products: 0</label>
-              </div>
-              <div class="flex flex-row mt-4">
-                <div class="d-flex align-items-center justify-content-start gap-5">
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
 
-                  <label for="qty" class="">Payment Status</label>
-                  <label for="qty" class="pl-5"><b>Payment Modes </b></label><br>
+                <!-- second section -->
+                <div class="card card-row card-primary mx-2 text-sm font-small"
+                  style="height:550px; width:855px; border:1px solid black;border-radius:8px;">
+
+                  <div class="card-body ">
+                    <label for="" id="txtvalue">katla</label>
+                    <!-- <a class="btn btn-success mr-5" href="#" id="add">+</a> -->
+                    <button @click="addField" id="add" class="btn btn-success mr-5">+</button>
+
+                    <label class="mx-5">Total Amount: Rs {{ totalAmount }}</label>
+                    <label class="ml-5">Total Quantity: {{ totalQuantity }}</label>
+
+                    <div>
+                      <!-- Button to add more fields -->
+
+                      <div v-for="(field, index) in fields" :key="index" class="flex flex-row"
+                        style="column-gap:40px; margin-top:10px;">
+                        <label for="qty">Qty</label>
+                        <input type="number" v-model="field.qty" required placeholder="Enter Qty" style="width: 100px;">
+
+                        <label for="unit">Unit</label>
+                        <select v-model="field.unit">
+                          <option value="kg">kg</option>
+                          <option value="g">g</option>
+                          <option value="pound">pound</option>
+                        </select>
+
+                        <label for="price">Price</label>
+                        <input type="number" v-model="field.price" required placeholder="Enter Price"
+                          style="width: 100px;">
+
+                        <label class="ml-2">Amount: Rs {{ calculateAmount(field.price, field.qty) }}</label>
+
+                        <button @click="removeField(index)" class="btn btn-danger"
+                          style="margin-left: 200px;">-</button>
+                      </div>
+                    </div>
+
+
+
+                    <hr>
+                  </div>
                 </div>
-                <select name="unit" id="paymentStatus" class="" style="width: 150px; height:40px;">
-                  <option value="completed">Completed</option>
-                  <option value="pending">Pending</option>
-                </select>
+                <!-- third section -->
+                <div class="card card-row card-primary font-small text-sm"
+                  style="border:1px solid black;border-radius:8px;width:350px;">
+                  <div class="card-body">
+                    <p class="text-center">Final total: Rs {{ totalAmount }}</p>
 
-                <!-- Cash Payment Field -->
-                <label for="cash" class="pl-5 mr-3">Cash</label>
-                <input type="number" v-model.number="cash" id="cash" placeholder="Enter Cash Amount"
-                  style="width: 100px;margin:10px;">
+                    <!-- Commission input -->
+                    <label for="commission" class="">Commission in %</label>
+                    <input type="number" v-model.number="commissionPercentage" placeholder="0" class="w-25" /><br>
 
-                <!-- Cheque Payment Field -->
-                <label for="cheque" class="pl-5">Cheque</label>
-                <input type="number" v-model.number="cheque" id="cheque" placeholder="Enter Cheque Amount"
-                  style="width: 100px;margin:10px;">
+                    <!-- Commission amount dynamically calculated -->
+                    <label class="font-small">Commission amount: Rs {{ commissionAmount }}</label>
 
-                <!-- Online Payment Field -->
-                <label for="online" class="pl-5">Online</label>
-                <input type="number" v-model.number="online" id="online" placeholder="Enter Online Payment"
-                  style="width: 100px;margin:10px;">
+                    <p class="text-center mr-5">Charges</p>
 
-                <!-- Total Dues Label -->
-                <label for="totalDues" class="font-small text-sm mx-5 px-5">
-                  Total Dues Rs {{ totalDues }} <!-- Total Dues displayed here -->
-                </label>
+                    <div class="text-center">
+                      <!-- Charges fields -->
+                      <span>
+                        <label for="arhat" class="">Arhat coolie :</label>
+                        <label for="britty" class="pl-5">Britty</label><br>
+                        <input type="number" v-model.number="arhatCoolie" placeholder="0" class="w-25 mx-3" />
+                        <input type="number" v-model.number="britty" placeholder="0" class="w-25" /><br>
+                      </span>
+                      <span>
+                        <label for="dan" class="">Dan :</label>
+                        <label for="jeepFair" class="pl-5">Jeep fair :</label><br>
+                        <input type="number" v-model.number="dan" placeholder="0" class="w-25 mx-3" />
+                        <input type="number" v-model.number="jeepFair" placeholder="0" class="w-25" /><br>
+                      </span>
+                      <span>
+                        <label for="railCoolie" class="">Rail Coolie :</label>
+                        <label for="iceLeaf" class="pl-5">Ice leaf :</label><br>
+                        <input type="number" v-model.number="railCoolie" placeholder="0" class="w-25 mx-3" />
+                        <input type="number" v-model.number="iceLeaf" placeholder="0" class="w-25" /><br>
+                      </span>
 
-                <!-- Buttons for Saving and Printing -->
+                      <!-- Union and Misc Expenses -->
+                      <span>
+                        <label for="union" class="">Union :</label>
+                        <label for="miscExp" class="pl-5">Misc Exp. :</label><br>
+                        <input type="number" v-model.number="union" placeholder="0" class="w-25 mx-3" />
+                        <input type="number" v-model.number="miscExp" placeholder="0" class="w-25" /><br>
+                      </span>
+
+                      <!-- Market Expenses -->
+                      <span>
+                        <label for="marketExp" class="">Market Exp. :</label><br>
+                        <input type="number" v-model.number="marketExp" placeholder="0" class="w-25 mx-3" />
+                      </span>
+
+
+                      <!-- Additional charges fields go here -->
+                    </div>
+
+                    <!-- Total charged amount and Grand Total -->
+                    <label for="totalCharged" style="font-size:20px;">Total charged amount: Rs {{ totalCharged
+                      }}</label><br>
+
+                    <div class="text-center">
+                      <button>
+                        <label for="grandTotal">Grand Total: Rs {{ grandTotal }}</label><br>
+                        <label for="roundedOffAmount">Rounded off amount: Rs {{ roundedTotal }}</label><br>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="d-flex align-items-center justify-content-start gap-3 mt-3" style="margin-left:150px;">
+                  <label for="qty" class="font-small text-sm px-5">Total Quantity: {{ totalQuantity }}</label>
+                  <label for="qty" class="font-small text-sm px-3">Total Products: 0</label>
+                </div>
+                <div class="flex flex-row mt-4">
+                  <div class="d-flex align-items-center justify-content-start gap-5">
+
+                    <label for="qty" class="">Payment Status</label>
+                    <label for="qty" class="pl-5"><b>Payment Modes </b></label><br>
+                  </div>
+                  <select name="unit" id="paymentStatus" class="" style="width: 150px; height:40px;">
+                    <option value="completed">Completed</option>
+                    <option value="pending">Pending</option>
+                  </select>
+
+                  <!-- Cash Payment Field -->
+                  <label for="cash" class="pl-5 mr-3">Cash</label>
+                  <input type="number" v-model.number="cash" id="cash" placeholder="Enter Cash Amount"
+                    style="width: 100px;margin:10px;">
+
+                  <!-- Cheque Payment Field -->
+                  <label for="cheque" class="pl-5">Cheque</label>
+                  <input type="number" v-model.number="cheque" id="cheque" placeholder="Enter Cheque Amount"
+                    style="width: 100px;margin:10px;">
+
+                  <!-- Online Payment Field -->
+                  <label for="online" class="pl-5">Online</label>
+                  <input type="number" v-model.number="online" id="online" placeholder="Enter Online Payment"
+                    style="width: 100px;margin:10px;">
+
+                  <!-- Total Dues Label -->
+                  <label for="totalDues" class="font-small text-sm mx-5 px-5">
+                    Total Dues Rs {{ totalDues }} <!-- Total Dues displayed here -->
+                  </label>
+
+                  <!-- Buttons for Saving and Printing -->
 
                   <button type="button" class="btn btn-primary btn-sm ml-5" @click="printPage"
                     style="width: 100px;margin-right:10px;">Print
                     & Save</button>
                   <button type="button" class="btn btn-dark btn-sm ml-3" style="width: 60px;">Save</button>
-                
+
+                </div>
+
+
+
+
               </div>
-
-
-
 
             </div>
 
@@ -604,7 +622,9 @@
         </div>
 
       </div>
+      <!-- content wrapper  -->
     </div>
+
   </div>
 
 </template>
@@ -616,7 +636,6 @@ import 'flatpickr/dist/flatpickr.css'; // Import flatpickr CSS
 
 
 export default {
-
   components: {
     //  FIcons,
   },
@@ -884,7 +903,7 @@ export default {
       // You can perform any necessary save actions here before printing, like saving to a database
       window.print(); // This opens the print dialog for the user
     }
-  }
+  },
 
 };
 </script>

@@ -44,19 +44,21 @@
                                         </select>
                                     </div>
 
-                                    <!-- Date and time range -->
-                                    <div class="form-group">
+                                     <!-- Date range -->
+                <div class="form-group">
+                  <label>Date range:</label>
 
-
-                                        <div class="input-group">
-                                            <div class="input-group-prepend" style="height:55px;">
-                                                <span class="input-group-text"><i class="far fa-clock"></i></span>
-                                            </div>
-                                            <input type="text" class="form-control float-right" style="height:55px;" id="reservationtime" required>
-                                        </div>
-
-                                        <!-- /.input group -->
-                                    </div>
+                  <div class="input-group">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text">
+                        <i class="far fa-calendar-alt"></i>
+                      </span>
+                    </div>
+                    <input type="text" class="form-control float-right" id="reservation">
+                  </div>
+                  <!-- /.input group -->
+                </div>
+                <!-- /.form group -->
 
                                     <!-- button add -->
                                     <button type="submit" class="btn btn-dark" href="#" style="float:right;">Search</button>

@@ -50,8 +50,7 @@
                 <tr>
 
                     <?php
-                    $query = $this->db->get('reg_companies');
-                    foreach ($query->result() as $row): ?>
+                    foreach ($query as $row): ?>
 
                         <td><?php echo $row->name; ?></td>
                         <td><?php echo $row->email; ?></td>

@@ -64,6 +64,30 @@ display: block;
 }
 </style>
 </head>
+<!-- Inside your view file (e.g., dashboard.php or login.php) -->
+<script>
+    // Make sure the role is being correctly echoed
+    var userRole = '<?php echo $this->session->userdata('role') ? $this->session->userdata('role') : ""; ?>';
+
+    // Debug: Log the role value to the console
+    console.log('Role:', userRole);
+
+    // Store the role in localStorage if it exists
+    if (userRole) {
+        localStorage.setItem('role', userRole);
+    } else {
+        console.log('Role is not defined.');
+    }
+</script>
+<script>
+    window.userRole = "<?php echo $this->session->userdata('role') ? $this->session->userdata('role') : ''; ?>";
+    console.log("User role from PHP:", window.userRole);
+</script>
 
 
 <body class="hold-transition sidebar-mini">
+
+<div id="app">
+        <!-- Vue.js will mount here -->
+        
+    </div>

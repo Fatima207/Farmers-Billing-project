@@ -46,14 +46,25 @@ class Home_model extends CI_Model
   // return $response;
  
  }
+ 
+  
 
   public function save_farmer($data)
   {
 
     $this->db->set($data);
     $this->db->insert('reg_farmers', $data);
-
     return $this->db->insert_id();
+
+    $query = $this->db->get('reg_farmers');
+    return $query->result();
+    
+  }
+  
+  public function get_farmers()
+  {
+    $query = $this->db->get('reg_farmers');
+    return $query->result();
   }
   // ----Registration-------
 
@@ -162,13 +173,11 @@ class Home_model extends CI_Model
   }
 
   public function save_company($data)
-  {
-    $query = $this->db->get('reg_companies');
-    $this->db->set($data);
-    $this->db->insert('reg_companies', $data);
+{ 
+  $this->db->set($data);
+  $this->db->insert('reg_companies', $data);
 
-
-    return $this->db->insert_id();
+  return $this->db->insert_id();
   }
   public function save_product($data)
   {
@@ -256,11 +265,6 @@ class Home_model extends CI_Model
     return $query->result();
   }
 
-  public function get_farmers()
-  {
-    $query = $this->db->get('reg_farmers');
-    return $query->result();
-  }
 
   public function get_products()
   {

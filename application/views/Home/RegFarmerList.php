@@ -47,9 +47,9 @@
             </thead>
             <tbody>
                 <?php
-                $query = $this->db->get('reg_farmers');
 
-                foreach ($query->result() as $row): ?>
+
+                foreach ($query as $row): ?>
 
                     <tr>
                         <td><?php echo $row->name; ?></td>

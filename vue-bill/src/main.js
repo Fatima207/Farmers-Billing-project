@@ -31,3 +31,14 @@ createApp(App)
 .use(router)
 .mount('#app');
 
+// new Vue({
+//     el: '#app',
+//     data: {
+//       role: window.userRole || "No role available"
+//     },
+//     template: '<div><h1>User Role: {{ role }}</h1></div>',
+//     mounted() {
+//       console.log("User role in Vue:", this.role);
+//     }
+//   });
+  

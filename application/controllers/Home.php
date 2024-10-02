@@ -11,7 +11,7 @@ class Home extends CI_Controller
 		$this->load->library('session');
 		$this->load->library('form_validation');
 	}
-	public function index($any="")
+	public function index($any = "")
 	{
 		$data = [];
 		$this->load->view('/vue_initialize', $data);
@@ -49,7 +49,7 @@ class Home extends CI_Controller
 		$this->load->view('Home/test');
 	}
 	public function login()
-	{ 
+	{
 		$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email');
 		$this->form_validation->set_rules('password', 'Passsword', 'trim|required');
 		if ($this->form_validation->run() == FALSE) {
@@ -58,6 +58,7 @@ class Home extends CI_Controller
 				'email' => $this->input->post("email"),
 				'password' => $this->input->post("password"),
 			];
+
 
 			$user = new Home_model;
 			$result = $user->loginUser($data);
@@ -75,6 +76,8 @@ class Home extends CI_Controller
 					'email' => $result->email,
 					'role' => $result->role,
 				);
+				$this->session->set_userdata('role', $result->role);  // Optional: use CodeIgniter's session
+
 				$this->session->set_userdata('authenticated', '1');
 				$this->session->set_userdata('auth_user', $auth_userdetails);
 				$this->session->set_flashdata('status', 'You are Loggedin successfully');
@@ -93,7 +96,7 @@ class Home extends CI_Controller
 		$this->load->view('Home/login.php');
 		$this->load->view('Partials/footer');
 	}
-
+	public function GetFarmers() {}
 	// Registration 
 	public function Register()
 	{
@@ -115,13 +118,13 @@ class Home extends CI_Controller
 				'password' => $this->input->post("password"),
 			];
 			// $data = $userData = array(); 
-       
+
 			$userModel = new Home_model;
 
 			$r = $userModel->registerUser($data);
 
 			var_dump($r->role);
-			
+
 			if ($r != FALSE) {
 
 				$_SESSION['first_name']	= $r->first_name;
@@ -145,7 +148,6 @@ class Home extends CI_Controller
 				// 	redirect(base_url("index.php/Home/SuperAdminDashboard"));
 				// }
 				redirect(base_url("index.php/Home/SuperAdminDashboard"));
-				
 			} else {
 				echo "User registered deny";
 			}
@@ -197,14 +199,33 @@ class Home extends CI_Controller
 
 	public function FarmerList()
 	{
-
-
+		
+		$data['query'] = $this->Home_model->get_farmers();
 		$this->load->view('Partials/header');
-		$this->load->view('Home/RegFarmerList');
+		$this->load->view('Home/RegFarmerList', $data);
 		$this->load->view('Partials/footer');
 	}
 
+	// public function get_farmers()
+	// {
+	// 	$data = $this->Home_model->get_farmers();
+	// 	echo json_encode($data);
+	// }
 
+    public function getFarmersList() {
+        // Example of returning data as a JSON response
+        $farmers = array(
+            array('id' => 1, 'name' => 'John Doe', 'email' => 'john@example.com'),
+            array('id' => 2, 'name' => 'Jane Smith', 'email' => 'jane@example.com')
+        );
+
+        // Send response in JSON format
+        echo json_encode($farmers);
+    }
+
+    
+	// example ends 
+	
 
 	public function edit_RegisterFarmer($id)
 	{
@@ -457,9 +478,9 @@ class Home extends CI_Controller
 
 	public function CompanyList()
 	{
-
+		$data['query'] = $this->Home_model->get_companies();
 		$this->load->view('Partials/header');
-		$this->load->view('Home/RegCompList');
+		$this->load->view('Home/RegCompList', $data);
 		$this->load->view('Partials/footer');
 	}
 	public function RegCompList()
@@ -1172,7 +1193,7 @@ class Home extends CI_Controller
 	}
 	public function new()
 	{
-		
+
 		$this->load->view('Partials/header');
 		$this->load->view('Home/new.php');
 		$this->load->view('Partials/footer');

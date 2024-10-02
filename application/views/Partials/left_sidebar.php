@@ -80,6 +80,7 @@
 
 				<!--registrations-->
 
+				<!-- Level 1 for registration -->
 				<li class="nav-item">
 					<a href="#" class="nav-link active">
 						<i class="far fa-circle nav-icon"></i>
@@ -197,6 +198,7 @@
 				</li>
 
 
+
 				<!--Products -->
 				<li class="nav-item has-treeview">
 					<a href="#" class="nav-link active">
@@ -231,7 +233,7 @@
 					<!-- for billing farmers -->
 					<ul class="nav nav-treeview">
 						<li class="nav-item">
-						<!-- <a href="/vue-bill/#/HomeView" class="nav-link"> -->
+							<!-- <a href="/vue-bill/#/HomeView" class="nav-link"> -->
 							<a href="#" class="nav-link">
 								<i class="nav-icon fas fa-circle"></i>
 								<p>
@@ -246,6 +248,7 @@
 										<p>New Billing</p>
 									</a>
 								</li>
+								
 								<li class="nav-item">
 									<a href="<?php echo base_url() ?>index.php/Home/FarmersBillingList" class="nav-link">
 										<i class="far fa-circle nav-icon"></i>
@@ -269,7 +272,7 @@
 							</a>
 							<ul class="nav nav-treeview">
 								<li class="nav-item">
-									<a href="<?php echo base_url() ?>index.php/Home/NewAgentsBilling" class="nav-link">
+									<a href="http://localhost:8080/#/BillingAgent" class="nav-link">
 										<i class="far fa-circle nav-icon"></i>
 										<p>New Billing</p>
 									</a>
@@ -283,7 +286,7 @@
 
 							</ul>
 						</li>
-						<!-- for agents -->
+
 					</ul>
 					<!-- for billing retailers  -->
 					<ul class="nav nav-treeview">
@@ -297,7 +300,7 @@
 							</a>
 							<ul class="nav nav-treeview">
 								<li class="nav-item">
-									<a href="<?php echo base_url() ?>index.php/Home/RetBilling" class="nav-link">
+									<a href="http://localhost:8080/#/BillingRetailer" class="nav-link">
 										<i class="far fa-circle nav-icon"></i>
 										<p>New Billing</p>
 									</a>
@@ -311,11 +314,10 @@
 
 							</ul>
 						</li>
-						<!-- for agents -->
 					</ul>
 				</li>
-				
-				
+
+
 				<!-- closing all three stuffs  -->
 				</li>
 				</li>
