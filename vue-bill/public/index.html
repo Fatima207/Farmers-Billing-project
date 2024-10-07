@@ -4,16 +4,79 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
-    <title><%= htmlWebpackPlugin.options.title %></title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
+    <title>Vue</title>
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> --><link rel="stylesheet" href="https://unpkg.com/vue-select@3.0.0/dist/vue-select.css">
   </head>
+
+  
   <body>
-    <noscript>
-      <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
-    </noscript>
-    <div id="app"></div>
-    <!-- built files will be auto injected -->
+   
+   
+    <div id="app">
+      <p><h1>Vue Select</h1></p> 
+      <div style="width: 500px;">
+      <!-- <v-select :options="options"></v-select> -->
+      
+   <v-select v-model="country" label="name" :reduce="country => country.id" :options="country_options" @search="fetchOptions" @input="selectedOption"  >
+      </v-select> 
+      <p>Selected Value : <span v-text="country"></span></p>
+      </div>
+    </div>
+    
+    <script src="https://unpkg.com/vue@latest"></script>
+    <script src="https://unpkg.com/vue-select@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script>
+  Vue.component('v-select', VueSelect.VueSelect)
+
+new Vue({
+  el: '#app',
+  data: { 
+    options: [
+      'foo',
+      'bar',
+      'baz'
+    ]
+  },
+}) 
+
+</script>
+
+
+<!-- <script>
+  Vue.component('v-select', VueSelect.VueSelect)
+   
+      new Vue({
+          el: '#app',
+          data: {
+              country: 0,
+              country_options: []
+          },
+          methods: {
+              fetchOptions: function(search){
+                   
+                  var el = this;
+   
+                  // AJAX request
+                  axios.get('Home.php', {
+                      params: {
+                          search: search,     
+                      }
+                  })
+                  .then(function (response) {
+                       
+                      // Update options
+                      el.country_options = response.data; 
+                         
+                  });
+   
+              },
+              selectedOption: function(value){
+                  console.log("value : " + value);
+              }
+          }
+      })
+      </script> -->
   </body>
+
 </html>

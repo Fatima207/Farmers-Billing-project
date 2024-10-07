@@ -11,8 +11,25 @@ class Home extends CI_Controller
 		$this->load->library('session');
 		$this->load->library('form_validation');
 	}
-	public function index($any = "")
+	// $any = "" 
+	public function index()
 	{
+		// Initialize $data['results'] to null or an empty array
+		$data['results'] = null;
+
+		// Check if form is submitted (if search is triggered)
+		if ($this->input->post('phone')) {
+			$phone = $this->input->post('phone');
+			// Fetch results from the model based on phone number
+			$data['results'] = $this->Home_model->searchByPhone($phone);
+		}
+
+		// Load the view and pass $data
+		$this->load->view('Home/PaymentData', $data);
+
+		// /phone ends 
+
+
 		$data = [];
 		$this->load->view('/vue_initialize', $data);
 		$this->load->view('Partials/header');
@@ -96,7 +113,7 @@ class Home extends CI_Controller
 		$this->load->view('Home/login.php');
 		$this->load->view('Partials/footer');
 	}
-	public function GetFarmers() {}
+
 	// Registration 
 	public function Register()
 	{
@@ -199,34 +216,36 @@ class Home extends CI_Controller
 
 	public function FarmerList()
 	{
-		
+
 		$data['query'] = $this->Home_model->get_farmers();
 		$this->load->view('Partials/header');
 		$this->load->view('Home/RegFarmerList', $data);
 		$this->load->view('Partials/footer');
 	}
 
-	// public function get_farmers()
-	// {
-	// 	$data = $this->Home_model->get_farmers();
-	// 	echo json_encode($data);
-	// }
+	public function get_farmers()
+	{
+		header('Access-Control-Allow-Origin: *');
+		header("Access-Control-Allow-Methods: GET, OPTIONS");
+		$data = $this->Home_model->get_farmers();
+		echo json_encode($data);
+	}
+	public function get_companies()
+	{
+		header('Access-Control-Allow-Origin: *');
+		header("Access-Control-Allow-Methods: GET, OPTIONS");
+		$data = $this->Home_model->get_companies();
+		echo json_encode($data);
+	}
+	public function get_products()
+	{
+		header('Access-Control-Allow-Origin: *');
+		header("Access-Control-Allow-Methods: GET, OPTIONS");
+		$data = $this->Home_model->get_products();
+		echo json_encode($data);
+	}
 
-    public function getFarmersList() {
-        // Example of returning data as a JSON response
-        $farmers = array(
-            array('id' => 1, 'name' => 'John Doe', 'email' => 'john@example.com'),
-            array('id' => 2, 'name' => 'Jane Smith', 'email' => 'jane@example.com')
-        );
-
-        // Send response in JSON format
-        echo json_encode($farmers);
-    }
-
-    
-	// example ends 
-	
-
+		
 	public function edit_RegisterFarmer($id)
 	{
 		$this->load->view('Partials/header');
@@ -1018,7 +1037,7 @@ class Home extends CI_Controller
 				//'name' =>'description')
 			);
 			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
+			// $resp = $this->Home_model->save($data);
 			// if($resp>0){
 
 			// }

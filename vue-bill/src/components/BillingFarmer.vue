@@ -314,6 +314,9 @@
       </ul>      
     </div> -->
     <!-- exapmle  -->
+    <!-- <v-select :options="['Option 1', 'Option 2', 'Option 3']"></v-select> -->
+
+
 
     <div class="col py-3">
 
@@ -649,9 +652,29 @@
 
 <script>
 
+// Vue.component('v-select', VueSelect.VueSelect)
+
+// new Vue({
+//   el: '#app',
+//   data: {
+//     options: [ 
+//       'foo',
+//       'bar',
+//       'baz'
+//     ]
+//   },
+// })
+
+
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.css"; // Import Flatpickr CSS
-import 'flatpickr/dist/flatpickr.css'; // Import flatpickr CSS
+import 'flatpickr/dist/flatpickr.css';
+// import Vue from "vue";
+
+// import vSelect from 'vue-select'
+// Vue.component ('v-select', vSelect)
+
+// Import flatpickr CSS
 // import axios from 'axios';
 // import BillingFarmer from "./BillingFarmer.vue";
 
@@ -661,7 +684,7 @@ export default {
     
       invoiceDate: null, // You can set a default date if needed
       config: {
-        dateFormat: "Y-m-d", // Your desired date format
+        dateFormat: "Y-m-d", // Ytempour desired date format
         allowInput: true
       },
       

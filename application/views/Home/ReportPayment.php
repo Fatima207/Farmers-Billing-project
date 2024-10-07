@@ -28,7 +28,7 @@
 
                             <!-- /.card-header -->
                             <!-- form start -->
-
+                            <!-- 
                             <form>
                                 <div class="card-body">
                                     <div class="form-group">
@@ -40,9 +40,59 @@
                                     </div>
 
                                 </div>
+                            </form> -->
+
+                            <form> <!-- Change the action to point to your controller method -->
+                                <div class="card-body">
+                                    <div class="form-group row">
+                                        <label for="phone" class="col-sm-4 col-form-label">Search Contact Number of Farmer/Agent/Retailer</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" name="phone" class="form-control" id="phone" placeholder="Enter Phone Number" required>
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <button type="submit" class="btn btn-dark" style="width: 100%; height: 45px;">SEARCH</button>
+                                        </div>
+                                    </div>
+                                </div>
                             </form>
 
+                            <?php
+                            
+                            // Check if results are available or if a search was performed
+                            if (is_null($results)) {
+                                // No search performed yet, so don't display any message or table
+                                echo '<p class="text-center">Please enter a contact number to search.</p>';
+                            } elseif (empty($results)) {
+                                // Search performed but no results found
+                                echo '<p class="text-center">No results found.</p>';
+                            } else {
+                                // Search performed and results found, display the table
+                            ?>
+                                <table class="table table-bordered w-100 mt-4">
+                                    <thead class="text-center">
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Code</th>
+                                            <th>Contact Number</th>
+                                            <th>Type</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($results as $row): ?>
+                                            <tr>
+                                                <td><?= $row['name'] ?></td>
+                                                <td><?= $row['code'] ?></td>
+                                                <td><?= $row['contact_number'] ?></td>
+                                                <td><?= isset($row['farmer_id']) ? 'Farmer' : (isset($row['agent_id']) ? 'Agent' : 'Retailer') ?></td>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            <?php } ?>
 
+
+
+                            <!-- original  -->
                             <table class=" ml-[12%] w-[80%] border-separate border-spacing-4 text-lg border border-slate-400 ...">
                                 <thead>
                                     <tr class="text-center">
@@ -83,12 +133,12 @@
             </div>
 
 
-    </section>
+        </section>
 
 
 
 
-    <!-- 
+        <!-- 
         <div class="min-h-screen  lg:justify-center items-center sm:pt-0 bg-gray-100">
             <div class="w-md mt-6 px-12 py-12 bg-white shadow-md overflow-hidden sm:rounded-lg">
                 <div class="relative">
@@ -130,15 +180,15 @@
 
 
 
-</div>
+    </div>
 
-<!-- /.content-wrapper -->
+    <!-- /.content-wrapper -->
 
-<!-- Control Sidebar -->
-<aside class="control-sidebar control-sidebar-dark">
-    <!-- Control sidebar content goes here -->
-</aside>
-<!-- /.control-sidebar -->
+    <!-- Control Sidebar -->
+    <aside class="control-sidebar control-sidebar-dark">
+        <!-- Control sidebar content goes here -->
+    </aside>
+    <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
 

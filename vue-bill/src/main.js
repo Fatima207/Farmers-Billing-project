@@ -14,11 +14,21 @@ import '@fortawesome/fontawesome-free/js/all.js';
 import flatPickr from 'vue-flatpickr-component';
 import 'flatpickr/dist/flatpickr.css'; // Import the style
 
-// import Sidebar from '../views/HomeView';
 // import Vue from 'vue'
+// Vue.prototype.$myGlobalVariable = 'arr';
+
+
+// import Sidebar from '../views/HomeView';
 // import {vue-dropdown} from 'vue-dropdown'
 // Vue.use(vue-adminlte)
 // import {registerLicense} from '@syncfusion/ej2-base';
+
+// import Vue from 'vue'
+// import vSelect from 'vue-select'
+
+// // Vue.component('v-select', vSelect)
+
+import 'vue-select/dist/vue-select.css';
 
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 

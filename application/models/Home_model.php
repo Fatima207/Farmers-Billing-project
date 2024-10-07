@@ -35,16 +35,7 @@ class Home_model extends CI_Model
               $relatedUsers = $this->user_model->get_Employee($name=NULL, $value=NULL);
               echo json_encode($relatedUsers);
           }
-  // $response = array();
-  // if(isset($_REQUEST['empid'])){ 
-  //   $this->db->select('*');
-  //   $this->db->where('id', $_REQUEST['empid']);
-  //   $this->db->from('reg_farmers');
-  //   $resultSet =  $this->db->get();
-  //   $response = $resultSet->result_array();
-  // }
-  // return $response;
- 
+  
  }
  
   
@@ -316,4 +307,35 @@ class Home_model extends CI_Model
   {
     return $this->db->delete('reports_daybook', ['id' => $id]);
   }
+
+  public function searchByPhone($phone) {
+    // Search in farmers table
+    $this->db->like('contact_number', $phone);
+    $query = $this->db->get('reg_farmers');
+
+    if ($query->num_rows() > 0) {
+        return $query->result_array();
+    }
+
+    // If no results, search in agents table
+    $this->db->like('contact_number', $phone);
+    $query = $this->db->get('reg_agents');
+
+    if ($query->num_rows() > 0) {
+        return $query->result_array();
+    }
+
+    // If no results, search in retailers table
+    $this->db->like('contact_number', $phone);
+    $query = $this->db->get('reg_retailers');
+
+    if ($query->num_rows() > 0) {
+        return $query->result_array();
+    }
+
+    // No results found
+    return null;
+}
+
+
 }
