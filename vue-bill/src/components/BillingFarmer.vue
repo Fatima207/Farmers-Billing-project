@@ -1,323 +1,304 @@
 <template>
-  <component :is="BillingFarmer" />
   <div class="row flex-nowrap">
-    <aside class="sidebar sidebar-dark-primary">
-      <!-- dashboard  -->
-      <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+    <aside class="sidebar">
 
-        <div class="image">
-          <img :src="imageSrc1" class="img-circle elevation-2 img-fluid " alt="User Image"
-            style="max-width: 35px; height: auto;" />
-        </div>
+<!-- dashboard  -->
+<div class="user-panel mt-3 pb-3 mb-3 d-flex">
 
-        <div class="info pl-3">
-          {{ dashboardText }}
-        </div>
+  <div class="image">
+    <img :src="imageSrc1" class="img-circle elevation-2 img-fluid " alt="User Image"
+      style="max-width: 35px; height: auto;" />
+  </div>
 
+  <div class="info pl-3">
+    {{ dashboardText }}
+  </div>
+
+</div>
+<hr>
+<!-- User Panel -->
+<ul class="nav flex-column">
+  <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+    <a href="/application/index.php/Home/Document">
+      <div class="image">
+        <img :src="imageSrc2" class="img-circle elevation-2 img-fluid" alt="User Image"
+          style="max-width: 35px; height: auto;" />
       </div>
-      <hr>
-      <!-- User Panel -->
-      <ul class="nav flex-column">
-        <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-          <a href="/application/index.php/Home/Document">
-            <div class="image">
-              <img :src="imageSrc2" class="img-circle elevation-2 img-fluid" alt="User Image"
-                style="max-width: 35px; height: auto;" />
-            </div>
-          </a>
+    </a>
+    <li class="nav-item">
+      <a href="#" @click.prevent="toggleDropdown('username')" class="nav-link">
+        username &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
+          :class="menuState.products.open ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+      </a>
+      <ul v-if="menuState.username.open" class="nav flex-column pl-3">
+        <li class="nav-item">
+          <a :href="profileSrc" class="nav-link">Profile</a>
+        </li>
+        <li class="nav-item">
+          <a :href="loginsrc" class="nav-link">Log out</a>
+        </li>
+      </ul>
+    </li>
+
+  </div>
+
+</ul>
+
+
+<hr>
+<!-- all dropdowns  -->
+<ul class="nav flex-column">
+  <!-- Level 1 for registration -->
+  <li class="nav-item">
+    <a href="#" @click.prevent="toggleDropdown('registration')" class="nav-link">
+      <i class='far fa-circle'></i>Registration <i
+        :class="menuState.registration.open ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+    </a>
+    <ul v-if="menuState.registration.open" class="nav flex-column pl-3">
+      <!-- Level 2 Farmers -->
+      <li class="nav-item">
+        <a href="" @click.prevent="toggleSubMenu('registration', 'farmers')" class="nav-link">
+          Farmers <i
+            :class="menuState.registration.subMenu.farmers ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+        </a>
+        <ul v-if="menuState.registration.subMenu.farmers" class="nav flex-column pl-3">
           <li class="nav-item">
-            <a href="#" @click.prevent="toggleDropdown('username')" class="nav-link">
-              username &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i
-                :class="menuState.products.open ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-            </a>
-            <ul v-if="menuState.username.open" class="nav flex-column pl-3">
-              <li class="nav-item">
-                <a :href="profileSrc" class="nav-link">Profile</a>
-              </li>
-              <li class="nav-item">
-                <a :href="loginsrc" class="nav-link">Log out</a>
-              </li>
-            </ul>
+            <a :href="addFarmerSrc" class="nav-link">Add Farmer</a>
           </li>
+          <li class="nav-item">
+            <a :href="farmerListSrc" class="nav-link">View All</a>
+          </li>
+        </ul>
+      </li>
 
-        </div>
+      <!-- Level 2 Agents -->
+      <li class="nav-item">
+        <a href="#" @click.prevent="toggleSubMenu('registration', 'agents')" class="nav-link">
+          Agents <i
+            :class="menuState.registration.subMenu.agents ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+        </a>
+        <ul v-if="menuState.registration.subMenu.agents" class="nav flex-column pl-3">
+          <li class="nav-item">
+            <a :href="addAgentSrc" class="nav-link">Add Agent</a>
+          </li>
+          <li class="nav-item">
+            <a :href="agentsListsrc" class="nav-link">View All</a>
+          </li>
+        </ul>
+      </li>
+      <!-- Level 2 retailers -->
+      <li class="nav-item">
+        <a href="#" @click.prevent="toggleSubMenu('registration', 'retailer')" class="nav-link">
+          Retailer <i
+            :class="menuState.registration.subMenu.retailer ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+        </a>
+        <ul v-if="menuState.registration.subMenu.retailer" class="nav flex-column pl-3">
+          <li class="nav-item">
+            <a :href="addRetailerSrc" class="nav-link">Add Retailer</a>
+          </li>
+          <li class="nav-item">
+            <a :href="retailerListSrc" class="nav-link">View All</a>
+          </li>
+        </ul>
+      </li>
+      <!-- Level 2 company -->
+      <li class="nav-item">
+        <a href="#" @click.prevent="toggleSubMenu('registration', 'company')" class="nav-link">
+          company <i
+            :class="menuState.registration.subMenu.company ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+        </a>
+        <ul v-if="menuState.registration.subMenu.company" class="nav flex-column pl-3">
+          <li class="nav-item">
+            <a :href="addCompanySrc" class="nav-link">Add Company</a>
+          </li>
+          <li class="nav-item">
+            <a :href="companyListSrc" class="nav-link">View All</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
 
-      </ul>
+  <!-- Products section -->
+  <li class="nav-item">
+    <a href="#" @click.prevent="toggleDropdown('products')" class="nav-link">
+      <i class='far fa-circle'></i> Products <i
+        :class="menuState.products.open ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+    </a>
+    <ul v-if="menuState.products.open" class="nav flex-column pl-3">
+      <li class="nav-item">
+        <a :href="addProductSrc" class="nav-link">Add Products</a>
+      </li>
+      <li class="nav-item">
+        <a :href="productListSrc" class="nav-link">View All</a>
+      </li>
+    </ul>
+  </li>
 
+  <!-- Billing section -->
+  <li class="nav-item">
+    <a href="#" @click.prevent="toggleDropdown('billing')" class="nav-link">
+      <i class='far fa-circle'></i> Billing <i
+        :class="menuState.registration.open ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+    </a>
+    <ul v-if="menuState.billing.open" class="nav flex-column pl-3">
+      <!-- Level 2 Farmers -->
+      <li class="nav-item">
+        <a href="#" @click.prevent="toggleSubMenu('billing', 'farmers')" class="nav-link">
+          Farmers <i
+            :class="menuState.billing.subMenu.farmers ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+        </a>
+        <ul v-if="menuState.billing.subMenu.farmers" class="nav flex-column pl-3">
+          <li class="nav-item">
+            <!-- <a href="/BillingFarmer.vue" class="nav-link">New Billing</a> -->
+            <router-link to="/BillingFarmer" class="nav-link"> New Billing</router-link>
+          </li>
+          <li class="nav-item">
+            <a :href="farmerListSrc" class="nav-link">View All</a>
+          </li>
+        </ul>
+      </li>
 
-      <hr>
-      <!-- all dropdowns  -->
-      <ul class="nav flex-column">
-        <!-- Level 1 for registration -->
-        <li class="nav-item">
-          <a href="#" @click.prevent="toggleDropdown('registration')" class="nav-link ">
-            <i class='far fa-circle'></i>Registration
-            <i :class="menuState.registration.open ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-          </a>
-          <!-- Apply  class to the dropdown -->
-          <ul v-if="menuState.registration.open" class="nav flex-column pl-3 ">
-            <!-- Level 2 Farmers -->
-            <li class="nav-item">
-              <a href="" @click.prevent="toggleSubMenu('registration', 'farmers')" class="nav-link">
-                Farmers
-                <i
-                  :class="menuState.registration.subMenu.farmers ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-              </a>
-              <ul v-if="menuState.registration.subMenu.farmers" class="nav flex-column pl-3 ">
-                <li class="nav-item">
-                  <a :href="addFarmerSrc" class="nav-link">Add Farmer</a>
-                </li>
-                <li class="nav-item">
-                  <a :href="farmerListSrc" class="nav-link">View All</a>
-                </li>
-              </ul>
-            </li>
+      <!-- Level 2 Agents -->
+      <li class="nav-item">
+        <a href="#" @click.prevent="toggleSubMenu('billing', 'agents')" class="nav-link">
+          Agents <i
+            :class="menuState.billing.subMenu.agents ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+        </a>
+        <ul v-if="menuState.billing.subMenu.agents" class="nav flex-column pl-3">
+          <li class="nav-item">
 
-            <!-- Level 2 Agents -->
-            <li class="nav-item">
-              <a href="#" @click.prevent="toggleSubMenu('registration', 'agents')" class="nav-link">
-                Agents
-                <i
-                  :class="menuState.registration.subMenu.agents ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-              </a>
-              <ul v-if="menuState.registration.subMenu.agents" class="nav flex-column pl-3 ">
-                <li class="nav-item">
-                  <a :href="addAgentSrc" class="nav-link">Add Agent</a>
-                </li>
-                <li class="nav-item">
-                  <a :href="agentsListsrc" class="nav-link">View All</a>
-                </li>
-              </ul>
-            </li>
+            <router-link to="/BillingAgent" class="nav-link"> New Billing</router-link>
+          </li>
+          <li class="nav-item">
+            <a :href="agentsListsrc" class="nav-link">View All</a>
+          </li>
+        </ul>
+      </li>
 
-            <!-- Level 2 Retailers -->
-            <li class="nav-item">
-              <a href="#" @click.prevent="toggleSubMenu('registration', 'retailer')" class="nav-link">
-                Retailer
-                <i
-                  :class="menuState.registration.subMenu.retailer ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-              </a>
-              <ul v-if="menuState.registration.subMenu.retailer" class="nav flex-column pl-3 ">
-                <li class="nav-item">
-                  <a :href="addRetailerSrc" class="nav-link">Add Retailer</a>
-                </li>
-                <li class="nav-item">
-                  <a :href="retailerListSrc" class="nav-link">View All</a>
-                </li>
-              </ul>
-            </li>
-
-            <!-- Level 2 Company -->
-            <li class="nav-item">
-              <a href="#" @click.prevent="toggleSubMenu('registration', 'company')" class="nav-link">
-                Company
-                <i
-                  :class="menuState.registration.subMenu.company ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-              </a>
-              <ul v-if="menuState.registration.subMenu.company" class="nav flex-column pl-3 ">
-                <li class="nav-item">
-                  <a :href="addCompanySrc" class="nav-link">Add Company</a>
-                </li>
-                <li class="nav-item">
-                  <a :href="companyListSrc" class="nav-link">View All</a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
-
-
-        <!-- Products section -->
-        <li class="nav-item">
-          <a href="#" @click.prevent="toggleDropdown('products')" class="nav-link  ">
-            <i class='far fa-circle'></i> Products <i
-              :class="menuState.products.open ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-          </a>
-          <ul v-if="menuState.products.open" class="nav flex-column pl-3">
-            <li class="nav-item">
-              <a :href="addProductSrc" class="nav-link">Add Products</a>
-            </li>
-            <li class="nav-item">
-              <a :href="productListSrc" class="nav-link">View All</a>
-            </li>
-          </ul>
-        </li>
-
-        <!-- Billing section -->
-        <li class="nav-item">
-          <a href="#" @click.prevent="toggleDropdown('billing')" class="nav-link  ">
-            <i class='far fa-circle'></i> Billing <i
-              :class="menuState.registration.open ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-          </a>
-          <ul v-if="menuState.billing.open" class="nav flex-column pl-3">
-            <!-- Level 2 Farmers -->
-            <li class="nav-item">
-              <a href="#" @click.prevent="toggleSubMenu('billing', 'farmers')" class="nav-link">
-                Farmers <i
-                  :class="menuState.billing.subMenu.farmers ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-              </a>
-              <ul v-if="menuState.billing.subMenu.farmers" class="nav flex-column pl-3">
-                <li class="nav-item">
-                  <router-link to="/BillingFarmer" class="nav-link"> New Billing</router-link>
-                </li>
-                <li class="nav-item">
-                  <a :href="FarmerListSrc" class="nav-link">View All</a>
-                </li>
-              </ul>
-            </li>
-
-            <!-- Level 2 Agents -->
-            <li class="nav-item">
-              <a href="#" @click.prevent="toggleSubMenu('billing', 'agents')" class="nav-link">
-                Agents <i
-                  :class="menuState.billing.subMenu.agents ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-              </a>
-              <ul v-if="menuState.billing.subMenu.agents" class="nav flex-column pl-3">
-                <li class="nav-item">
-                  <router-link to="/BillingAgent" class="nav-link"> New Billing</router-link>
-                </li>
-                <li class="nav-item">
-                  <a :href="agentsbillingListsrc" class="nav-link">View All</a>
-                </li>
-              </ul>
-            </li>
-
-            <!-- Level 2 retailer -->
-            <li class="nav-item">
-              <a href="#" @click.prevent="toggleSubMenu('billing', 'retailer')" class="nav-link">
-                Retailer <i
-                  :class="menuState.billing.subMenu.retailer ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-              </a>
-              <ul v-if="menuState.billing.subMenu.retailer" class="nav flex-column pl-3">
-                <li class="nav-item">
-                  <router-link to="/BillingRetailer" class="nav-link"> New Billing</router-link>
-                </li>
-                <li class="nav-item">
-                  <a :href="retailerListSrc" class="nav-link">View All</a>
-                </li>
-              </ul>
-            </li>
-          </ul>
-        </li>
+      <!-- Level 2 retailer -->
+      <li class="nav-item">
+        <a href="#" @click.prevent="toggleSubMenu('billing', 'retailer')" class="nav-link">
+          Retailer <i
+            :class="menuState.billing.subMenu.retailer ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+        </a>
+        <ul v-if="menuState.billing.subMenu.retailer" class="nav flex-column pl-3">
+          <li class="nav-item">
+            <router-link to="/BillingRetailer" class="nav-link"> New Billing</router-link>
+          </li>
+          <li class="nav-item">
+            <a :href="retailerListSrc" class="nav-link">View All</a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
 
 
-        <!-- Expenses section -->
-        <li class="nav-item">
-          <a href="#" @click.prevent="toggleDropdown('Expenses')" class="nav-link  ">
-            <i class='far fa-circle'></i> Expenses <i
-              :class="menuState.Expenses.open ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-          </a>
-          <ul v-if="menuState.Expenses.open" class="nav flex-column pl-3">
-            <!-- Level 2 category -->
-            <li class="nav-item">
-              <a href="#" @click.prevent="toggleSubMenu('Expenses', 'Categories')" class="nav-link">
-                Categories <i
-                  :class="menuState.Expenses.subMenu.Categories ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-              </a>
-              <ul v-if="menuState.Expenses.subMenu.Categories" class="nav flex-column pl-3">
-                <li class="nav-item">
-                  <a :href="addCategorySrc" class="nav-link">Create Category</a>
-                </li>
-                <li class="nav-item">
-                  <a :href="CategoryListSrc" class="nav-link">View All</a>
-                </li>
-              </ul>
-            </li>
+  <!-- Expenses section -->
+  <li class="nav-item">
+    <a href="#" @click.prevent="toggleDropdown('Expenses')" class="nav-link">
+      <i class='far fa-circle'></i> Expenses <i
+        :class="menuState.Expenses.open ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+    </a>
+    <ul v-if="menuState.Expenses.open" class="nav flex-column pl-3">
+      <!-- Level 2 category -->
+      <li class="nav-item">
+        <a href="#" @click.prevent="toggleSubMenu('Expenses', 'Categories')" class="nav-link">
+          Categories <i
+            :class="menuState.Expenses.subMenu.Categories ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+        </a>
+        <ul v-if="menuState.Expenses.subMenu.Categories" class="nav flex-column pl-3">
+          <li class="nav-item">
+            <a :href="addCategorySrc" class="nav-link">Create Category</a>
+          </li>
+          <li class="nav-item">
+            <a :href="CategoryListSrc" class="nav-link">View All</a>
+          </li>
+        </ul>
+      </li>
 
-            <!-- Level 2 Daybook -->
-            <li class="nav-item">
-              <a href="#" @click.prevent="toggleSubMenu('Expenses', 'Daybook')" class="nav-link">
-                Daybook <i
-                  :class="menuState.Expenses.subMenu.Daybook ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-              </a>
-              <ul v-if="menuState.Expenses.subMenu.Daybook" class="nav flex-column pl-3">
-                <li class="nav-item">
-                  <a :href="ExpenseDaybookSrc" class="nav-link">Create Daybook</a>
-                </li>
-                <li class="nav-item">
-                  <a :href="ExpenseDaybookListSrc" class="nav-link">View All</a>
-                </li>
-              </ul>
-            </li>
+      <!-- Level 2 Daybook -->
+      <li class="nav-item">
+        <a href="#" @click.prevent="toggleSubMenu('Expenses', 'Daybook')" class="nav-link">
+          Daybook <i
+            :class="menuState.Expenses.subMenu.Daybook ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+        </a>
+        <ul v-if="menuState.Expenses.subMenu.Daybook" class="nav flex-column pl-3">
+          <li class="nav-item">
+            <a :href="ExpenseDaybookSrc" class="nav-link">Create Daybook</a>
+          </li>
+          <li class="nav-item">
+            <a :href="ExpenseDaybookListSrc" class="nav-link">View All</a>
+          </li>
+        </ul>
+      </li>
 
-          </ul>
-        </li>
+    </ul>
+  </li>
 
-        <!-- Reports section -->
-        <li class="nav-item">
-          <a href="#" @click.prevent="toggleDropdown('Reports')" class="nav-link  ">
-            <i class='far fa-circle'></i>Reports <i
-              :class="menuState.Reports.open ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-          </a>
-          <ul v-if="menuState.Reports.open" class="nav flex-column pl-3">
+  <!-- Reports section -->
+  <li class="nav-item">
+    <a href="#" @click.prevent="toggleDropdown('Reports')" class="nav-link">
+      <i class='far fa-circle'></i>Reports <i
+        :class="menuState.Reports.open ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+    </a>
+    <ul v-if="menuState.Reports.open" class="nav flex-column pl-3">
 
-            <!-- ProfitLossAccount  -->
-            <li class="nav-item">
-              <a :href="ProfitLossSrc" class="nav-link">
-                Profit/Loss Account
-              </a>
+      <!-- ProfitLossAccount  -->
+      <li class="nav-item">
+        <a :href="ProfitLossSrc" class="nav-link">
+          Profit/Loss Account
+        </a>
 
-            </li>
-            <!-- ledgers  -->
-            <li class="nav-item">
-              <a href="#" @click.prevent="toggleSubMenu('Reports', 'Ledgers')" class="nav-link">
-                Ledgers <i
-                  :class="menuState.Reports.subMenu.Ledgers ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-              </a>
-              <ul v-if="menuState.Reports.subMenu.Ledgers" class="nav flex-column pl-3">
-                <li class="nav-item">
-                  <a :href="farmerLedgerSrc" class="nav-link">Farmer Ledger</a>
-                </li>
-                <li class="nav-item">
-                  <a :href="agentLedgerSrc" class="nav-link">Agent Ledger</a>
-                </li>
-                <li class="nav-item">
-                  <a :href="retailerLedgerSrc" class="nav-link">Retailer Ledger</a>
-                </li>
-              </ul>
-            </li>
-
-
-            <!-- payment data  -->
-            <li class="nav-item">
-              <a :href="paymentSrc" class="nav-link">
-                Payment Data
-              </a>
-            </li>
-            <!-- daybook  -->
-            <li class="nav-item">
-              <a href="#" @click.prevent="toggleSubMenu('Reports', 'Daybook')" class="nav-link">
-                Daybook <i
-                  :class="menuState.Reports.subMenu.Daybook ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
-              </a>
-              <ul v-if="menuState.Reports.subMenu.Daybook" class="nav flex-column pl-3">
-                <li class="nav-item">
-                  <a :href="reportDaybookSrc" class="nav-link">New Daybook</a>
-                </li>
-                <li class="nav-item">
-                  <a :href="reportDaybookListSrc" class="nav-link">View All</a>
-                </li>
-              </ul>
-            </li>
-
-          </ul>
-        </li>
-
-      </ul>
-    </aside>
-
-    <!-- example  -->
-    <!-- <div>
-      <h1>Farmers List</h1>
-      <ul>
-        <li v-for="farmer in farmers" :key="farmer.id">{{ farmer.name }} ({{ farmer.email }})</li>
-      </ul>      
-    </div> -->
-    <!-- exapmle  -->
-    <!-- <v-select :options="['Option 1', 'Option 2', 'Option 3']"></v-select> -->
+      </li>
+      <!-- ledgers  -->
+      <li class="nav-item">
+        <a href="#" @click.prevent="toggleSubMenu('Reports', 'Ledgers')" class="nav-link">
+          Ledgers <i
+            :class="menuState.Reports.subMenu.Ledgers ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+        </a>
+        <ul v-if="menuState.Reports.subMenu.Ledgers" class="nav flex-column pl-3">
+          <li class="nav-item">
+            <a :href="farmerLedgerSrc" class="nav-link">Farmer Ledger</a>
+          </li>
+          <li class="nav-item">
+            <a :href="agentLedgerSrc" class="nav-link">Agent Ledger</a>
+          </li>
+          <li class="nav-item">
+            <a :href="retailerLedgerSrc" class="nav-link">Retailer Ledger</a>
+          </li>
+        </ul>
+      </li>
 
 
+      <!-- payment data  -->
+      <li class="nav-item">
+        <a :href="paymentSrc" class="nav-link">
+          Payment Data
+        </a>
+      </li>
+      <!-- daybook  -->
+      <li class="nav-item">
+        <a href="#" @click.prevent="toggleSubMenu('Reports', 'Daybook')" class="nav-link">
+          Daybook <i
+            :class="menuState.Reports.subMenu.Daybook ? 'fas fa-angle-down rotate-icon' : 'fas fa-angle-left'"></i>
+        </a>
+        <ul v-if="menuState.Reports.subMenu.Daybook" class="nav flex-column pl-3">
+          <li class="nav-item">
+            <a :href="reportDaybookSrc" class="nav-link">New Daybook</a>
+          </li>
+          <li class="nav-item">
+            <a :href="reportDaybookListSrc" class="nav-link">View All</a>
+          </li>
+        </ul>
+      </li>
 
+    </ul>
+  </li>
+
+</ul>
+</aside>
     <div class="col py-3">
 
       <!-- header navbar  -->
@@ -342,7 +323,7 @@
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-6">
-                <h1>New Farmer Billing</h1>
+                <h1>New Farmers Billing</h1>
               </div>
 
             </div>
@@ -376,29 +357,31 @@
                   </div>
                 </div>
               </div>
+
+              <!-- for farmers  -->
+              <!-- select -->
               <div class="col-md-2">
-                  <label>Select Farmers</label>
-                  <select v-model="selectedFarmer">
-                    <!-- <option value="" disabled>Select a Farmer</option> -->
-                    <!-- Loop through RegFarmerList to display options -->
-                    <option v-for="farmer in RegFarmerList" :key="farmer.id" :value="farmer.id">
-                      {{ farmer.name }}
-                    </option>
-                  </select>
-  
-                </div>
-  
-                <!-- select -->
-                <!-- for company -->
-                <div class="col-md-2">
-                  <label>Select Company</label>
-                  <select v-model="selectedCompany">
-                    <!-- <option value="" hidden>Companies</option> -->
-                    <option v-for="company in RegFarmerList" :key="company.id" :value="company.id">
-                      {{ company.name }}
-                    </option>
-                  </select>
-                </div>
+
+                <label for="farmers">Select Farmer:</label>
+                <select id="farmers" v-model="selectedFarmers">
+                  <option v-for="farmer in frms" :key="farmer.id" :value="farmer.id">
+                    {{ farmer.name }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- select -->
+              <!-- for company -->
+              <div class="col-md-2">
+
+                <label for="companies">Select companies:</label>
+                <select id="companies" v-model="selectedCompanies">
+                  <option v-for="companies in comp" :key="companies.id" :value="companies.id">
+                    {{ companies.name }}
+                  </option>
+                </select>
+              </div>
+
               <br>
               <br>
               <br>
@@ -421,18 +404,13 @@
                         </thead>
                         <tbody>
 
-                          <tr>
-                            <!-- find the name and id of farmers from the list that got matched with farmers options
-                                     and then show that full row in the table...-->
-
-
-                            <td id="name"></td>
-                            <td id="code"></td>
-                            <td id="address"></td>
-                            <td id="contact_number"></td>
-
-                          </tr>
-
+                           <!-- If a farmer is selected, display their details -->
+        <tr v-if="selectedFarmerDetails">
+          <td>{{ selectedFarmerDetails.name }}</td>
+          <td>{{ selectedFarmerDetails.code }}</td>
+          <td>{{ selectedFarmerDetails.address }}</td>
+          <td>{{ selectedFarmerDetails.contact_number }}</td>
+        </tr>
 
                         </tbody>
 
@@ -458,69 +436,60 @@
               <div class="row" style="padding-left:15px">
 
                 <!-- first section  -->
-               
-                  <!-- first section  -->
-                  <div style="width:200px;">
-                    <!-- Select multiple-->
-                    <div class="form-group">
-                      <label>Select Products</label>
+                
+    <!-- First Section: Dropdown for selecting multiple products -->
+    <div style="width:200px;">
+      <div class="form-group">
+        <label>Select Products</label>
+        <select id="Products" v-model="selectedProducts" multiple class="form-control">
+          <option v-for="product in prod" :key="product.id" :value="product.id">
+            {{ product.name }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <br><br><br><br><br>
+
+    <!-- Second Section: Display selected product details and handle input fields -->
+    <div class="card card-row card-primary mx-2 text-sm font-small"
+      style="height:550px; width:855px; border:1px solid black;border-radius:8px;">
+      <div class="card-body ">
+        <label for="" id="txtvalue">Selected Products: 
+          <br><br>
+          
+          {{ selectedProductNames.join(', ') }}</label>
+        
+        <button @click="addField" id="add" class="btn btn-success mr-5">+</button>
+
+        <label class="mx-5">Total Amount: Rs {{ totalAmount }}</label>
+        <label class="ml-5">Total Quantity: {{ totalQuantity }}</label>
+
+        <div>
+          <!-- Fields for quantity, unit, and price -->
+          <div v-for="(field, index) in fields" :key="index" class="flex flex-row" style="column-gap:40px; margin-top:10px;">
+            <label for="qty">Qty</label>
+            <input type="number" v-model="field.qty" required placeholder="Enter Qty" style="width: 100px;">
+
+            <label for="unit">Unit</label>
+            <select v-model="field.unit">
+              <option value="kg">kg</option>
+              <option value="g">g</option>
+              <option value="pound">pound</option>
+            </select>
+
+            <label for="price">Price</label>
+            <input type="number" v-model="field.price" required placeholder="Enter Price" style="width: 100px;">
+
+            <label class="ml-2">Amount: Rs {{ calculateAmount(field.price, field.qty) }}</label>
+
+            <button @click="removeField(index)" class="btn btn-danger" style="margin-left: 200px;">-</button>
+          </div>
+        </div>
+        <hr>
+      </div>
+    </div>
   
-                      <select v-model="selectedProducts" multiple class="form-control" id="ddselect">
-                        <option v-for="product in RegFarmerList" :key="product.id" :value="product.id">
-                          {{ product.name }}
-                        </option>
-                      </select>
-                    </div>
-                  </div>
-                <br>
-                <br>
-                <br>
-                <br>
-                <br>
-
-                <!-- second section -->
-                <div class="card card-row card-primary mx-2 text-sm font-small"
-                  style="height:550px; width:855px; border:1px solid black;border-radius:8px;">
-
-                  <div class="card-body ">
-                    <label for="" id="txtvalue">katla</label>
-                    <!-- <a class="btn btn-success mr-5" href="#" id="add">+</a> -->
-                    <button @click="addField" id="add" class="btn btn-success mr-5">+</button>
-
-                    <label class="mx-5">Total Amount: Rs {{ totalAmount }}</label>
-                    <label class="ml-5">Total Quantity: {{ totalQuantity }}</label>
-
-                    <div>
-                      <!-- Button to add more fields -->
-
-                      <div v-for="(field, index) in fields" :key="index" class="flex flex-row"
-                        style="column-gap:40px; margin-top:10px;">
-                        <label for="qty">Qty</label>
-                        <input type="number" v-model="field.qty" required placeholder="Enter Qty" style="width: 100px;">
-
-                        <label for="unit">Unit</label>
-                        <select v-model="field.unit">
-                          <option value="kg">kg</option>
-                          <option value="g">g</option>
-                          <option value="pound">pound</option>
-                        </select>
-
-                        <label for="price">Price</label>
-                        <input type="number" v-model="field.price" required placeholder="Enter Price"
-                          style="width: 100px;">
-
-                        <label class="ml-2">Amount: Rs {{ calculateAmount(field.price, field.qty) }}</label>
-
-                        <button @click="removeField(index)" class="btn btn-danger"
-                          style="margin-left: 200px;">-</button>
-                      </div>
-                    </div>
-
-
-
-                    <hr>
-                  </div>
-                </div>
                 <!-- third section -->
                 <div class="card card-row card-primary font-small text-sm"
                   style="border:1px solid black;border-radius:8px;width:350px;">
@@ -649,120 +618,116 @@
   </div>
 
 </template>
-
 <script>
-
-// Vue.component('v-select', VueSelect.VueSelect)
-
-// new Vue({
-//   el: '#app',
-//   data: {
-//     options: [ 
-//       'foo',
-//       'bar',
-//       'baz'
-//     ]
-//   },
-// })
-
 
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.css"; // Import Flatpickr CSS
-import 'flatpickr/dist/flatpickr.css';
-// import Vue from "vue";
+import 'flatpickr/dist/flatpickr.css'; // Import flatpickr CSS
 
-// import vSelect from 'vue-select'
-// Vue.component ('v-select', vSelect)
+// import vSelect from 'vue-select';
+// import 'vue-select/dist/vue-select.css';
+import axios from 'axios';
 
-// Import flatpickr CSS
-// import axios from 'axios';
-// import BillingFarmer from "./BillingFarmer.vue";
+export default {
 
-export default {  
+
+
   data() {
+
     return {
-    
+
+      frms: [],              // This will store the list of farmers from the backend
+      selectedFarmers: '',     // This stores the selected farmer ID from the dropdown
+
+      comp:[],
+      selectedCompanies:'',
+
+      prod:[],
+      // selectedProducts:'',
+      selectedProducts: [], 
       invoiceDate: null, // You can set a default date if needed
       config: {
-        dateFormat: "Y-m-d", // Ytempour desired date format
+        dateFormat: "Y-m-d", // Your desired date format
         allowInput: true
       },
-      
-        // Other charge fields can go here
-        RegFarmerList: [
-          { id: 1, name: 'Farmer 1' },
-          { id: 2, name: 'Farmer 2' },
-          { id: 3, name: 'Farmer 3' },
-          // More farmers
-        ],
-        selectedFarmer: null,
-        menuState: {
 
-          username: {
-            open: false
-          },
-          registration: {
-            open: false,
-            subMenu: {
-              farmers: false,
-              agents: false,
-              retailer: false,
-              company: false,
-            }
-          },
-          products: {
-            open: false
-          },
-          billing: {
-            open: false,
-            subMenu: {
-              farmers: false,
-              agents: false,
-              retailer: false
-            }
-          },
-          Expenses: {
-            open: false,
-            subMenu: {
-              Categories: false,
-              Daybook: false,
-            }
-          },
-          Reports: {
-            open: false,
-            subMenu: {
-              ProfitLossAccount: false,
-              Ledgers: false,
-              PaymentData: false,
-              Daybook: false
-            }
-          },
+      selectedFarmer: null,
+      menuState: {
+
+        username: {
+          open: false
         },
+        registration: {
+          open: false,
+          subMenu: {
+            farmers: false,
+            agents: false,
+            retailer: false,
+            company: false,
+          }
+        },
+        products: {
+          open: false
+        },
+        billing: {
+          open: false,
+          subMenu: {
+            farmers: false,
+            agents: false,
+            retailer: false
+          }
+        },
+        Expenses: {
+          open: false,
+          subMenu: {
+            Categories: false,
+            Daybook: false,
+          }
+        },
+        Reports: {
+          open: false,
+          subMenu: {
+            ProfitLossAccount: false,
+            Ledgers: false,
+            PaymentData: false,
+            Daybook: false
+          }
+        },
+      },
 
 
-        fields: [],// Ensuring fields is an array from the start
+      fields: [],// Ensuring fields is an array from the start
 
-        documentLink: "http://localhost/dairy/index.php/Home/Document",
-        imageSrc1: "/images/laravel3.png",
-        imageSrc2: "/images/avatar5.png",
-        dashboardText: "Dashboard",
-        commissionPercentage: 0, // Initialize as 0
-        arhatCoolie: 0,
-        britty: 0,
-        dan: 0,
-        jeepFair: 0,
-        railCoolie: 0,
-        iceLeaf: 0,
-        union: 0,
-        miscExp: 0,
-        marketExp: 0,
-        cash: 0,
-        cheque: 0,
-        online: 0,
-      }
-  
+      documentLink: "http://localhost/dairy/index.php/Home/Document",
+      imageSrc1: "/images/laravel3.png",
+      imageSrc2: "/images/avatar5.png",
+      dashboardText: "Dashboard",
+      commissionPercentage: 0, // Initialize as 0
+      arhatCoolie: 0,
+      britty: 0,
+      dan: 0,
+      jeepFair: 0,
+      railCoolie: 0,
+      iceLeaf: 0,
+      union: 0,
+      miscExp: 0,
+      marketExp: 0,
+      cash: 0,
+      cheque: 0,
+      online: 0,
+    };
   },
   computed: {
+    selectedFarmerDetails() {
+      // Find the farmer object that matches the selected farmer's ID
+      return this.frms.find(farmer => farmer.id === this.selectedFarmers);
+    },
+    selectedProductNames() {
+      return this.selectedProducts.map(id => {
+        const product = this.prod.find(p => p.id === id);
+        return product ? product.name : '';
+      });
+    },
     totalAmount() {
       return (this.fields || []).reduce((total, field) => {
         return total + (field.qty * field.price || 0);
@@ -874,9 +839,12 @@ export default {
     },
 
   },
+
   mounted() {
-    // this.BillingFarmer = true;
-        
+    this.getFarmers();
+    this.getCompanies();
+    this.getProducts();
+
     // Safely initialize flatpickr when the component is mounted
     if (this.$refs.datepicker) {
       this.datepickerInstance = flatpickr(this.$refs.datepicker, {
@@ -892,21 +860,9 @@ export default {
     } else {
       console.error("Datepicker ref not found");
     }
-  },  
+  },
   methods: {
-    
-    // getFarmersList() {
-    //   // Call the CodeIgniter API to get the farmers list
-    //   axios.get('/index.php/Home/getFarmersList')
-    //     .then(response => {
-    //       this.farmers = response.data;
-    //       console.log('hey i am')
-    //     })
-    //     .catch(error => {
-    //       console.error('Error fetching farmers list:', error);
-    //     });
-    // },
-  
+
     openDatePicker() {
       // Open the flatpickr calendar when the icon is clicked
       if (this.datepickerInstance) {
@@ -946,10 +902,7 @@ export default {
     removeField(index) {
       this.fields.splice(index, 1);
     },
-    // Calculate amount as price * quantity
-    // calculateAmount(price, qty) {
-    //   return price && qty ? price * qty : 0;
-    // },
+
     calculateAmount(price, qty) {
       const priceNum = Number(price) || 0; // Ensure price is a number
       const qtyNum = Number(qty) || 0; // Ensure quantity is a number
@@ -958,11 +911,45 @@ export default {
     printPage() {
       // You can perform any necessary save actions here before printing, like saving to a database
       window.print(); // This opens the print dialog for the user
+    },
+    getFarmers() {
+      axios.get('http://localhost/dairy/index.php/Home/get_farmers')
+        .then((response) => {
+          console.log(response.data); // This will log the data fetched from the backend
+          this.frms = response.data;  // Assign the fetched data to the 'frms' array
+        })
+        .catch(error => {
+          console.error(error); // Log errors if the request fails
+        });
+    },
+  
+    getCompanies() {
+      axios.get('http://localhost/dairy/index.php/Home/get_companies')
+        .then((response) => {
+          console.log(response.data); // This will log the data fetched from the backend
+          this.comp = response.data;  // Assign the fetched data to the 'frms' array
+        })
+        .catch(error => {
+          console.error(error); // Log errors if the request fails
+        });
+    },
+
+    getProducts() {
+      axios.get('http://localhost/dairy/index.php/Home/get_products')
+      .then((response) => {
+        console.log(response.data); // This will log the data fetched from the backend
+        this.prod = response.data;  // Assign the fetched data to the 'frms' array
+        })
+        .catch(error => {
+          console.error(error); // Log errors if the request fails
+        });
     }
+
   }
+
+
+      
 };
-
-
 </script>
 <style scoped>
 .d-flex {

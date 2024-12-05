@@ -13,70 +13,9 @@
    
    
     <div id="app">
-      <p><h1>Vue Select</h1></p> 
-      <div style="width: 500px;">
-      <!-- <v-select :options="options"></v-select> -->
-      
-   <v-select v-model="country" label="name" :reduce="country => country.id" :options="country_options" @search="fetchOptions" @input="selectedOption"  >
-      </v-select> 
-      <p>Selected Value : <span v-text="country"></span></p>
-      </div>
+     
     </div>
-    
-    <script src="https://unpkg.com/vue@latest"></script>
-    <script src="https://unpkg.com/vue-select@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
-  Vue.component('v-select', VueSelect.VueSelect)
-
-new Vue({
-  el: '#app',
-  data: { 
-    options: [
-      'foo',
-      'bar',
-      'baz'
-    ]
-  },
-}) 
-
-</script>
-
-
-<!-- <script>
-  Vue.component('v-select', VueSelect.VueSelect)
-   
-      new Vue({
-          el: '#app',
-          data: {
-              country: 0,
-              country_options: []
-          },
-          methods: {
-              fetchOptions: function(search){
-                   
-                  var el = this;
-   
-                  // AJAX request
-                  axios.get('Home.php', {
-                      params: {
-                          search: search,     
-                      }
-                  })
-                  .then(function (response) {
-                       
-                      // Update options
-                      el.country_options = response.data; 
-                         
-                  });
-   
-              },
-              selectedOption: function(value){
-                  console.log("value : " + value);
-              }
-          }
-      })
-      </script> -->
+      
   </body>
 
 </html>

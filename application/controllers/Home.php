@@ -10,25 +10,11 @@ class Home extends CI_Controller
 
 		$this->load->library('session');
 		$this->load->library('form_validation');
+		$this->db->db_debug = TRUE;
 	}
 	// $any = "" 
 	public function index()
 	{
-		// Initialize $data['results'] to null or an empty array
-		$data['results'] = null;
-
-		// Check if form is submitted (if search is triggered)
-		if ($this->input->post('phone')) {
-			$phone = $this->input->post('phone');
-			// Fetch results from the model based on phone number
-			$data['results'] = $this->Home_model->searchByPhone($phone);
-		}
-
-		// Load the view and pass $data
-		$this->load->view('Home/PaymentData', $data);
-
-		// /phone ends 
-
 
 		$data = [];
 		$this->load->view('/vue_initialize', $data);
@@ -237,6 +223,20 @@ class Home extends CI_Controller
 		$data = $this->Home_model->get_companies();
 		echo json_encode($data);
 	}
+	public function get_agents()
+	{
+		header('Access-Control-Allow-Origin: *');
+		header("Access-Control-Allow-Methods: GET, OPTIONS");
+		$data = $this->Home_model->get_agents();
+		echo json_encode($data);
+	}
+	public function get_retailers()
+	{
+		header('Access-Control-Allow-Origin: *');
+		header("Access-Control-Allow-Methods: GET, OPTIONS");
+		$data = $this->Home_model->get_retailers();
+		echo json_encode($data);
+	}
 	public function get_products()
 	{
 		header('Access-Control-Allow-Origin: *');
@@ -245,7 +245,7 @@ class Home extends CI_Controller
 		echo json_encode($data);
 	}
 
-		
+
 	public function edit_RegisterFarmer($id)
 	{
 		$this->load->view('Partials/header');
@@ -623,6 +623,8 @@ class Home extends CI_Controller
 	// Billing section
 
 	// Farmer
+
+
 	public function NewFarmersBilling()
 	{
 		if ($this->input->post()) {
@@ -667,45 +669,93 @@ class Home extends CI_Controller
 		$this->load->view('Home/BillingfarmerList');
 		$this->load->view('Partials/footer');
 	}
+	private function generate_billing_number()
+	{
+		// Get the latest record from the billing table
+		$last_billing = $this->Home_model->get_last_billing();
+
+		if ($last_billing) {
+			// Increment the billing number
+			$last_number = (int) $last_billing->billing_number;
+			return sprintf('%04d', $last_number + 1); // Generates 0001, 0002, etc.
+		} else {
+			// Start with 0001 if no record exists
+			return '0001';
+		}
+	}
+
 	// Agents
 	public function NewAgentsBilling()
 	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-			);
-			$resp = $this->Home_model->save($data);
-			exit;
+		header('Access-Control-Allow-Origin: http://localhost:8080'); // Allow frontend
+		header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow methods
+		header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization'); // Allow headers
+		header('Access-Control-Allow-Credentials: true'); // Allow credentials
+
+		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+			exit(0); // Handle preflight request
 		}
+		if (!$this->input->post('billing_number') || !$this->input->post('agent')) {
+			log_message('error', 'Required fields missing.');
+			echo json_encode(['status' => 'error', 'message' => 'Required fields missing.']);
+			return;
+		}
+		
+		$billing_number = $this->generate_billing_number();
+
+    // if ($paymentStatus !== 'Completed') {
+	// 	echo json_encode(['status' => 'error', 'message' => 'Payment status must be "Completed"']);
+    //     exit;
+    // }
+		$postData = [
+			'billing_number' => $billing_number,
+			'agent'          => $this->input->post('agent'),
+			'company'        => $this->input->post('company'),
+			'commission' => $this->input->post('commission'),
+			'grand_total' => $this->input->post('grand_total'),
+			'final_total' =>  $this->input->post('final_total'),
+			'total_dues' =>  $this->input->post('total_dues'),
+			'payment_status' =>  $this->input->post('payment_status'),
+		];
+
+		try {
+			$resp = $this->Home_model->get_agentsBilling($postData);
+			if ($resp) {
+				log_message('info', 'Billing saved successfully.');
+			} else {
+				log_message('error', 'Failed to save billing.');
+			}
+		} catch (Exception $e) {
+			log_message('error', 'Error in NewAgentsBilling: ' . $e->getMessage());
+			$this->session->set_flashdata('msg', array('show_msg' => 'An error occurred while saving billing details', 'type' => 'danger'));
+		}
+
+
+		return; // Avoid redirecting for API requests
+
+		redirect(site_url('index.php/Home/AgentsBillingList'));
+
+
+
+
 		$data['RegAgentList'] = $this->Home_model->get_agents();
 		$data['RegCompaniesList'] = $this->Home_model->get_companies();
 		$data['ProductList'] = $this->Home_model->get_products();
 
 		$this->load->view('Partials/header');
-		$this->load->view('Home/BillingAgent', $data);
+		$this->load->view('vue-bill/src/components/BillingAgent.vue', $data);
 		$this->load->view('Partials/footer');
 	}
+
+
 	public function AgentsBillingList()
 	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
-			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
-			exit;
-		}
+		$data['query'] = $this->Home_model->get_agentsBilling();
 		$this->load->view('Partials/header');
 		$this->load->view('Home/BillingAgentList');
 		$this->load->view('Partials/footer');
 	}
+
 	// Retailers
 	public function RetBilling()
 	{
@@ -1036,11 +1086,6 @@ class Home extends CI_Controller
 				'name' => $this->input->post("name")
 				//'name' =>'description')
 			);
-			//echo $this->input->post("name");
-			// $resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
 
 			exit;
 		}
@@ -1048,6 +1093,31 @@ class Home extends CI_Controller
 		$this->load->view('Home/ReportPayment.php');
 		$this->load->view('Partials/footer');
 	}
+	public function search_contact()
+	{
+		// Get the contact number from the request (use GET for AJAX)
+		$contact_number = $this->input->get('contact_number');
+
+		// Debugging: Check if the contact_number is being received
+		if (!$contact_number) {
+			echo json_encode(['error' => 'No contact number provided']);
+			return;
+		}
+
+		// Search the contact number in farmers, agents, and retailers tables
+		$details = $this->Home_model->get_details_by_contact($contact_number);
+
+		// Debugging: Check if any results are found
+		if (empty($details)) {
+			echo json_encode(['error' => 'No results found']);
+			return;
+		}
+
+		// Return the result as JSON
+		echo json_encode($details);
+	}
+
+
 	public function ReptDaybook()
 	{
 		if ($this->input->post()) {

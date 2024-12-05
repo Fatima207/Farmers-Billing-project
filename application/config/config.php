@@ -25,6 +25,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 
 $config['base_url'] = 'http://localhost/dairy/';
+$config['enable_hooks'] = TRUE;
+$config['log_threshold'] = 4; 
+// Log all errors and debug messages
 
 /*
 |--------------------------------------------------------------------------

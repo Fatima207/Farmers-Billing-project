@@ -250,6 +250,34 @@ class Home_model extends CI_Model
     return $query->result();
   }
 
+  public function get_last_billing()
+{
+    $this->db->select('billing_number');
+    $this->db->from('billing_agent_records');
+    $this->db->order_by('id', 'DESC'); // Assuming 'id' is the primary key
+    $this->db->limit(1);
+    $query = $this->db->get();
+
+    return $query->row(); // Return the last record
+}
+
+// public function save_billing($data)
+// {
+//     return $this->db->insert('billing_agent_records', $data);
+// }
+
+  public function get_agentsBilling($postData)
+{
+  
+
+    $this->db->insert('billing_agent_records', $postData);
+    if ($this->db->affected_rows() > 0) {
+        return $this->db->insert_id();
+    }
+    return false;
+}
+
+  
   public function get_retailers()
   {
     $query = $this->db->get('reg_retailers');
@@ -308,34 +336,30 @@ class Home_model extends CI_Model
     return $this->db->delete('reports_daybook', ['id' => $id]);
   }
 
-  public function searchByPhone($phone) {
-    // Search in farmers table
-    $this->db->like('contact_number', $phone);
-    $query = $this->db->get('reg_farmers');
+  public function get_details_by_contact($contact_number)
+  {
+      // Query for farmers
+      $farmers_query = $this->db->select('name, code, contact_number, "Farmer" as type')
+                                ->from('reg_farmers')
+                                ->where('contact_number', $contact_number)
+                                ->get_compiled_select();
 
-    if ($query->num_rows() > 0) {
-        return $query->result_array();
-    }
+      // Query for agents
+      $agents_query = $this->db->select('name, code, contact_number, "Agent" as type')
+                               ->from('reg_agents')
+                               ->where('contact_number', $contact_number)
+                               ->get_compiled_select();
 
-    // If no results, search in agents table
-    $this->db->like('contact_number', $phone);
-    $query = $this->db->get('reg_agents');
+      // Query for retailers
+      $retailers_query = $this->db->select('name, code, contact_number, "Retailer" as type')
+                                  ->from('reg_retailers')
+                                  ->where('contact_number', $contact_number)
+                                  ->get_compiled_select();
 
-    if ($query->num_rows() > 0) {
-        return $query->result_array();
-    }
+      // Combine all queries using UNION
+      $query = $this->db->query("($farmers_query) UNION ($agents_query) UNION ($retailers_query)");
 
-    // If no results, search in retailers table
-    $this->db->like('contact_number', $phone);
-    $query = $this->db->get('reg_retailers');
-
-    if ($query->num_rows() > 0) {
-        return $query->result_array();
-    }
-
-    // No results found
-    return null;
-}
-
+      return $query->result_array();  // Return all matching results
+  }
 
 }

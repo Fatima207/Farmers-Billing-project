@@ -154,7 +154,7 @@
                   <router-link to="/BillingFarmer" class="nav-link"> New Billing</router-link>
                 </li>
                 <li class="nav-item">
-                  <a :href="FarmerListSrc" class="nav-link">View All</a>
+                  <a :href="farmerListSrc" class="nav-link">View All</a>
                 </li>
               </ul>
             </li>
@@ -171,7 +171,7 @@
                   <router-link to="/BillingAgent" class="nav-link"> New Billing</router-link>
                 </li>
                 <li class="nav-item">
-                  <a :href="agentsbillingListsrc" class="nav-link">View All</a>
+                  <a :href="agentsListsrc" class="nav-link">View All</a>
                 </li>
               </ul>
             </li>
@@ -332,297 +332,329 @@
           <!-- /.container-fluid -->
         </section>
 
+        <form ref="billingForm" @submit.prevent="submitForm">
+          <!-- billing page main content  -->
+          <div class="card-body" style='justify-content: space-between;'>
 
-        <!-- billing page main content  -->
-        <div class="card-body" style='justify-content: space-between;'>
-
-          <!-- Date -->
-          <div class="form-group">
-            <div class="row" style='justify-content: space-between;'>
-              <!-- for date  -->
-              <div class="col-md-2">
-                <label><b>Invoice Date:</b></label>
-                <div class="input-group">
-                  <!-- Calendar Icon as a trigger -->
-                  <div class="input-group-append">
-                    <div class="input-group">
-                      <!-- Date Picker Input -->
-                      <input type="text" class="form-control" ref="datepicker" placeholder="Select Date" />
-                      <!-- Calendar Icon that triggers the date picker -->
-                      <div class="input-group-append" @click="openDatePicker">
-                        <span class="input-group-text" style="cursor: pointer;">
-                          <FIcons :icon="['fas', 'calendar']" style="height:23px;" />
-                        </span>
+            <!-- Date -->
+            <div class="form-group">
+              <div class="row" style='justify-content: space-between;'>
+                <!-- for date  -->
+                <div class="col-md-2">
+                  <label><b>Invoice Date:</b></label>
+                  <div class="input-group">
+                    <!-- Calendar Icon as a trigger -->
+                    <div class="input-group-append">
+                      <div class="input-group">
+                        <!-- Date Picker Input -->
+                        <input type="text" class="form-control" ref="datepicker" placeholder="Select Date" />
+                        <!-- Calendar Icon that triggers the date picker -->
+                        <div class="input-group-append" @click="openDatePicker">
+                          <span class="input-group-text" style="cursor: pointer;">
+                            <FIcons :icon="['fas', 'calendar']" style="height:23px;" />
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
 
-              <!-- for farmers  -->
-              <!-- select -->
-              <div class="col-md-2">
+                <!-- for Agents  -->
+                <!-- select -->
+                <div class="col-md-2">
+                  <!-- <input type="text" name="billing_number" v-model="billingNumber"> -->
+                  <label for="Agents">Select Agents:</label>
 
-                <label for="farmers">Select Farmer:</label>
-                <select id="farmers" v-model="selectedFarmers">
-                  <option v-for="farmer in frms" :key="farmer.id" :value="farmer.id">
-                    {{ farmer.name }}
-                  </option>
-                </select>
-              </div>
-
-              <!-- select -->
-              <!-- for company -->
-              <div class="col-md-2">
-
-                <label for="companies">Select companies:</label>
-                <select id="companies" v-model="selectedCompanies">
-                  <option v-for="companies in comp" :key="companies.id" :value="companies.id">
-                    {{ companies.name }}
-                  </option>
-                </select>
-              </div>
-
-              <br>
-              <br>
-              <br>
-
-              <div class="row" style="padding-left:10px;">
-                <div class="col-12">
-                  <div class="card" style="display:flex;flex-direction:row;">
-                    <!-- /.card-header -->
-                    <div class="card-body table-responsive p-0"
-                      style="height: 100px; border:1px solid black;margin-right: 7px;">
-                      <table class="table table-head-fixed text-nowrap" id="recordListing">
-                        <thead>
-                          <tr>
-                            <th>Farmer Name</th>
-                            <th>Farmer code</th>
-                            <th>Address</th>
-                            <th>Contact Number</th>
-
-                          </tr>
-                        </thead>
-                        <tbody>
-
-                          <tr>
-                            <!-- find the name and id of farmers from the list that got matched with farmers options
-                                       and then show that full row in the table...-->
-
-
-                            <td id="name"></td>
-                            <td id="code"></td>
-                            <td id="address"></td>
-                            <td id="contact_number"></td>
-
-                          </tr>
-
-
-                        </tbody>
-
-                      </table>
-
-                    </div>
-                    <!-- /.card-body -->
-                    <!-- previous -->
-                    <div class="card-body  table-responsive p-0" style="flex-shrink:2;border:1px solid black;">
-                      <label style='padding-right:100px;'>Previous Dues Amount</label>
-                      <span>Rs</span>
-                    </div>
-                  </div>
-                  <!-- /.card -->
+                  <select id="Agents" name="agent" v-model="selectedAgents">
+                    <option v-for="Agents in agents" :key="Agents.id" :value="Agents.id">
+                      {{ Agents.name }}
+                    </option>
+                  </select>
                 </div>
-                <!-- column -->
-              </div>
-              <br>
-              <br>
-              <br>
-              <br>
-              <br>
-              <div class="row" style="padding-left:15px">
 
-                <!-- first section  -->
-                <div style="width:200px;">
-                  <!-- Select multiple-->
-                  <div class="form-group">
-                    <label>Select Products</label>
-                    <select id="Products" v-model="selectedProducts" multiple class="form-control">
-                  <option v-for="Products in prod" :key="Products.id" :value="Products.id">
-                    {{ Products.name }}
-                  </option>
-                </select>
-                  </div>
+                <!-- select -->
+                <!-- for company -->
+                <div class="col-md-2">
+
+                  <label for="companies">Select companies:</label>
+                  <select id="companies" name="company" v-model="selectedCompanies">
+                    <option v-for="companies in comp" :key="companies.id" :value="companies.id">
+                      {{ companies.name }}
+                    </option>
+                  </select>
                 </div>
+
                 <br>
                 <br>
                 <br>
-                <br>
-                <br>
 
-                <!-- second section -->
-                <div class="card card-row card-primary mx-2 text-sm font-small"
-                  style="height:550px; width:855px; border:1px solid black;border-radius:8px;">
+                <div class="row" style="padding-left:10px;">
+                  <div class="col-12">
+                    <div class="card" style="display:flex;flex-direction:row;">
+                      <!-- /.card-header -->
+                      <div class="card-body table-responsive p-0"
+                        style="height: 100px; border:1px solid black;margin-right: 7px;">
+                        <table class="table table-head-fixed text-nowrap" id="recordListing">
+                          <thead>
+                            <tr>
+                              <th>Agent Name</th>
+                              <th>Agent code</th>
+                              <th>Address</th>
+                              <th>Contact Number</th>
 
-                  <div class="card-body ">
-                    <label for="" id="txtvalue">katla</label>
-                    <!-- <a class="btn btn-success mr-5" href="#" id="add">+</a> -->
-                    <button @click="addField" id="add" class="btn btn-success mr-5">+</button>
+                            </tr>
+                          </thead>
+                          <tbody>
 
-                    <label class="mx-5">Total Amount: Rs {{ totalAmount }}</label>
-                    <label class="ml-5">Total Quantity: {{ totalQuantity }}</label>
+                            <!-- If a Agents is selected, display their details -->
+                            <tr v-if="selectedAgentsDetails">
+                              <td>{{ selectedAgentsDetails.name }}</td>
+                              <td>{{ selectedAgentsDetails.code }}</td>
+                              <td>{{ selectedAgentsDetails.address }}</td>
+                              <td>{{ selectedAgentsDetails.contact_number }}</td>
+                            </tr>
 
-                    <div>
-                      <!-- Button to add more fields -->
+                          </tbody>
 
-                      <div v-for="(field, index) in fields" :key="index" class="flex flex-row"
-                        style="column-gap:40px; margin-top:10px;">
-                        <label for="qty">Qty</label>
-                        <input type="number" v-model="field.qty" required placeholder="Enter Qty" style="width: 100px;">
+                        </table>
 
-                        <label for="unit">Unit</label>
-                        <select v-model="field.unit">
-                          <option value="kg">kg</option>
-                          <option value="g">g</option>
-                          <option value="pound">pound</option>
-                        </select>
-
-                        <label for="price">Price</label>
-                        <input type="number" v-model="field.price" required placeholder="Enter Price"
-                          style="width: 100px;">
-
-                        <label class="ml-2">Amount: Rs {{ calculateAmount(field.price, field.qty) }}</label>
-
-                        <button @click="removeField(index)" class="btn btn-danger"
-                          style="margin-left: 200px;">-</button>
+                      </div>
+                      <!-- /.card-body -->
+                      <!-- previous -->
+                      <div class="card-body  table-responsive p-0" style="flex-shrink:2;border:1px solid black;">
+                        <label style='padding-right:100px;'>Previous Dues Amount</label>
+                        <span>Rs</span>
                       </div>
                     </div>
-
-
-
-                    <hr>
+                    <!-- /.card -->
                   </div>
+                  <!-- column -->
                 </div>
-                <!-- third section -->
-                <div class="card card-row card-primary font-small text-sm"
-                  style="border:1px solid black;border-radius:8px;width:350px;">
-                  <div class="card-body">
-                    <p class="text-center">Final total: Rs {{ totalAmount }}</p>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <div class="row" style="padding-left: 5px; padding-right: 5px; margin-left: 0; margin-right: 0;">
 
-                    <!-- Commission input -->
-                    <label for="commission" class="">Commission in %</label>
-                    <input type="number" v-model.number="commissionPercentage" placeholder="0" class="w-25" /><br>
-
-                    <!-- Commission amount dynamically calculated -->
-                    <label class="font-small">Commission amount: Rs {{ commissionAmount }}</label>
-
-                    <p class="text-center mr-5">Charges</p>
-
-                    <div class="text-center">
-                      <!-- Charges fields -->
-                      <span>
-                        <label for="arhat" class="">Arhat coolie :</label>
-                        <label for="britty" class="pl-5">Britty</label><br>
-                        <input type="number" v-model.number="arhatCoolie" placeholder="0" class="w-25 mx-3" />
-                        <input type="number" v-model.number="britty" placeholder="0" class="w-25" /><br>
-                      </span>
-                      <span>
-                        <label for="dan" class="">Dan :</label>
-                        <label for="jeepFair" class="pl-5">Jeep fair :</label><br>
-                        <input type="number" v-model.number="dan" placeholder="0" class="w-25 mx-3" />
-                        <input type="number" v-model.number="jeepFair" placeholder="0" class="w-25" /><br>
-                      </span>
-                      <span>
-                        <label for="railCoolie" class="">Rail Coolie :</label>
-                        <label for="iceLeaf" class="pl-5">Ice leaf :</label><br>
-                        <input type="number" v-model.number="railCoolie" placeholder="0" class="w-25 mx-3" />
-                        <input type="number" v-model.number="iceLeaf" placeholder="0" class="w-25" /><br>
-                      </span>
-
-                      <!-- Union and Misc Expenses -->
-                      <span>
-                        <label for="union" class="">Union :</label>
-                        <label for="miscExp" class="pl-5">Misc Exp. :</label><br>
-                        <input type="number" v-model.number="union" placeholder="0" class="w-25 mx-3" />
-                        <input type="number" v-model.number="miscExp" placeholder="0" class="w-25" /><br>
-                      </span>
-
-                      <!-- Market Expenses -->
-                      <span>
-                        <label for="marketExp" class="">Market Exp. :</label><br>
-                        <input type="number" v-model.number="marketExp" placeholder="0" class="w-25 mx-3" />
-                      </span>
-
-
-                      <!-- Additional charges fields go here -->
-                    </div>
-
-                    <!-- Total charged amount and Grand Total -->
-                    <label for="totalCharged" style="font-size:20px;">Total charged amount: Rs {{ totalCharged
-                      }}</label><br>
-
-                    <div class="text-center">
-                      <button>
-                        <label for="grandTotal">Grand Total: Rs {{ grandTotal }}</label><br>
-                        <label for="roundedOffAmount">Rounded off amount: Rs {{ roundedTotal }}</label><br>
-                      </button>
+                  <!-- First Section: Select Products -->
+                  <div class="col-md-2"
+                    style="display: flex; flex-direction: column; padding-right: 5px; height:250px;">
+                    <div class="form-group">
+                      <label>Select Products</label>
+                      <select id="Products" v-model="selectedProductIds" @change="updateSelectedProducts" multiple
+                        class="form-control">
+                        <option v-for="product in prod" :key="product.id" :value="product.id">
+                          {{ product.name }}
+                        </option>
+                      </select>
                     </div>
                   </div>
+
+                  <!-- Second Section: Display selected product details -->
+                  <div class="col-md-7"
+                    style="display: flex; flex-direction: column; padding-left: 5px; padding-right: 5px;">
+                    <div class="card card-row card-primary mx-2 text-sm font-small"
+                      style="border: 1px solid black; border-radius: 8px; flex: 1;">
+                      <div class="card-body">
+                        <div v-for="product in fields" :key="product.id" class="mb-4">
+
+                          <h5>{{ product.name }}</h5>
+                          <button @click="addField(product)" class="btn btn-success">+</button>
+                          <label class="mx-5">Total Amount: Rs {{ calculateTotalAmount(product) }}</label>
+                          <label class="ml-5">Total Quantity: {{ calculateTotalQuantity(product) }}</label>
+
+                          <!-- Flex container for fields -->
+                          <div v-for="(field, fieldIndex) in product.fields || []" :key="fieldIndex"
+                            class="d-flex flex-wrap" style="gap: 20px;">
+
+                            <!-- Qty field -->
+                            <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
+                              <label>Qty</label>
+                              <input type="number" v-model="field.qty" required placeholder="Enter Qty"
+                                style="width:100%; padding: 0px; box-sizing: border-box;" />
+                            </div>
+
+                            <!-- Unit field -->
+                            <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
+                              <label>Unit</label>
+                              <select v-model="field.unit" style="width: 100%; padding: 0px;">
+                                <option value="kg">kg</option>
+                                <option value="g">g</option>
+                                <option value="pound">pound</option>
+                              </select>
+                            </div>
+
+                            <!-- Price field -->
+                            <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
+                              <label>Price</label>
+                              <input type="number" v-model="field.price" required placeholder="Enter Price"
+                                style="width: 100%; padding: 0px; box-sizing: border-box;" />
+                            </div>
+
+                            <!-- Amount calculation and remove button -->
+                            <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
+                              <label>Amount: Rs {{ calculateAmount(field.price, field.qty) }}</label>
+                              <button @click="removeField(product, index)" class="btn btn-danger"
+                                style="margin-top: 5px; width: 50px; font-size: 14px; padding: 0px;">
+                                -
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Third Section: Final totals and payment details -->
+                  <div class="col-md-3" style="display: flex; flex-direction: column; padding-left: 5px;">
+                    <div class="card card-row card-primary font-small text-sm"
+                      style="border: 1px solid black; border-radius: 8px; flex: 1;">
+                      <div class="card-body">
+                        <p class="text-center">Final total: Rs {{ totalAmount }}</p>
+                        <!-- Add a hidden input to include totalAmount in the form submission -->
+                        <input type="hidden" name="final_total" :value="totalAmount" />
+
+
+                        <!-- Commission input -->
+                        <label for="commission">Commission in %</label>
+                        <input type="number" v-model.number="commissionPercentage" placeholder="0" class="w-25"
+                          name="commission" /><br>
+
+                        <label class="font-small">Commission amount: Rs {{ commissionAmount }}</label>
+
+                        <p class="text-center mr-5">Charges</p>
+
+                        <div class="text-center">
+                          <!-- Charges fields -->
+                          <span>
+                            <label for="arhat">Arhat coolie :</label>
+                            <label for="britty" class="pl-5">Britty</label><br>
+                            <input type="number" v-model.number="arhatCoolie" placeholder="0" class="w-25 mx-3" />
+                            <input type="number" v-model.number="britty" placeholder="0" class="w-25" /><br>
+                          </span>
+                          <span>
+                            <label for="dan">Dan :</label>
+                            <label for="jeepFair" class="pl-5">Jeep fair :</label><br>
+                            <input type="number" v-model.number="dan" placeholder="0" class="w-25 mx-3" />
+                            <input type="number" v-model.number="jeepFair" placeholder="0" class="w-25" /><br>
+                          </span>
+                          <span>
+                            <label for="railCoolie">Rail Coolie :</label>
+                            <label for="iceLeaf" class="pl-5">Ice leaf :</label><br>
+                            <input type="number" v-model.number="railCoolie" placeholder="0" class="w-25 mx-3" />
+                            <input type="number" v-model.number="iceLeaf" placeholder="0" class="w-25" /><br>
+                          </span>
+
+                          <span>
+                            <label for="union">Union :</label>
+                            <label for="miscExp" class="pl-5">Misc Exp. :</label><br>
+                            <input type="number" v-model.number="union" placeholder="0" class="w-25 mx-3" />
+                            <input type="number" v-model.number="miscExp" placeholder="0" class="w-25" /><br>
+                          </span>
+
+                          <span>
+                            <label for="marketExp">Market Exp. :</label><br>
+                            <input type="number" v-model.number="marketExp" placeholder="0" class="w-25 mx-3" />
+                          </span>
+                        </div>
+
+                        <!-- Total charged amount and Grand Total -->
+                        <label for="totalCharged" style="font-size: 20px;">Total charged amount: Rs {{ totalCharged
+                          }}</label><br>
+
+                        <div class="text-center">
+                          <button>
+                            <label for="grandTotal">Grand Total: Rs
+                              <span>{{ grandTotal }}</span>
+                            </label>
+                            <input type="hidden" name="grand_total" :value="grandTotal" />
+
+
+                            <!-- Add a hidden input to send grand_total with the form -->
+                            <label for="roundedOffAmount">Rounded off amount: Rs {{ roundedTotal }}</label><br>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                 </div>
+
+
+
+
+                <!-- Additional footer or total information -->
                 <div class="d-flex align-items-center justify-content-start gap-3 mt-3" style="margin-left:150px;">
                   <label for="qty" class="font-small text-sm px-5">Total Quantity: {{ totalQuantity }}</label>
-                  <label for="qty" class="font-small text-sm px-3">Total Products: 0</label>
-                </div>
-                <div class="flex flex-row mt-4">
-                  <div class="d-flex align-items-center justify-content-start gap-5">
+                  <label for="qty" class="font-small text-sm px-3">Total Products: {{ totalSelectedProducts }}</label>
 
-                    <label for="qty" class="">Payment Status</label>
-                    <label for="qty" class="pl-5"><b>Payment Modes </b></label><br>
+                </div>
+                <br><br>
+
+                <br><br><br>
+
+                <!-- Payment Status and Payment Fields -->
+                <div style="display: flex; align-items: center;">
+                  <!-- Payment Status -->
+                  <div style="margin-right: 20px;">
+                    <label for="paymentStatus" style="display: block;">Payment Status</label>
+                    <select name="payment_status" id="paymentStatus" style="width: 150px; height: 40px;">
+                      <option value="" disabled selected>Payment Status</option>
+                      <option value="completed">Completed</option>
+                      <option value="pending">Pending</option>
+                    </select>
                   </div>
-                  <select name="unit" id="paymentStatus" class="" style="width: 150px; height:40px;">
-                    <option value="completed">Completed</option>
-                    <option value="pending">Pending</option>
-                  </select>
 
-                  <!-- Cash Payment Field -->
-                  <label for="cash" class="pl-5 mr-3">Cash</label>
-                  <input type="number" v-model.number="cash" id="cash" placeholder="Enter Cash Amount"
-                    style="width: 100px;margin:10px;">
+                  <!-- Payment Modes -->
+                  <div>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">Payment Modes</label>
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                      <!-- Cash Payment Field -->
+                      <div>
+                        <label for="cash" style="display: block;">Cash</label>
+                        <input type="number" v-model.number="cash" id="cash" placeholder="Enter Cash Amount"
+                          style="width: 100px;" />
+                      </div>
 
-                  <!-- Cheque Payment Field -->
-                  <label for="cheque" class="pl-5">Cheque</label>
-                  <input type="number" v-model.number="cheque" id="cheque" placeholder="Enter Cheque Amount"
-                    style="width: 100px;margin:10px;">
+                      <!-- Cheque Payment Field -->
+                      <div>
+                        <label for="cheque" style="display: block;">Cheque</label>
+                        <input type="number" v-model.number="cheque" id="cheque" placeholder="Enter Cheque Amount"
+                          style="width: 100px;" />
+                      </div>
 
-                  <!-- Online Payment Field -->
-                  <label for="online" class="pl-5">Online</label>
-                  <input type="number" v-model.number="online" id="online" placeholder="Enter Online Payment"
-                    style="width: 100px;margin:10px;">
+                      <!-- Online Payment Field -->
+                      <div>
+                        <label for="online" style="display: block;">Online</label>
+                        <input type="number" v-model.number="online" id="online" placeholder="Enter Online Payment"
+                          style="width: 100px;" />
+                      </div>
+                    </div>
+                  </div>
 
-                  <!-- Total Dues Label -->
-                  <label for="totalDues" class="font-small text-sm mx-5 px-5">
-                    Total Dues Rs {{ totalDues }} <!-- Total Dues displayed here -->
-                  </label>
+                  <!-- Total Dues -->
+                  <div style="margin-left: 20px;">
+                    <label for="totalDues" style="display: block;">Total Dues : {{ totalDues }}</label>
+                    <input type="hidden" name="total_dues" :value="totalDues" />
+                  </div>
 
-                  <!-- Buttons for Saving and Printing -->
-
-                  <button type="button" class="btn btn-primary btn-sm ml-5" @click="printPage"
-                    style="width: 100px;margin-right:10px;">Print
-                    & Save</button>
-                  <button type="button" class="btn btn-dark btn-sm ml-3" style="width: 60px;">Save</button>
-
+                  <!-- Buttons -->
+                  <div style="margin-left: 450px; display: flex; gap: 10px;">
+                    <button type="button" class="btn btn-primary btn-sm" @click="printPage" style="width: 100px;">
+                      Print & Save
+                    </button>
+                    <button type="submit" class="btn btn-dark btn-sm" style="width: 60px;">
+                      Save
+                    </button>
+                  </div>
                 </div>
-
-
-
 
               </div>
 
             </div>
 
           </div>
-
-        </div>
-
+        </form>
       </div>
       <!-- content wrapper  -->
     </div>
@@ -644,29 +676,31 @@ export default {
 
 
 
-  components: {
-    // vSelect,
-  },
   data() {
 
     return {
 
-      frms: [],              // This will store the list of farmers from the backend
-      selectedFarmers: '',     // This stores the selected farmer ID from the dropdown
+      agents: [],              // This will store the list of Agentss from the backend
+      selectedAgents: '',      // This stores the selected farmer ID from the dropdown
 
-      comp:[],
-      selectedCompanies:'',
-
-      prod:[],
-      selectedProducts:'',
-
+      comp: [],
+      selectedCompanies: '',
+      selectedProductIds: [],
+      prod: [
+        { id: 1, name: "Goldfish", fields: [] },
+        { id: 2, name: "Whales", fields: [] },
+        { id: 3, name: "Katla", fields: [] },
+        { id: 4, name: "Shark", fields: [] },
+      ],
+      // selectedProducts:'',
+      selectedProducts: [],
       invoiceDate: null, // You can set a default date if needed
       config: {
         dateFormat: "Y-m-d", // Your desired date format
         allowInput: true
       },
 
-      selectedFarmer: null,
+      // selectedAgents: null,
       menuState: {
 
         username: {
@@ -733,41 +767,62 @@ export default {
     };
   },
   computed: {
+    totalSelectedProducts() {
+      return this.selectedProductIds.length;
+    },
+    selectedAgentsDetails() {
+      // Find the Agents object that matches the selected Agents's ID
+      return this.agents.find(Agents => Agents.id === this.selectedAgents);
+    },
+    selectedProductNames() {
+      return this.selectedProducts
+        .map(productId => this.prod.find(product => product.id === productId)?.name)
+        .filter(name => name);
+
+    },
+    // Calculate total amount
     totalAmount() {
-      return (this.fields || []).reduce((total, field) => {
-        return total + (field.qty * field.price || 0);
+      return this.fields.reduce((total, product) => {
+        return total + this.calculateTotalAmount(product);
       }, 0);
     },
-    // totalAmount() {
-    //   return this.fields.reduce((total, field) => total + (field.qty * field.price || 0), 0);
-    // },
     commissionAmount() {
       const validTotal = isNaN(this.totalAmount) || this.totalAmount <= 0 ? 0 : this.totalAmount;
       const validPercentage = isNaN(this.commissionPercentage) || this.commissionPercentage <= 0 ? 0 : this.commissionPercentage;
       return (validTotal * validPercentage) / 100;
     },
     totalCharged() {
-      return this.arhatCoolie + this.britty + this.dan + this.jeepFair + this.railCoolie +
-        this.iceLeaf +
-        this.union +
-        this.miscExp +
-        this.marketExp
-        ;
+      return (
+        parseFloat(this.commissionAmount || 0) +
+        parseFloat(this.arhatCoolie || 0) +
+        parseFloat(this.britty || 0) +
+        parseFloat(this.dan || 0) +
+        parseFloat(this.jeepFair || 0) +
+        parseFloat(this.railCoolie || 0) +
+        parseFloat(this.iceLeaf || 0) +
+        parseFloat(this.union || 0) +
+        parseFloat(this.miscExp || 0) +
+        parseFloat(this.marketExp || 0)
+      );
     },
     grandTotal() {
-      return (this.totalAmount || 0) + this.totalCharged + this.commissionAmount; // Avoid NaN
+      return this.totalAmount + this.totalCharged;
     },
     roundedTotal() {
       return Math.round(this.grandTotal);
     },
-    // Compute total quantity by summing up the qty of each field
+    // Calculate total quantity
     totalQuantity() {
-      return this.fields.reduce((total, field) => total + (field.qty || 0), 0);
+      return this.fields.reduce((total, product) => {
+        return total + this.calculateTotalQuantity(product);
+      }, 0);
     },
 
     totalDues() {
-      return this.grandTotal - (this.cash + this.cheque + this.online) || 0; // Avoid NaN by using || 0
+      const payments = parseFloat(this.cash || 0) + parseFloat(this.cheque || 0) + parseFloat(this.online || 0);
+      return this.grandTotal - payments;
     },
+
 
     amount() {
       return this.qty * this.price;
@@ -846,10 +901,13 @@ export default {
   },
 
   mounted() {
-    this.getFarmers();
+    this.getAgents();
     this.getCompanies();
     this.getProducts();
-
+    this.submitForm();
+    // if (!sessionStorage.getItem('formSubmitted')) {
+    //   sessionStorage.setItem('formSubmitted', 'false');
+    // }
     // Safely initialize flatpickr when the component is mounted
     if (this.$refs.datepicker) {
       this.datepickerInstance = flatpickr(this.$refs.datepicker, {
@@ -868,93 +926,147 @@ export default {
   },
   methods: {
 
-    openDatePicker() {
-      // Open the flatpickr calendar when the icon is clicked
-      if (this.datepickerInstance) {
-        this.datepickerInstance.open();
-      } else {
-        console.error("Flatpickr instance not initialized yet");
-      }
-    },
-    toggleDropdown(menu) {
-      // Toggle the main menu and close all other menus
-      Object.keys(this.menuState).forEach(key => {
-        if (key === menu) {
-          this.menuState[key].open = !this.menuState[key].open;
-        } else {
-          this.menuState[key].open = false;
-        }
-      });
-    },
-    toggleSubMenu(menu, subMenu) {
-      // Ensure the correct submenu within a specific menu is toggled
-      Object.keys(this.menuState[menu].subMenu).forEach(key => {
-        if (key === subMenu) {
-          this.menuState[menu].subMenu[key] = !this.menuState[menu].subMenu[key];
-        } else {
-          this.menuState[menu].subMenu[key] = false;
-        }
-      });
-    },
+    submitForm() {
+      const formData = new FormData(this.$refs.billingForm);
 
-    // Add a new field, up to the max limit
-    addField() {
-      // if (this.fields.length < this.maxFields) {
-      this.fields.push({ qty: '', unit: 'kg', price: '' });
-      // }
-    },
-    // Remove a field at a given index
-    removeField(index) {
-      this.fields.splice(index, 1);
-    },
+      console.log('Submitting form data:', [...formData.entries()]); // Debugging
 
-    calculateAmount(price, qty) {
-      const priceNum = Number(price) || 0; // Ensure price is a number
-      const qtyNum = Number(qty) || 0; // Ensure quantity is a number
-      return priceNum * qtyNum; // Calculate amount
-    },
-    printPage() {
-      // You can perform any necessary save actions here before printing, like saving to a database
-      window.print(); // This opens the print dialog for the user
-    },
-    getFarmers() {
-      axios.get('http://localhost/dairy/index.php/Home/get_farmers')
-        .then((response) => {
-          console.log(response.data); // This will log the data fetched from the backend
-          this.frms = response.data;  // Assign the fetched data to the 'frms' array
+      axios
+        .post('http://localhost/dairy/index.php/Home/NewAgentsBilling', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          withCredentials: true,
         })
-        .catch(error => {
-          console.error(error); // Log errors if the request fails
+        .then((response) => {
+          console.log('Server response:', response.data); // Debugging
+          if (response.data.status === 'success') {
+            alert('Billing record saved successfully!');
+          }
+        })
+        .catch((error) => {
+          console.error('Axios error:', error);
+          alert('An error occurred while saving the billing record.');
         });
     },
+
   
-    getCompanies() {
-      axios.get('http://localhost/dairy/index.php/Home/get_companies')
-        .then((response) => {
-          console.log(response.data); // This will log the data fetched from the backend
-          this.comp = response.data;  // Assign the fetched data to the 'frms' array
-        })
-        .catch(error => {
-          console.error(error); // Log errors if the request fails
-        });
-    },
 
-    getProducts() {
-      axios.get('http://localhost/dairy/index.php/Home/get_products')
+  openDatePicker() {
+    // Open the flatpickr calendar when the icon is clicked
+    if (this.datepickerInstance) {
+      this.datepickerInstance.open();
+    } else {
+      console.error("Flatpickr instance not initialized yet");
+    }
+  },
+  toggleDropdown(menu) {
+    // Toggle the main menu and close all other menus
+    Object.keys(this.menuState).forEach(key => {
+      if (key === menu) {
+        this.menuState[key].open = !this.menuState[key].open;
+      } else {
+        this.menuState[key].open = false;
+      }
+    });
+  },
+  toggleSubMenu(menu, subMenu) {
+    // Ensure the correct submenu within a specific menu is toggled
+    Object.keys(this.menuState[menu].subMenu).forEach(key => {
+      if (key === subMenu) {
+        this.menuState[menu].subMenu[key] = !this.menuState[menu].subMenu[key];
+      } else {
+        this.menuState[menu].subMenu[key] = false;
+      }
+    });
+  },
+
+  // Add a new field, up to the max limit
+
+  updateSelectedProducts() {
+    // Add new products to the fields array
+    this.selectedProductIds.forEach((id) => {
+      const product = this.prod.find((p) => p.id === id);
+      if (product && !this.fields.find((f) => f.id === product.id)) {
+        this.fields.push({
+          ...product,
+          fields: [{ qty: 0, unit: "kg", price: 0 }],
+        });
+
+      }
+    });
+
+    // Remove products from fields if deselected
+    this.fields = this.fields.filter((product) => this.selectedProductIds.includes(product.id));
+  },
+  addField(product) {
+    product.fields.push({ qty: 0, unit: "kg", price: 0 });
+  },
+  removeField(product, index) {
+    if (!product.fields) return; // Safeguard
+    product.fields.splice(index, 1);
+    if (product.fields.length === 0) {
+      this.fields = this.fields.filter((f) => f.id !== product.id);
+      this.selectedProductIds = this.selectedProductIds.filter((id) => id !== product.id);
+    }
+  },
+
+
+  calculateAmount(price, qty) {
+    return price * qty || 0;
+  },
+  calculateTotalAmount(product) {
+    if (!product.fields) return 0; // Prevent accessing undefined.
+    return product.fields.reduce((sum, field) => sum + (field.qty * field.price), 0);
+  },
+
+  calculateTotalQuantity(product) {
+    return product.fields.reduce((total, field) => total + (field.qty || 0), 0);
+  },
+
+
+  printPage() {
+    // You can perform any necessary save actions here before printing, like saving to a database
+    window.print(); // This opens the print dialog for the user
+  },
+  getAgents() {
+    axios.get('http://localhost/dairy/index.php/Home/get_Agents')
+      .then((response) => {
+        console.log(response.data); // This will log the data fetched from the backend
+        this.agents = response.data;  // Assign the fetched data to the 'agents' array
+      })
+      .catch(error => {
+        console.error(error); // Log errors if the request fails
+      });
+  },
+  getCompanies() {
+    axios.get('http://localhost/dairy/index.php/Home/get_companies')
+      .then((response) => {
+        console.log(response.data); // This will log the data fetched from the backend
+        this.comp = response.data;  // Assign the fetched data to the 'frms' array
+      })
+      .catch(error => {
+        console.error(error); // Log errors if the request fails
+      });
+  },
+
+  getProducts() {
+    axios.get('http://localhost/dairy/index.php/Home/get_products')
       .then((response) => {
         console.log(response.data); // This will log the data fetched from the backend
         this.prod = response.data;  // Assign the fetched data to the 'frms' array
-        })
-        .catch(error => {
-          console.error(error); // Log errors if the request fails
-        });
-    }
-
+      })
+      .catch(error => {
+        console.error(error); // Log errors if the request fails
+      });
   }
 
-
-      
+}
 };
+
+
+
+
 </script>
 <style scoped>
 .d-flex {
@@ -992,7 +1104,7 @@ export default {
   background-color: #343a40;
   padding: 15px;
   color: #fff;
-  height: 127vh;
+  height: auto;
 }
 
 .sidebar-header {

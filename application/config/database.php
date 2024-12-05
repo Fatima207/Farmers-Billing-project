@@ -70,8 +70,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | The $query_builder variables lets you determine whether or not to load
 | the query builder class.
 */
+// $this->db->insert('billing_agent_records', $data);
+// if (!$this->db->affected_rows()) {
+//     log_message('error', 'DB insert failed: ' . $this->db->last_query());
+// };
 $active_group = 'default';
 $query_builder = TRUE;
+
+$db['default']['db_debug'] = TRUE;
+
 
 $db['default'] = array(
 	'dsn'	=> '',
@@ -94,4 +101,3 @@ $db['default'] = array(
 	'failover' => array(),
 	'save_queries' => TRUE
 );
-

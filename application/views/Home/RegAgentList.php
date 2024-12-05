@@ -36,9 +36,9 @@
                     <th>Name</th>
                     <th>Email</th>
                     <th>Code</th>
-                    <th>Address</th>
                     <th>Contact Number</th>
                     <th>Whatsapp Number</th>
+                    <th>Address</th>
                     <th>Action</th>
 
                 </tr>
