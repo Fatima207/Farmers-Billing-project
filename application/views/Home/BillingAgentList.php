@@ -41,85 +41,31 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>
-                        Yaa
-                    </td>
+                    <?php
+                    $query = $this->db->get('billing_agent_records');
+                    foreach ($query->result() as $row): ?>
 
-                    <td>
-                        ya@gmail.com
-                    </td>
 
-                    <td>
-                        20
-                    </td>
+                        <td><?php echo $row->billing_number; ?></td>
+                        <td><?php echo $row->agent; ?></td>
+                        <td><?php echo $row->company; ?></td>
+                        <td><?php echo $row->commission; ?></td>
+                        <td><?php echo $row->grand_total; ?></td>
+                        <td><?php echo $row->final_total; ?></td>
+                        <td><?php echo $row->total_dues; ?></td>
+                        <td><?php echo $row->payment_status; ?></td>
 
-                    <td>
-                        fsgg
-                    </td>
 
-                    <td>
-                        2043561265
-                    </td>
-
-                    <td>
-                        sf
-                    </td>
-
-                    <td>
-                        er
-                    </td>
-
-                    <td>
-                        completed
-                    </td>
-
-                    <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
-                    </td>
+                        <td>
+                            <a class="btn btn-success" href="<?php echo base_url('index.php/Home/BillingAgentList/edit_BillingAgent/' . $row->id) ?>">Edit</a>
+                            <a href="<?php echo base_url('index.php/Home/RegAgentList/delete_RegisterAgent/' . $row->id) ?>" class="btn btn-danger">Delete</a>
+                        </td>
 
                 </tr>
 
-                <tr>
-                    <td>
-                        sdf
-                    </td>
-
-                    <td>
-                        sd@gmail.com
-                    </td>
-
-                    <td>
-                        30
-                    </td>
-
-                    <td>
-                        fwfg
-                    </td>
-
-                    <td>
-                        3032456787
-                    </td>
-
-                    <td>
-                        sh
-                    </td>
-
-                    <td>
-                        dssh
-                    </td>
-
-                    <td>
-                        completed
-                    </td>
-
-
-                    <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
-                    </td>
-
-                </tr>
+            <?php
+                    endforeach;
+            ?>
 
             </tbody>
         </table>

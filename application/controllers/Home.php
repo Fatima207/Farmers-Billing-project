@@ -695,18 +695,26 @@ class Home extends CI_Controller
 		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 			exit(0); // Handle preflight request
 		}
-		if (!$this->input->post('billing_number') || !$this->input->post('agent')) {
-			log_message('error', 'Required fields missing.');
-			echo json_encode(['status' => 'error', 'message' => 'Required fields missing.']);
+		// Validate input data
+		if (!$this->input->post('agent')) {
+			log_message('error', 'Agent is missing.');
+			echo json_encode(['status' => 'error', 'message' => 'Agent is required.']);
 			return;
 		}
-		
+		$paymentStatus = $this->input->post('payment_status');
+		if ($paymentStatus !== 'Completed') {
+			echo json_encode(['status' => 'error', 'message' => 'Payment status must be "Completed"']);
+			exit;
+		}
+		// $paymentStatus = $this->input->post('payment_status');
 		$billing_number = $this->generate_billing_number();
+		// 	if ($paymentStatus !== 'Completed') {
+		// 		echo json_encode(['status' => 'error', 'message' => 'Payment status must be "Completed"']);
+		// 		exit;
+		// 	};
+		// // Ensure payment status is "Completed"
 
-    // if ($paymentStatus !== 'Completed') {
-	// 	echo json_encode(['status' => 'error', 'message' => 'Payment status must be "Completed"']);
-    //     exit;
-    // }
+
 		$postData = [
 			'billing_number' => $billing_number,
 			'agent'          => $this->input->post('agent'),
@@ -715,30 +723,28 @@ class Home extends CI_Controller
 			'grand_total' => $this->input->post('grand_total'),
 			'final_total' =>  $this->input->post('final_total'),
 			'total_dues' =>  $this->input->post('total_dues'),
-			'payment_status' =>  $this->input->post('payment_status'),
+			'payment_status' => $paymentStatus,
 		];
 
 		try {
 			$resp = $this->Home_model->get_agentsBilling($postData);
+			log_message('error', 'Failed to save billing.');
 			if ($resp) {
-				log_message('info', 'Billing saved successfully.');
-			} else {
-				log_message('error', 'Failed to save billing.');
+				echo json_encode([
+					'status' => 'success',
+					'redirect_url' => 'http://localhost/dairy/index.php/Home/AgentsBillingList', // Redirection URL
+				]);
+			} else { // Failure response
+				echo json_encode(['status' => 'error', 'message' => 'Failed to save billing record.']);
 			}
 		} catch (Exception $e) {
-			log_message('error', 'Error in NewAgentsBilling: ' . $e->getMessage());
-			$this->session->set_flashdata('msg', array('show_msg' => 'An error occurred while saving billing details', 'type' => 'danger'));
-		}
+			// Exception handling
+			echo json_encode(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()]);
+		};
 
 
 		return; // Avoid redirecting for API requests
-
-		redirect(site_url('index.php/Home/AgentsBillingList'));
-
-
-
-
-		$data['RegAgentList'] = $this->Home_model->get_agents();
+	$data['RegAgentList'] = $this->Home_model->get_agents();
 		$data['RegCompaniesList'] = $this->Home_model->get_companies();
 		$data['ProductList'] = $this->Home_model->get_products();
 
@@ -750,12 +756,68 @@ class Home extends CI_Controller
 
 	public function AgentsBillingList()
 	{
-		$data['query'] = $this->Home_model->get_agentsBilling();
+		// $data['query'] = $this->Home_model->get_agentsBilling();
 		$this->load->view('Partials/header');
 		$this->load->view('Home/BillingAgentList');
 		$this->load->view('Partials/footer');
 	}
+	public function edit_BillingAgent($id)
+	{
+		$this->load->view('Partials/header');
 
+		$this->load->model('Home_model');
+		$data['billing_agent_records'] = $this->Home_model->edit_BillingAgent($id);
+
+		$this->load->view('Home/editRegisterFarmer', $data);
+		$this->load->view('Partials/footer');
+	}
+	public function update_BillingAgent($id)
+	{
+		if (!$this->input->post('agent')) {
+			log_message('error', 'Agent is missing.');
+			echo json_encode(['status' => 'error', 'message' => 'Agent is required.']);
+			return;
+		}
+		$paymentStatus = $this->input->post('payment_status');
+		if ($paymentStatus !== 'Completed') {
+			echo json_encode(['status' => 'error', 'message' => 'Payment status must be "Completed"']);
+			exit;
+		};
+		$postData = [
+			'billing_number' =>  $this->input->post('billing_number'),
+			'agent'          => $this->input->post('agent'),
+			'company'        => $this->input->post('company'),
+			'commission' => $this->input->post('commission'),
+			'grand_total' => $this->input->post('grand_total'),
+			'final_total' =>  $this->input->post('final_total'),
+			'total_dues' =>  $this->input->post('total_dues'),
+			'payment_status' => $paymentStatus,
+		];
+
+		try {
+			$resp = $this->Home_model->update_BillingAgent($postData);
+			log_message('error', 'Failed to save billing.');
+			if ($resp) {
+				echo json_encode([
+					'status' => 'success',
+					'redirect_url' => 'http://localhost/dairy/index.php/Home/AgentsBillingList', // Redirection URL
+				]);
+			} else { // Failure response
+				echo json_encode(['status' => 'error', 'message' => 'It seems you didn\'t change anything !']);
+			}
+		} catch (Exception $e) {
+			// Exception handling
+			echo json_encode(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()]);
+		};
+
+
+		return; // Avoid redirecting for API requests
+	$data['RegAgentList'] = $this->Home_model->get_agents();
+		$data['RegCompaniesList'] = $this->Home_model->get_companies();
+		$data['ProductList'] = $this->Home_model->get_products();
+
+	}
+	
 	// Retailers
 	public function RetBilling()
 	{

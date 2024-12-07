@@ -365,7 +365,8 @@
                   <!-- <input type="text" name="billing_number" v-model="billingNumber"> -->
                   <label for="Agents">Select Agents:</label>
 
-                  <select id="Agents" name="agent" v-model="selectedAgents" required>
+                  <select id="Agents" name="agent" v-model="selectedAgents" value="$billing_agent_records->agent"
+                    required>
                     <option v-for="Agents in agents" :key="Agents.id" :value="Agents.id">
                       {{ Agents.name }}
                     </option>
@@ -377,7 +378,8 @@
                 <div class="col-md-2">
 
                   <label for="companies">Select companies:</label>
-                  <select id="companies" name="company" v-model="selectedCompanies" required>
+                  <select id="companies" name="company" v-model="selectedCompanies"
+                    value="$billing_agent_records->company" required>
                     <option v-for="companies in comp" :key="companies.id" :value="companies.id">
                       {{ companies.name }}
                     </option>
@@ -512,13 +514,13 @@
                       <div class="card-body">
                         <p class="text-center">Final total: Rs {{ totalAmount }}</p>
                         <!-- Add a hidden input to include totalAmount in the form submission -->
-                        <input type="hidden" name="final_total" :value="totalAmount" />
+                        <input type="hidden" name="final_total" value="$billing_agent_records->final_total" />
 
 
                         <!-- Commission input -->
                         <label for="commission">Commission in %</label>
                         <input type="number" v-model.number="commissionPercentage" placeholder="0" class="w-25"
-                          name="commission" /><br>
+                          name="commission" value="$billing_agent_records->commission" /><br>
 
                         <label class="font-small">Commission amount: Rs {{ commissionAmount }}</label>
 
@@ -567,7 +569,7 @@
                             <label for="grandTotal">Grand Total: Rs
                               <span>{{ grandTotal }}</span>
                             </label>
-                            <input type="hidden" name="grand_total" :value="grandTotal" />
+                            <input type="hidden" name="grand_total" value="$billing_agent_records->grand_total" />
 
 
                             <!-- Add a hidden input to send grand_total with the form -->
@@ -598,7 +600,8 @@
                   <!-- Payment Status -->
                   <div style="margin-right: 20px;">
                     <label for="paymentStatus" style="display: block;">Payment Status</label>
-                    <select name="payment_status" id="paymentStatus"  v-model="paymentStatus" style="width: 150px; height: 40px;" required>
+                    <select name="payment_status" id="paymentStatus" value="$billing_agent_records->payment_status"
+                      v-model="paymentStatus" style="width: 150px; height: 40px;" required>
                       <option value="" disabled selected>Payment Status</option>
                       <option value="Completed">Completed</option>
                       <option value="Pending">Pending</option>
@@ -635,7 +638,7 @@
                   <!-- Total Dues -->
                   <div style="margin-left: 20px;">
                     <label for="totalDues" style="display: block;">Total Dues : {{ totalDues }}</label>
-                    <input type="hidden" name="total_dues" :value="totalDues" />
+                    <input type="hidden" name="total_dues" value="$billing_agent_records->total_dues" />
                   </div>
 
                   <!-- Buttons -->
@@ -942,7 +945,7 @@ export default {
       console.log('Submitting form data:', [...formData.entries()]); // Debugging
 
       axios
-        .post('http://localhost/dairy/index.php/Home/NewAgentsBilling', formData, {
+        .post('http://localhost/dairy/index.php/Home/update_AgentsBilling'.$billing_agent_records -> id, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

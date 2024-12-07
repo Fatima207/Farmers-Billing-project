@@ -261,10 +261,23 @@ class Home_model extends CI_Model
     return $query->row(); // Return the last record
 }
 
-// public function save_billing($data)
-// {
-//     return $this->db->insert('billing_agent_records', $data);
-// }
+public function edit_BillingAgent($id)
+{
+  $query = $this->db->get_where('billing_agent_records', ['id' => $id]);
+  return $query->row();
+}
+public function delete_BillingAgent($id)
+{
+  return $this->db->delete('billing_agent_records', ['id' => $id]);
+
+}
+public function update_BillingAgent($id, $postdata)
+{
+  return $this->db->update('billing_agent_records', $postdata,['id' => $id]);
+
+
+}
+
 
   public function get_agentsBilling($postData)
 {
