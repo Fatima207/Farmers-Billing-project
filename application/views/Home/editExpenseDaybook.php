@@ -26,11 +26,11 @@
 
                             <!-- /.card-header -->
                             <!-- form start -->
-                            <form action="<?= base_url('index.php/Home/update_ExpenseDaybook/'.$expense_daybook->id)  ?>" method="post">
+                            <form action="<?= base_url('index.php/Home/update_ExpenseDaybook/' . $expense_daybook->id)  ?>" method="post">
                                 <div class="card-body">
                                     <div class="form-group">
                                         <label for="exampleInputName1">Expenses by</label>
-                                        <input type="name" class="form-control" id="exampleInputName1" placeholder= "" name="expense_by"  value="<?= $expense_daybook->expense_by ?>">
+                                        <input type="name" class="form-control" id="exampleInputName1" placeholder="" name="expense_by" value="<?= $expense_daybook->expense_by ?>">
                                     </div>
 
 
@@ -38,41 +38,43 @@
                                         <label for="Amount" class="">Amount</label><br>
                                         <input type="number" name="Amount" id="amount" required="" placeholder="Enter Qty" class="form-control" value="<?= $expense_daybook->Amount ?>">
                                     </div>
-
                                     <div class="form-group">
-                                        <label>Expense Date</label>
-                                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                            <input type="text" name="Expense_date" class="form-control datetimepicker-input" data-target="#reservationdate" value="<?= $expense_daybook->Expense_date ?>">
-                                            <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                            </div>
-                                        </div>
+                                        <label for="expense_date">Expense Date</label>
+                                        <input type="date" name="Expense_date" id="expense_date" class="form-control"
+                                            value="<?= isset($expense_daybook->Expense_date) ? date('Y-m-d', strtotime($expense_daybook->Expense_date)) : '' ?>" required>
+
                                     </div>
-                                    <!-- select -->
                                     <div class="form-group">
                                         <label>Companies</label>
-                                        <select name="Company" class="form-control" value="<?= $expense_daybook->Company ?>">
-                                            <option>option 1</option>
-                                            <option>option 2</option>
-                                            <option>option 3</option>
-                                            <option>option 4</option>
-                                            <option>option 5</option>
+                                        <select name="Company" id="Company" class="form-control">
+                                            <option value="" default hidden>Companies</option>
+                                            <?php foreach ($RegCompanyList as $reg) { ?>
+                                                <option value="<?php echo $reg->id; ?>"
+                                                    <?php echo ($expense_daybook->Company == $reg->id) ? 'selected' : ''; ?>>
+                                                    <?php echo $reg->name; ?>
+                                                </option>
+                                            <?php } ?>
                                         </select>
                                     </div>
 
-                                    <!-- select -->
                                     <div class="form-group">
                                         <label>Categories</label>
-                                        <select name="Category" class="form-control" value="<?= $expense_daybook->Category ?>">
-                                            <option>stationary</option>
-
+                                        <select name="Category" class="form-control">
+                                            <option value="" default hidden>Categories</option>
+                                            <?php foreach ($ExpCategoryList as $reg) { ?>
+                                                <option value="<?php echo $reg->id; ?>"
+                                                    <?php echo ($expense_daybook->Category == $reg->id) ? 'selected' : ''; ?>>
+                                                    <?php echo $reg->name; ?>
+                                                </option>
+                                            <?php } ?>
                                         </select>
                                     </div>
+
 
 
 
                                     <!-- button add -->
-                                    <button type="submit"class="btn btn-dark" href="#" style="float:right;">Add</button>
+                                    <button type="submit" class="btn btn-dark" href="#" style="float:right;">Add</button>
                                 </div>
 
 

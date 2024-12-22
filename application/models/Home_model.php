@@ -15,30 +15,30 @@ class Home_model extends CI_Model
       return false;
     }
   }
-  public function registerUser($data){
-    
+  public function registerUser($data)
+  {
+
     $this->db->set($data);
     $this->db->insert('users', $data);
     return $this->db->insert_id();
   }
   public function get_Employee()
- { 
-  $name='';
-  $value='';
-  $relatedUsers = '';
-        if(isset($_REQUEST['empid']) && $_REQUEST['empid']['value']!='') {
-            $name = $_REQUEST['empid']['field'];
-            $value = $_REQUEST['empid']['value'];
-            $relatedUsers = $this->user_model->get_Employee($name, $value);
-            echo json_encode($relatedUsers);
-          } else {
-              $relatedUsers = $this->user_model->get_Employee($name=NULL, $value=NULL);
-              echo json_encode($relatedUsers);
-          }
-  
- }
- 
-  
+  {
+    $name = '';
+    $value = '';
+    $relatedUsers = '';
+    if (isset($_REQUEST['empid']) && $_REQUEST['empid']['value'] != '') {
+      $name = $_REQUEST['empid']['field'];
+      $value = $_REQUEST['empid']['value'];
+      $relatedUsers = $this->user_model->get_Employee($name, $value);
+      echo json_encode($relatedUsers);
+    } else {
+      $relatedUsers = $this->user_model->get_Employee($name = NULL, $value = NULL);
+      echo json_encode($relatedUsers);
+    }
+  }
+
+
 
   public function save_farmer($data)
   {
@@ -49,9 +49,8 @@ class Home_model extends CI_Model
 
     $query = $this->db->get('reg_farmers');
     return $query->result();
-    
   }
-  
+
   public function get_farmers()
   {
     $query = $this->db->get('reg_farmers');
@@ -164,11 +163,11 @@ class Home_model extends CI_Model
   }
 
   public function save_company($data)
-{ 
-  $this->db->set($data);
-  $this->db->insert('reg_companies', $data);
+  {
+    $this->db->set($data);
+    $this->db->insert('reg_companies', $data);
 
-  return $this->db->insert_id();
+    return $this->db->insert_id();
   }
   public function save_product($data)
   {
@@ -234,6 +233,10 @@ class Home_model extends CI_Model
 
   public function save_daybook($data)
   {
+    // $data = [
+    //   'Expense_date' => date('Y-m-d', strtotime($this->input->post('Expense_date')))
+    // ];
+
     $query = $this->db->get('expense_daybook');
     $this->db->set($data);
     $this->db->insert('expense_daybook', $data);
@@ -250,8 +253,8 @@ class Home_model extends CI_Model
     return $query->result();
   }
 
-  public function get_last_billing()
-{
+  public function get_last_billing_agents()
+  {
     $this->db->select('billing_number');
     $this->db->from('billing_agent_records');
     $this->db->order_by('id', 'DESC'); // Assuming 'id' is the primary key
@@ -259,38 +262,104 @@ class Home_model extends CI_Model
     $query = $this->db->get();
 
     return $query->row(); // Return the last record
-}
+  }
+  public function get_last_billing_farmers()
+  {
+    $this->db->select('farmer_billing_num');
+    $this->db->from('billing_farmer_records');
+    $this->db->order_by('id', 'DESC'); // Assuming 'id' is the primary key
+    $this->db->limit(1);
+    $query = $this->db->get();
 
-public function edit_BillingAgent($id)
-{
-  $query = $this->db->get_where('billing_agent_records', ['id' => $id]);
-  return $query->row();
-}
-public function delete_BillingAgent($id)
-{
-  return $this->db->delete('billing_agent_records', ['id' => $id]);
-
-}
-public function update_BillingAgent($id, $postdata)
-{
-  return $this->db->update('billing_agent_records', $postdata,['id' => $id]);
+    return $query->row(); // Return the last record
+  }
+  public function edit_BillingAgent($id)
+  {
+    $query = $this->db->get_where('billing_agent_records', ['id' => $id]);
+    // return $query->row();
+    if ($query->num_rows() > 0) {
+      return $query->row_array(); // Return the record as an associative array
+    }
+    return false;
+  }
 
 
-}
 
+  public function delete_BillingAgent($id)
+  {
+    return $this->db->delete('billing_agent_records', ['id' => $id]);
+  }
+  public function update_BillingAgent($id, $postData)
+  {
+    return $this->db->update('billing_agent_records', $postData, ['id' => $id]);
+  }
+
+
+  public function update_BillingFarmer($postData, $id)
+  {
+    return $this->db->update('billing_agent_records', $postData, ['id' => $id]);
+  }
 
   public function get_agentsBilling($postData)
-{
-  
+  {
+
 
     $this->db->insert('billing_agent_records', $postData);
     if ($this->db->affected_rows() > 0) {
-        return $this->db->insert_id();
+      return $this->db->insert_id();
     }
     return false;
-}
+  }
 
+  public function get_farmersBilling($postData)
+  {
+    $this->db->insert('billing_farmer_records', $postData);
+    if ($this->db->affected_rows() > 0) {
+      return $this->db->insert_id();
+    }
+    return false;
+  }
   
+
+  public function save_agentsBillingproductDetails($data)
+  {
+    $this->db->set($data);
+    $this->db->insert('billing_agent_product_records', $data);
+    return $this->db->insert_id();
+    $query = $this->db->get('billing_agent_product_records');
+    return $query->result();
+  }
+
+  public function get_retailersBilling($postData)
+  {
+    $this->db->insert('billing_retailer_records', $postData);
+    if ($this->db->affected_rows() > 0) {
+      return $this->db->insert_id();
+    }
+    return false;
+  }
+  public function delete_BillingFarmer($id)
+  {
+    // Ensure the ID is valid
+    if (!$id) {
+      log_message('error', 'Invalid ID provided for deletion');
+      return false;
+    }
+    return $this->db->delete('billing_farmer_records', ['id' => $id]);
+
+    // Log the last executed query
+    log_message('error', 'Delete Query: ' . $this->db->last_query());
+
+    // Check for errors
+    if (!$deleted) {
+      log_message('error', 'DB Error: ' . $this->db->_error_message());
+      return false;
+    }
+
+    // Ensure at least one row was affected
+    // return $this->db->affected_rows() > 0;
+  }
+
   public function get_retailers()
   {
     $query = $this->db->get('reg_retailers');
@@ -351,28 +420,27 @@ public function update_BillingAgent($id, $postdata)
 
   public function get_details_by_contact($contact_number)
   {
-      // Query for farmers
-      $farmers_query = $this->db->select('name, code, contact_number, "Farmer" as type')
-                                ->from('reg_farmers')
-                                ->where('contact_number', $contact_number)
-                                ->get_compiled_select();
+    // Query for farmers
+    $farmers_query = $this->db->select('name, code, contact_number, "Farmer" as type')
+      ->from('reg_farmers')
+      ->where('contact_number', $contact_number)
+      ->get_compiled_select();
 
-      // Query for agents
-      $agents_query = $this->db->select('name, code, contact_number, "Agent" as type')
-                               ->from('reg_agents')
-                               ->where('contact_number', $contact_number)
-                               ->get_compiled_select();
+    // Query for agents
+    $agents_query = $this->db->select('name, code, contact_number, "Agent" as type')
+      ->from('reg_agents')
+      ->where('contact_number', $contact_number)
+      ->get_compiled_select();
 
-      // Query for retailers
-      $retailers_query = $this->db->select('name, code, contact_number, "Retailer" as type')
-                                  ->from('reg_retailers')
-                                  ->where('contact_number', $contact_number)
-                                  ->get_compiled_select();
+    // Query for retailers
+    $retailers_query = $this->db->select('name, code, contact_number, "Retailer" as type')
+      ->from('reg_retailers')
+      ->where('contact_number', $contact_number)
+      ->get_compiled_select();
 
-      // Combine all queries using UNION
-      $query = $this->db->query("($farmers_query) UNION ($agents_query) UNION ($retailers_query)");
+    // Combine all queries using UNION
+    $query = $this->db->query("($farmers_query) UNION ($agents_query) UNION ($retailers_query)");
 
-      return $query->result_array();  // Return all matching results
+    return $query->result_array();  // Return all matching results
   }
-
 }

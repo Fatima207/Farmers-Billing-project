@@ -154,7 +154,7 @@
                   <router-link to="/BillingFarmer" class="nav-link"> New Billing</router-link>
                 </li>
                 <li class="nav-item">
-                  <a :href="farmerListSrc" class="nav-link">View All</a>
+                  <a :href="BillingfarmerListSrc" class="nav-link">View All</a>
                 </li>
               </ul>
             </li>
@@ -171,7 +171,7 @@
                   <router-link to="/BillingAgent" class="nav-link"> New Billing</router-link>
                 </li>
                 <li class="nav-item">
-                  <a :href="agentsListsrc" class="nav-link">View All</a>
+                  <a :href="BillingAgentsListsrc" class="nav-link">View All</a>
                 </li>
               </ul>
             </li>
@@ -187,7 +187,7 @@
                   <router-link to="/BillingRetailer" class="nav-link"> New Billing</router-link>
                 </li>
                 <li class="nav-item">
-                  <a :href="retailerListSrc" class="nav-link">View All</a>
+                  <a :href="BillingretailerListSrc" class="nav-link">View All</a>
                 </li>
               </ul>
             </li>
@@ -332,7 +332,7 @@
           <!-- /.container-fluid -->
         </section>
 
-        <form ref="billingForm" @submit.prevent="submitForm">
+        <form ref="billingForm" @submit.prevent="updateAgentBilling" >
           <!-- billing page main content  -->
           <div class="card-body" style='justify-content: space-between;'>
 
@@ -362,26 +362,26 @@
                 <!-- for Agents  -->
                 <!-- select -->
                 <div class="col-md-2">
+                  <!-- <div v-if="$billing_agent_records && $billing_agent_records.agent"> -->
                   <!-- <input type="text" name="billing_number" v-model="billingNumber"> -->
                   <label for="Agents">Select Agents:</label>
 
-                  <select id="Agents" name="agent" v-model="selectedAgents" value="$billing_agent_records->agent"
-                    required>
-                    <option v-for="Agents in agents" :key="Agents.id" :value="Agents.id">
+                  <select id="Agents" name="agent" v-model="person.selectedAgents" value="formData.agent"   required>
+                    <option v-for="Agents in agents" :key="Agents.id" value="Agents.id">
                       {{ Agents.name }}
                     </option>
                   </select>
-                </div>
+                <!-- </div> -->
+              </div>
 
                 <!-- select -->
                 <!-- for company -->
                 <div class="col-md-2">
 
                   <label for="companies">Select companies:</label>
-                  <select id="companies" name="company" v-model="selectedCompanies"
-                    value="$billing_agent_records->company" required>
-                    <option v-for="companies in comp" :key="companies.id" :value="companies.id">
-                      {{ companies.name }}
+                  <select id="companies" name="company" v-model="person.selectedCompanies" value="formData.company" required>
+                    <option v-for="company in comp" :key="company.id" value="company.id">
+                      {{ company.name }}
                     </option>
                   </select>
                 </div>
@@ -446,7 +446,7 @@
                       <label>Select Products</label>
                       <select id="Products" v-model="selectedProductIds" @change="updateSelectedProducts" multiple
                         class="form-control">
-                        <option v-for="product in prod" :key="product.id" :value="product.id">
+                        <option v-for="product in prod" :key="product.id" value="product.id">
                           {{ product.name }}
                         </option>
                       </select>
@@ -514,13 +514,13 @@
                       <div class="card-body">
                         <p class="text-center">Final total: Rs {{ totalAmount }}</p>
                         <!-- Add a hidden input to include totalAmount in the form submission -->
-                        <input type="hidden" name="final_total" value="$billing_agent_records->final_total" />
+                        <input type="hidden" name="final_total" v-model="person.finaltotal" value="formData.final_total" />
 
 
                         <!-- Commission input -->
                         <label for="commission">Commission in %</label>
-                        <input type="number" v-model.number="commissionPercentage" placeholder="0" class="w-25"
-                          name="commission" value="$billing_agent_records->commission" /><br>
+                        <input type="number" v-model.number="commissionPercentage" v-model="person.commission" placeholder="0" class="w-25"
+                          name="commission" value="formData.commission" /><br>
 
                         <label class="font-small">Commission amount: Rs {{ commissionAmount }}</label>
 
@@ -569,7 +569,7 @@
                             <label for="grandTotal">Grand Total: Rs
                               <span>{{ grandTotal }}</span>
                             </label>
-                            <input type="hidden" name="grand_total" value="$billing_agent_records->grand_total" />
+                            <input type="hidden" name="grand_total" v-model="person.grandTotal" value="formData.grand_total" />
 
 
                             <!-- Add a hidden input to send grand_total with the form -->
@@ -600,8 +600,8 @@
                   <!-- Payment Status -->
                   <div style="margin-right: 20px;">
                     <label for="paymentStatus" style="display: block;">Payment Status</label>
-                    <select name="payment_status" id="paymentStatus" value="$billing_agent_records->payment_status"
-                      v-model="paymentStatus" style="width: 150px; height: 40px;" required>
+                    <select name="payment_status" id="paymentStatus" value="formData.payment_status"
+                      v-model="person.paymentStatus" style="width: 150px; height: 40px;" required>
                       <option value="" disabled selected>Payment Status</option>
                       <option value="Completed">Completed</option>
                       <option value="Pending">Pending</option>
@@ -638,7 +638,7 @@
                   <!-- Total Dues -->
                   <div style="margin-left: 20px;">
                     <label for="totalDues" style="display: block;">Total Dues : {{ totalDues }}</label>
-                    <input type="hidden" name="total_dues" value="$billing_agent_records->total_dues" />
+                    <input type="hidden" name="total_dues" v-model="person.totaldues" value="formData.total_dues" />
                   </div>
 
                   <!-- Buttons -->
@@ -676,18 +676,33 @@ import 'flatpickr/dist/flatpickr.css'; // Import flatpickr CSS
 import axios from 'axios';
 
 export default {
-
-
-
+  props: ['billingAgentRecords'],
+  // props: ['id'], 
+  // Accept the ID from route params
+  
   data() {
 
     return {
+
+
+      person: {
+        totaldues: '',
+        paymentStatus: '',
+        grandTotal: '',
+        commission: '',
+        finaltotal: '',
+        selectedCompanies: '',
+        selectedAgents: '',
+      },
+
+
+      $billing_agent_records: {},
       paymentStatus: "",
       agents: [],              // This will store the list of Agentss from the backend
-      selectedAgents: '',      // This stores the selected farmer ID from the dropdown
-
+      selectedAgents: null,      // This stores the selected farmer ID from the dropdown
+      // localBillingAgentRecords: { ...this.billingAgentRecords } ,// Create a copy of the prop
       comp: [],
-      selectedCompanies: '',
+      selectedCompanies: null,
       selectedProductIds: [],
       prod: [
         { id: 1, name: "Goldfish", fields: [] },
@@ -900,18 +915,33 @@ export default {
     ProfitLossSrc() {
       return `http://localhost/dairy/index.php/Home/ProfitLoss`
     },
+    BillingAgentsListsrc() {
+      return `http://localhost/dairy/index.php/Home/AgentsBillingList`
+    },
+    BillingfarmerListSrc() {
+      return `http://localhost/dairy/index.php/Home/FarmersBillingList`
 
+    },
+    BillingretailerListSrc() {
+      return `http://localhost/dairy/index.php/Home/RetailersBillingList`
+
+    }
   },
 
   mounted() {
+    // const agentId = this.$route.params.id; // Assuming the id is in the route params
+    this.fetchPersonData();
+
+    // console.log('Editing billing for ID:', this.id);
+    // Fetch the details for this ID
+
     this.getAgents();
     this.getCompanies();
     this.getProducts();
-    // this.submitForm();
-    // if (!sessionStorage.getItem('formSubmitted')) {
-    //   sessionStorage.setItem('formSubmitted', 'false');
-    // }
-    // Safely initialize flatpickr when the component is mounted
+    // this.fetchAgentBillingDetails();
+
+
+
     if (this.$refs.datepicker) {
       this.datepickerInstance = flatpickr(this.$refs.datepicker, {
         dateFormat: "Y-m-d", // Customize your date format
@@ -929,46 +959,38 @@ export default {
   },
   methods: {
 
-    submitForm() {
-      if (!this.selectedAgents) {
-        alert("Please select an agent.");
-        return; // Prevent the form from being submitted
+    async fetchPersonData() {
+      const personId = this.$route.params.id;
+      try {
+        const response = await axios.get(`http://localhost/dairy/index.php/Home/edit_BillingAgent/${personId}`); // Get the data of the person
+        this.person = response.data;  // Pre-fill the form fields with the person's data
+      } catch (error) {
+        console.error('Error fetching person data:', error);
       }
-      console.log("Payment Status:", this.paymentStatus);
+    },
+  
+    updateAgent() {
+      let formData = new FormData();
+      formData.append('agents', this.agents);
+      formData.append('company', this.company);
+      formData.append('commission', this.commission);
+      // Add more fields if needed
 
-      if (this.paymentStatus !== "Completed") {
-        alert("Payment status must be 'Completed' to submit the form.");
-        return; // Prevent submission
-      }
-      const formData = new FormData(this.$refs.billingForm);
+      const agentId = this.$route.params.id;
 
-      console.log('Submitting form data:', [...formData.entries()]); // Debugging
-
-      axios
-        .post('http://localhost/dairy/index.php/Home/update_AgentsBilling'.$billing_agent_records -> id, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          withCredentials: true,
-        })
-        .then((response) => {
-          console.log('Server response:', response.data); // Debugging
+      axios.put(`http://localhost/dairy/index.php/Home/update_BillingAgent/${agentId}`,  this.person)
+        .then(response => {
           if (response.data.status === 'success') {
-
-            alert('Billing record saved successfully!');
-            // Redirect to the URL provided by the backend
-            window.location.href = response.data.redirect_url;
+            alert('Agent updated successfully!');
+            this.$router.push('/agentBillingList'); // Redirect after success
+          } else {
+            alert('Failed to update agent.');
           }
-
         })
-        .catch((error) => {
-          console.error('Axios error:', error);
-          alert('An error occurred while saving the billing record.');
+        .catch(error => {
+          console.error("Error updating agent:", error);
         });
     },
-
-
-
     openDatePicker() {
       // Open the flatpickr calendar when the icon is clicked
       if (this.datepickerInstance) {
@@ -977,6 +999,7 @@ export default {
         console.error("Flatpickr instance not initialized yet");
       }
     },
+
     toggleDropdown(menu) {
       // Toggle the main menu and close all other menus
       Object.keys(this.menuState).forEach(key => {
@@ -987,6 +1010,7 @@ export default {
         }
       });
     },
+
     toggleSubMenu(menu, subMenu) {
       // Ensure the correct submenu within a specific menu is toggled
       Object.keys(this.menuState[menu].subMenu).forEach(key => {
@@ -999,7 +1023,6 @@ export default {
     },
 
     // Add a new field, up to the max limit
-
     updateSelectedProducts() {
       // Add new products to the fields array
       this.selectedProductIds.forEach((id) => {
@@ -1056,6 +1079,7 @@ export default {
           console.error(error); // Log errors if the request fails
         });
     },
+
     getCompanies() {
       axios.get('http://localhost/dairy/index.php/Home/get_companies')
         .then((response) => {

@@ -40,47 +40,36 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>Expense Date</label>
-                                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                            <input type="text" name="expense_date" class="form-control datetimepicker-input" data-target="#reservationdate" value="<?= $reports_daybook->expense_date ?>">
-                                            <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                            </div>
-                                        </div>
+                                        <label for="expense_date">Expense Date</label>
+                                        <input type="date" name="expense_date" id="expense_date" class="form-control"
+                                            value="<?= isset($reports_daybook->expense_date) ? date('Y-m-d', strtotime($reports_daybook->expense_date)) : '' ?>" required>
+
                                     </div>
-                                 
-
-                                    <!-- select -->
                                     <div class="form-group">
-                                        <label for="name-in" class="col-md-6 label-heading">Companies</label>
-                                        <?php //pr($extra); 
-                                        ?>
-                                        <select name="companies" class="form-control">
-                                            <option value="0">Main Category</option>
-                                            <!-- $query = $this->db->get('reports_daybook');     -->
-                                            <?php foreach ($reg_companies as $company) { ?>
-
-                                                <option <?php if ($company['id'] == $reports_daybook['id']) {
-                                                            echo 'selected';
-                                                        } ?> value="<?php echo $company['id'] ?>"> <?php echo $company['name'] ?> </option>
+                                        <label>Companies</label>
+                                        <select name="companies" id="companies" class="form-control">
+                                            <option value="" default hidden>Companies</option>
+                                            <?php foreach ($ReptDaybooklist as $reg) { ?>
+                                                <option value="<?php echo $reg->id; ?>"
+                                                    <?php echo ($reports_daybook->companies == $reg->id) ? 'selected' : ''; ?>>
+                                                    <?php echo $reg->name; ?>
+                                                </option>
                                             <?php } ?>
                                         </select>
                                     </div>
 
-
-
-
-
-                                    <!-- select -->
                                     <div class="form-group">
                                         <label>Categories</label>
-                                        <select name="categories" class="form-control" value="<?= $reports_daybook->categories ?>">
-                                            <option>stationary</option>
-
+                                        <select name="categories" class="form-control">
+                                            <option value="" default hidden>Categories</option>
+                                            <?php foreach ($ExpCategoryList as $reg) { ?>
+                                                <option value="<?php echo $reg->id; ?>"
+                                                    <?php echo ($reports_daybook->categories == $reg->id) ? 'selected' : ''; ?>>
+                                                    <?php echo $reg->name; ?>
+                                                </option>
+                                            <?php } ?>
                                         </select>
                                     </div>
-
-
 
                                     <!-- button add -->
                                     <button type="submit" class="btn btn-dark" href="#" style="float:right;">Add</button>

@@ -52,7 +52,7 @@
                     <div class="col-md-2">
                         <!-- select -->
                         <label>Select Companies</label>
-                        <select name="" id="employee" class="form-control">
+                        <select name="Company" id="employee" class="form-control">
                             <option value="" selected="selected" default hidden>companies</option>
                             <?php foreach ($RegCompaniesList as $reg) { ?>
                                 <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>

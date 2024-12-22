@@ -82,6 +82,7 @@ display: block;
 <script>
     window.userRole = "<?php echo $this->session->userdata('role') ? $this->session->userdata('role') : ''; ?>";
     console.log("User role from PHP:", window.userRole);
+    
 </script>
 
 
@@ -89,5 +90,5 @@ display: block;
 
 <div id="app">
         <!-- Vue.js will mount here -->
-        
+        <editAgentBilling :billing-agent-records='<?= json_encode($billing_agent_records) ?>'></editAgentBilling>
     </div>

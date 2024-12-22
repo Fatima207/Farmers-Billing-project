@@ -37,8 +37,8 @@ class Home extends CI_Controller
 		$AddProduct = $this->Home_model->save_product();
 		$this->load->view('Home/AddProductList', ['add_products' => $AddProduct]);
 
-		$AddCategories = $this->Home_model->save_categories();
-		$this->load->view('Home/ExpCatgList', ['add_categories' => $AddCategories]);
+		// $AddCategories = $this->Home_model->save_categories();
+		// $this->load->view('Home/ExpCatgList', ['add_categories' => $AddCategories]);
 
 		$ExpDaybook = $this->Home_model->save_daybook();
 		$this->load->view('Home/ExpDaybookList', ['expense_daybook' => $ExpDaybook]);
@@ -623,56 +623,134 @@ class Home extends CI_Controller
 	// Billing section
 
 	// Farmer
+	private function farmer_BillingNumGenerate()
+	{
+		// Get the latest record from the billing table
+		$last_billing = $this->Home_model->get_last_billing_farmers();
 
-
+		if ($last_billing) {
+			// Increment the billing number
+			$last_number = (int) $last_billing->farmer_billing_num;
+			return sprintf('%04d', $last_number + 1); // Generates 0001, 0002, etc.
+		} else {
+			// Start with 0001 if no record exists
+			return '0001';
+		}
+	}
 	public function NewFarmersBilling()
 	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-			);
-			$resp = $this->Home_model->save($data);
+		header('Access-Control-Allow-Origin: http://localhost:8080'); // Allow frontend
+		header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow methods
+		header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization'); // Allow headers
+		header('Access-Control-Allow-Credentials: true'); // Allow credentials
+
+		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+			exit(0); // Handle preflight request
+		}
+		// Validate input data
+		if (!$this->input->post('farmer')) {
+			log_message('error', 'Farmer is missing.');
+			echo json_encode(['status' => 'error', 'message' => 'farmer is required.']);
+			return;
+		}
+		$paymentStatus = $this->input->post('payment_status');
+		if ($paymentStatus !== 'Completed') {
+			echo json_encode(['status' => 'error', 'message' => 'Payment status must be "Completed"']);
 			exit;
 		}
+		$billing_number = $this->farmer_BillingNumGenerate();
+
+
+
+		$postData = [
+			'farmer_billing_num' => $billing_number,
+			'farmer'          => $this->input->post('farmer'),
+			'Company'        => $this->input->post('Company'),
+			'commission' => $this->input->post('commission'),
+			'grand_total' => $this->input->post('grand_total'),
+			'final_total' =>  $this->input->post('final_total'),
+			'total_dues' =>  $this->input->post('total_dues'),
+			'payment_status' => $paymentStatus,
+		];
+
+		try {
+			$resp = $this->Home_model->get_farmersBilling($postData);
+			log_message('error', 'Failed to save billing.');
+			if ($resp) {
+				echo json_encode([
+					'status' => 'success',
+					'redirect_url' => 'http://localhost/dairy/index.php/Home/FarmersBillingList', // Redirection URL
+				]);
+			} else { // Failure response
+				echo json_encode(['status' => 'error', 'message' => 'Failed to save billing record.']);
+			}
+		} catch (Exception $e) {
+			// Exception handling
+			echo json_encode(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()]);
+		};
+
+
+		return; // Avoid redirecting for API requests
 		$data['RegFarmerList'] = $this->Home_model->get_farmers();
 		$data['RegCompaniesList'] = $this->Home_model->get_companies();
 		$data['ProductList'] = $this->Home_model->get_products();
-		// $_REQUEST=$this->input->request();
-
-		// $data['EmpList'] = $this->Home_model->get_Employee($_REQUEST);
-
-		// echo json_encode($data);
-
 
 		$this->load->view('Partials/header');
-		$this->load->view('Home/Billingfarmer', $data);
+		$this->load->view('vue-bill/src/components/BillingFarmer.vue', $data);
 		$this->load->view('Partials/footer');
 	}
+
 	public function FarmersBillingList()
 	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
-			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
-			exit;
-		}
+		// $data['query'] = $this->Home_model->get_farmersBilling();		
 		$this->load->view('Partials/header');
-		$this->load->view('Home/BillingfarmerList');
+		$this->load->view('Home/BillingFarmerList');
 		$this->load->view('Partials/footer');
 	}
+	public function delete_BillingFarmer($id)
+	{
+		$this->load->model('Home_model');
+
+		// Attempt to delete the record
+		$this->Home_model->delete_BillingFarmer($id);
+
+
+		// Redirect to the Farmers Billing List page
+		redirect(site_url('index.php/Home/FarmersBillingList'));
+	}
+
+
+	// public function update_BillingFarmer($id)
+	// {
+	// 	$paymentStatus = $this->input->post('payment_status');
+	// 	$billing_number = $this->farmer_BillingNumGenerate();
+
+
+	// 	$data = [
+	// 		'farmer_billing_num' => $billing_number,
+	// 		'farmer'          => $this->input->post('farmer'),
+	// 		'Company'        => $this->input->post('Company'),
+	// 		'commission' => $this->input->post('commission'),
+	// 		'grand_total' => $this->input->post('grand_total'),
+	// 		'final_total' =>  $this->input->post('final_total'),
+	// 		'total_dues' =>  $this->input->post('total_dues'),
+	// 		'payment_status' => $paymentStatus,
+	// 	];
+	// 	$resp = $this->Home_model->update_BillingFarmer($data, $id);
+
+
+	// 	if ($resp) {
+	// 		$this->session->set_flashdata('msg', array('show_msg' => 'Field Updated successfully !', 'type' => 'success'));
+	// 	} else {
+	// 		$this->session->set_flashdata('msg', array('show_msg' => 'It seems you didn\'t change anything !', 'type' => 'warning'));
+	// 	}
+	// 	$this->load->model('Home_model');
+	// 	redirect(site_url('index.php/Home/BillingFarmerList'));
+	// }
 	private function generate_billing_number()
 	{
 		// Get the latest record from the billing table
-		$last_billing = $this->Home_model->get_last_billing();
+		$last_billing = $this->Home_model->get_last_billing_agents();
 
 		if ($last_billing) {
 			// Increment the billing number
@@ -695,6 +773,9 @@ class Home extends CI_Controller
 		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 			exit(0); // Handle preflight request
 		}
+		// echo "<pre>";
+		// print_r($_POST);
+		// echo "</pre>";
 		// Validate input data
 		if (!$this->input->post('agent')) {
 			log_message('error', 'Agent is missing.');
@@ -706,13 +787,7 @@ class Home extends CI_Controller
 			echo json_encode(['status' => 'error', 'message' => 'Payment status must be "Completed"']);
 			exit;
 		}
-		// $paymentStatus = $this->input->post('payment_status');
 		$billing_number = $this->generate_billing_number();
-		// 	if ($paymentStatus !== 'Completed') {
-		// 		echo json_encode(['status' => 'error', 'message' => 'Payment status must be "Completed"']);
-		// 		exit;
-		// 	};
-		// // Ensure payment status is "Completed"
 
 
 		$postData = [
@@ -742,9 +817,8 @@ class Home extends CI_Controller
 			echo json_encode(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()]);
 		};
 
-
 		return; // Avoid redirecting for API requests
-	$data['RegAgentList'] = $this->Home_model->get_agents();
+		$data['RegAgentList'] = $this->Home_model->get_agents();
 		$data['RegCompaniesList'] = $this->Home_model->get_companies();
 		$data['ProductList'] = $this->Home_model->get_products();
 
@@ -756,68 +830,127 @@ class Home extends CI_Controller
 
 	public function AgentsBillingList()
 	{
-		// $data['query'] = $this->Home_model->get_agentsBilling();
+		// $postData['query'] = $this->Home_model->get_agentsBilling();
 		$this->load->view('Partials/header');
 		$this->load->view('Home/BillingAgentList');
 		$this->load->view('Partials/footer');
 	}
+	public function saveAgentsProductDetails() {
+		$data = $this->input->post();
+		if (empty($data['product_id']) || empty($data['qty']) || empty($data['price'])) {
+			echo json_encode(['status' => 'error', 'message' => 'Missing required fields']);
+			return;
+		}
+		// Save to database logic here...
+		echo json_encode(['status' => 'success']);
+	}
+	
+	public function delete_AgentBilling($id)
+	{
+		$this->load->model('Home_model');
+		if ($this->Home_->delete_BillingAgent($id)) {
+			echo json_encode(['status' => 'success', 'message' => 'Record deleted successfully']);
+		} else {
+			echo json_encode(['status' => 'error', 'message' => 'Failed to delete record']);
+		}
+	}
 	public function edit_BillingAgent($id)
 	{
+		header('Access-Control-Allow-Origin: http://localhost:8080'); // Allow frontend
+		header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow methods
+		header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization'); // Allow headers
+		header('Access-Control-Allow-Credentials: true'); // Allow credentials
+
+		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+			exit(0); // Handle preflight request
+		}
+
 		$this->load->view('Partials/header');
 
 		$this->load->model('Home_model');
 		$data['billing_agent_records'] = $this->Home_model->edit_BillingAgent($id);
-
-		$this->load->view('Home/editRegisterFarmer', $data);
+		echo json_encode($data); // Return JSON response for Vue
+		$this->load->view('vue-bill/src/components/editAgentBilling.vue', $data);
 		$this->load->view('Partials/footer');
 	}
+	// public function update_BillingAgent($id)
+	// {
+	// 	if (!$this->input->post('agent')) {
+	// 		log_message('error', 'Agent is missing.');
+	// 		echo json_encode(['status' => 'error', 'message' => 'Agent is required.']);
+	// 		return;
+	// 	}
+	// 	$paymentStatus = $this->input->post('payment_status');
+	// 	if ($paymentStatus !== 'Completed') {
+	// 		echo json_encode(['status' => 'error', 'message' => 'Payment status must be "Completed"']);
+	// 		exit;
+	// 	};
+	// 	$postData = [
+	// 		'billing_number' =>  $this->input->post('billing_number'),
+	// 		'agent'          => $this->input->post('agent'),
+	// 		'company'        => $this->input->post('company'),
+	// 		'commission' => $this->input->post('commission'),
+	// 		'grand_total' => $this->input->post('grand_total'),
+	// 		'final_total' =>  $this->input->post('final_total'),
+	// 		'total_dues' =>  $this->input->post('total_dues'),
+	// 		'payment_status' => $paymentStatus,
+	// 	];
+
+	// 	try {
+	// 		$resp = $this->Home_model->update_BillingAgent($postData);
+	// 		log_message('error', 'Failed to save billing.');
+	// 		if ($resp) {
+	// 			echo json_encode([
+	// 				'status' => 'success',
+	// 				'redirect_url' => 'http://localhost/dairy/index.php/Home/AgentsBillingList', // Redirection URL
+	// 			]);
+	// 		} else { // Failure response
+	// 			echo json_encode(['status' => 'error', 'message' => 'It seems you didn\'t change anything !']);
+	// 		}
+	// 	} catch (Exception $e) {
+	// 		// Exception handling
+	// 		echo json_encode(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()]);
+	// 	};
+
+
+	// 	return; // Avoid redirecting for API requests
+	// 	$data['RegAgentList'] = $this->Home_model->get_agents();
+	// 	$data['RegCompaniesList'] = $this->Home_model->get_companies();
+	// 	$data['ProductList'] = $this->Home_model->get_products();
+	// }
 	public function update_BillingAgent($id)
 	{
-		if (!$this->input->post('agent')) {
-			log_message('error', 'Agent is missing.');
-			echo json_encode(['status' => 'error', 'message' => 'Agent is required.']);
-			return;
+		header('Access-Control-Allow-Origin: http://localhost:8080');
+		header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
+		header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization');
+		header('Access-Control-Allow-Credentials: true');
+
+		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+			exit(0);
 		}
-		$paymentStatus = $this->input->post('payment_status');
-		if ($paymentStatus !== 'Completed') {
-			echo json_encode(['status' => 'error', 'message' => 'Payment status must be "Completed"']);
-			exit;
-		};
-		$postData = [
-			'billing_number' =>  $this->input->post('billing_number'),
-			'agent'          => $this->input->post('agent'),
-			'company'        => $this->input->post('company'),
-			'commission' => $this->input->post('commission'),
-			'grand_total' => $this->input->post('grand_total'),
-			'final_total' =>  $this->input->post('final_total'),
-			'total_dues' =>  $this->input->post('total_dues'),
-			'payment_status' => $paymentStatus,
+
+		$data = json_decode(file_get_contents("php://input"), true);
+
+		$updateData = [
+			'billing_number' => $data['billing_number'],
+			'agents' => $data['agents'],
+			'company' => $data['company'],
+			'commission' => $data['commission'],
+			'grand_total' => $data('grand_total'),
+			'final_total' => $data('final_total'),
+			'total_dues' => $data('total_dues'),
+			'payment_status' => $data('payment_status')
+			// Add other fields here
 		];
 
-		try {
-			$resp = $this->Home_model->update_BillingAgent($postData);
-			log_message('error', 'Failed to save billing.');
-			if ($resp) {
-				echo json_encode([
-					'status' => 'success',
-					'redirect_url' => 'http://localhost/dairy/index.php/Home/AgentsBillingList', // Redirection URL
-				]);
-			} else { // Failure response
-				echo json_encode(['status' => 'error', 'message' => 'It seems you didn\'t change anything !']);
-			}
-		} catch (Exception $e) {
-			// Exception handling
-			echo json_encode(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()]);
-		};
-
-
-		return; // Avoid redirecting for API requests
-	$data['RegAgentList'] = $this->Home_model->get_agents();
-		$data['RegCompaniesList'] = $this->Home_model->get_companies();
-		$data['ProductList'] = $this->Home_model->get_products();
-
+		$this->db->where('id', $id);
+		if ($this->db->update('billing_agent_records', $updateData)) {
+			echo json_encode(['status' => 'success', 'message' => 'Record updated successfully']);
+		} else {
+			echo json_encode(['status' => 'error', 'message' => 'Failed to update record']);
+		}
 	}
-	
+
 	// Retailers
 	public function RetBilling()
 	{
@@ -838,7 +971,7 @@ class Home extends CI_Controller
 		$this->load->view('Home/BillingRetailer.php', $data);
 		$this->load->view('Partials/footer');
 	}
-	public function RetList()
+	public function RetailersBillingList()
 	{
 		if ($this->input->post()) {
 			//have post
@@ -869,8 +1002,8 @@ class Home extends CI_Controller
 				'name' => $this->input->post("name"),
 				'description' => $this->input->post("description"),
 				'amount' => $this->input->post("amount"),
-				'expense_date' => $this->input->post("expense_date"),
-				// 'added_by' => $this->input->post("added_by"),
+				'expense_date' => date('Y-m-d', strtotime($this->input->post('expense_date'))),
+
 				'added_at' => date('Y-m-d h:i:s'),
 				//  'updated_by' => $this->input->post("updated_by"),
 				'updated_at' => date('Y-m-d h:i:s'),
@@ -917,7 +1050,7 @@ class Home extends CI_Controller
 			'name' => $this->input->post("name"),
 			'description' => $this->input->post("description"),
 			'amount' => $this->input->post("amount"),
-			'expense_date' => $this->input->post("expense_date"),
+			'expense_date' => date('Y-m-d', strtotime($this->input->post('expense_date'))),
 			// 'added_by' => $this->input->post("added_by"),
 			'added_at' => date('Y-m-d h:i:s'),
 			//  'updated_by' => $this->input->post("updated_by"),
@@ -957,7 +1090,9 @@ class Home extends CI_Controller
 				'Amount' => $this->input->post("Amount"),
 				'Company' => $this->input->post("Company"),
 				'Category' => $this->input->post("Category"),
-				'Expense_date' => $this->input->post("Expense_date"),
+				// 'Expense_date' => $expense_date,
+				'Expense_date' => date('Y-m-d', strtotime($this->input->post('Expense_date'))),
+
 				// 'added_by' => $this->input->post("added_by"),
 				'added_at' => date('Y-m-d h:i:s'),
 				//  'updated_by' => $this->input->post("updated_by"),
@@ -998,6 +1133,9 @@ class Home extends CI_Controller
 
 		$this->load->model('Home_model');
 		$data['expense_daybook'] = $this->Home_model->edit_ExpenseDaybook($id);
+		// 'countries' => $countries->result()
+		$data['RegCompanyList'] = $this->Home_model->get_companies();
+		$data['ExpCategoryList'] = $this->Home_model->get_categories();
 
 		$this->load->view('Home/editExpenseDaybook', $data);
 		$this->load->view('Partials/footer');
@@ -1008,9 +1146,11 @@ class Home extends CI_Controller
 		$data = [
 			'expense_by' => $this->input->post("expense_by"),
 			'Amount' => $this->input->post("Amount"),
+			'Expense_date' => date('Y-m-d', strtotime($this->input->post('Expense_date'))),
 			'Company' => $this->input->post("Company"),
 			'Category' => $this->input->post("Category"),
-			'Expense_date' => $this->input->post("Expense_date"),
+
+			// 'Expense_date' => $this->input->post("Expense_date"),
 			// 'added_by' => $this->input->post("added_by"),
 			'added_at' => date('Y-m-d h:i:s'),
 			//  'updated_by' => $this->input->post("updated_by"),
@@ -1189,10 +1329,8 @@ class Home extends CI_Controller
 				'amount' => $this->input->post("amount"),
 				'companies' => $this->input->post("companies"),
 				'categories' => $this->input->post("categories"),
-				'expense_date' => $this->input->post("expense_date"),
-				// 'added_by' => $this->input->post("added_by"),
+				'expense_date' => date('Y-m-d', strtotime($this->input->post('expense_date'))),
 				'added_at' => date('Y-m-d h:i:s'),
-				//  'updated_by' => $this->input->post("updated_by"),
 				'updated_at' => date('Y-m-d h:i:s'),
 			);
 			$resp = $this->Home_model->save_reportdaybook($data);
@@ -1204,8 +1342,7 @@ class Home extends CI_Controller
 			redirect(site_url('index.php/Home/ReptDaybooklist'));
 		}
 		$data['ReptDaybooklist'] = $this->Home_model->get_companies();
-		$data['ExpCategorieslist'] = $this->Home_model->get_categories();
-
+		$data['ExpCategoryList'] = $this->Home_model->get_categories();
 
 
 		$this->load->view('Partials/header');
@@ -1227,6 +1364,9 @@ class Home extends CI_Controller
 
 		$this->load->model('Home_model');
 		$data['reports_daybook'] = $this->Home_model->edit_ReportDaybook($id);
+		// 'countries' => $countries->result()
+		$data['ReptDaybooklist'] = $this->Home_model->get_companies();
+		$data['ExpCategoryList'] = $this->Home_model->get_categories();
 
 		$this->load->view('Home/editReportDaybook', $data);
 		$this->load->view('Partials/footer');
@@ -1237,9 +1377,9 @@ class Home extends CI_Controller
 		$data = [
 			'expenses_by' => $this->input->post("expenses_by"),
 			'amount' => $this->input->post("amount"),
+			'expense_date' => date('Y-m-d', strtotime($this->input->post('expense_date'))),
 			'companies' => $this->input->post("companies"),
 			'categories' => $this->input->post("categories"),
-			'expense_date' => $this->input->post("expense_date"),
 			// 'added_by' => $this->input->post("added_by"),
 			'added_at' => date('Y-m-d h:i:s'),
 			//  'updated_by' => $this->input->post("updated_by"),

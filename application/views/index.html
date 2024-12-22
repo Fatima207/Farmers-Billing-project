@@ -9,4 +9,7 @@
 
 </body>
 <script> window.baseUrl = '<?php echo base_url(); ?>';</script>
+window.billingAgentRecords = {
+    company: <?php echo json_encode($billing_agent_records->company); ?>
+  };
 </html>

@@ -34,10 +34,12 @@
 </script>
 
 <script src="http://localhost:8080/#/BillingFarmer"></script>
+<script src="http://localhost:8080/#/BillingAgent"></script>
+<script src="http://localhost:8080/#/editAgentBilling"></script>
+
 
 <script src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 
-<script src="<?= base_url('js/app.js') ?>"></script>
 <!-- Bootstrap 4 -->
 <script src="<?= base_url() ?>assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Select2 -->
@@ -71,8 +73,7 @@
     document.getElementById("print-button").addEventListener("click", function() {
         window.print();
     });
-</script>
-<script type="text/javascript">
+</script><script type="text/javascript">
     $(document).ready(function() {
         $("#employee").change(function() {
             var id = $(this).find(":selected").val();
@@ -84,23 +85,23 @@
                 cache: false,
                 success: function(empData) {
                     if (empData) {
-                        $("#errormassage").addclass('hidden').text("");
+                        $("#errormassage").addClass('hidden').text("");
                         $("#recordListing").removeClass('hidden');
-                        $("#id").text('empData.id');
-                        $("#name").text('empData.name');
-                        $("#code").text('empData.code');
-                        $("#address").text('empData.address');
-                        $("#contact_number").text('empData.contact_number');
-
+                        $("#id").text(empData.id);
+                        $("#name").text(empData.name);
+                        $("#code").text(empData.code);
+                        $("#address").text(empData.address);
+                        $("#contact_number").text(empData.contact_number);
                     } else {
                         $('#recordListing').addClass('hidden');
-                        $("#errorMassage").removeClass('hidden').text("No record found!");
+                        $("#errormassage").removeClass('hidden').text("No record found!");
                     }
                 }
-            })
+            });
         });
-    })
+    });
 </script>
+
 <script>
     $(function() {
         //Initialize Select2 Elements
@@ -150,33 +151,6 @@
         $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
       }
     )
-
-//     $('#daterange-btn').daterangepicker(
-//   {
-//     ranges   : {
-//       'Today'       : [moment(), moment()],
-//       'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-//       'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
-//       'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-//       'This Month'  : [moment().startOf('month'), moment().endOf('month')],
-//       'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-//     },
-//     startDate: moment().subtract(29, 'days'),
-//     endDate  : moment(),
-//     locale: {
-//       format: 'DD/MM/YYYY'  // ensure you are using the correct format
-//     }
-//   },
-//   function (start, end) {
-//     // Debug to see if start and end dates are correct
-//     console.log("Start Date:", start.format('DD/MM/YYYY'));
-//     console.log("End Date:", end.format('DD/MM/YYYY'));
-
-//     $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
-//   }
-// );
-
-
         //Timepicker
         $("#timepicker").datetimepicker({
             format: "LT",
@@ -200,6 +174,7 @@
     });
 
 </script>
+
 
 
 </body>

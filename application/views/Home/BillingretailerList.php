@@ -50,85 +50,43 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>
-                        Yaa
-                    </td>
+                    <?php
+                    $query = $this->db->select('bfr.*, f.name AS retailer, c.name AS company')
+                        ->from('billing_retailer_records AS bfr')
+                        ->join('reg_retailers AS f', 'bfr.retailer = f.id', 'left')
+                        ->join('reg_companies AS c', 'bfr.company = c.id', 'left')
+                        ->get();
 
-                    <td>
-                        ya@gmail.com
-                    </td>
-
-                    <td>
-                        20
-                    </td>
-
-                    <td>
-                        fsgg
-                    </td>
-
-                    <td>
-                        2043561265
-                    </td>
-
-                    <td>
-                        sf
-                    </td>
-
-                    <td>
-                        er
-                    </td>
-
-                    <td>
-                        completed
-                    </td>
-
-                    <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
-                    </td>
-
-                </tr>
-
+                    foreach ($query->result() as $row): ?>
                 <tr>
-                    <td>
-                        sdf
-                    </td>
-
-                    <td>
-                        sd@gmail.com
-                    </td>
-
-                    <td>
-                        30
-                    </td>
-
-                    <td>
-                        fwfg
-                    </td>
-
-                    <td>
-                        3032456787
-                    </td>
-
-                    <td>
-                        sh
-                    </td>
-
-                    <td>
-                        dssh
-                    </td>
-
-                    <td>
-                        completed
-                    </td>
+                    <td><?php echo $row->billing_number; ?></td>
+                    <td><?php echo $row->retailer; ?></td>
+                    <td><?php echo $row->company; ?></td>
+                    <td><?php echo $row->commission; ?></td>
+                    <td><?php echo $row->grand_total; ?></td>
+                    <td><?php echo $row->final_total; ?></td>
+                    <td><?php echo $row->total_dues; ?></td>
+                    <td><?php echo $row->payment_status; ?></td>
 
 
                     <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
+                        <!-- <a class="btn btn-success" href="http://localhost:8080/#/editAgentBilling" >Edit</a> -->
+                        <a class="btn btn-success" href="http://localhost:8080/#/editAgentBilling/<?php echo $row->id; ?>">Edit</a>
+                        <!-- <router-link :to="{ name: 'editAgentBilling', params: { id: row.id } }" class="btn btn-success">
+                                Edit
+                            </router-link> -->
+
+
+                        <a href="<?php echo base_url('index.php/Home/RegAgentList/delete_RegisterAgent/' . $row->id) ?>" class="btn btn-danger">Delete</a>
                     </td>
 
                 </tr>
+
+            <?php
+                    endforeach;
+            ?>
+
+            </tbody>
 
             </tbody>
         </table>

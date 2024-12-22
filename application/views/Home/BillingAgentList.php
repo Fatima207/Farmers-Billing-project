@@ -13,7 +13,7 @@
                     <div style="margin-left:550px;">
                         <a class="btn btn-success " id="print-button" href="#">Export</a>
                     </div>
-                   
+
 
                 </div>
             </div>
@@ -42,10 +42,15 @@
             <tbody>
                 <tr>
                     <?php
-                    $query = $this->db->get('billing_agent_records');
-                    foreach ($query->result() as $row): ?>
-
-
+                    $query = $this->db->select('bfr.*, f.name AS agent, c.name AS company')
+                    ->from('billing_agent_records AS bfr')
+                    ->join('reg_agents AS f', 'bfr.agent = f.id', 'left')
+                    ->join('reg_companies AS c', 'bfr.company = c.id', 'left')
+                    ->get();
+                
+                foreach ($query->result() as $row): ?>
+                    <tr>
+                     
                         <td><?php echo $row->billing_number; ?></td>
                         <td><?php echo $row->agent; ?></td>
                         <td><?php echo $row->company; ?></td>
@@ -57,12 +62,14 @@
 
 
                         <td>
-                            <a class="btn btn-success" href="<?php echo base_url('index.php/Home/BillingAgentList/edit_BillingAgent/' . $row->id) ?>">Edit</a>
-                            <a href="<?php echo base_url('index.php/Home/RegAgentList/delete_RegisterAgent/' . $row->id) ?>" class="btn btn-danger">Delete</a>
+                            <!-- <a class="btn btn-success" href="http://localhost:8080/#/editAgentBilling" >Edit</a> -->
+                            <a class="btn btn-success" href="http://localhost:8080/#/editAgentBilling/<?php echo $row->id; ?>">Edit</a>
+                           
+                            <a href="<?php echo base_url('index.php/Home/AgentsBillingList/delete_BillingAgent/' . $row->id) ?>" class="btn btn-danger">Delete</a>
                         </td>
 
-                </tr>
 
+                </tr>
             <?php
                     endforeach;
             ?>

@@ -11,9 +11,10 @@
                         <h1>FarmersBilling List</h1>
                     </div>
                     <div style="margin-left:550px;">
-                        <a class="btn btn-success " href="#" id="print-button">Export</a>
+                        <a class="btn btn-success " id="print-button" href="#">Export</a>
                     </div>
-                    
+
+
                 </div>
             </div>
             <!-- /.container-fluid -->
@@ -40,90 +41,38 @@
             </thead>
             <tbody>
                 <tr>
-                    <td>
-                        Yaa
-                    </td>
+                    <?php
+                  $query = $this->db->select('bfr.*, f.name AS farmer, c.name AS Company')
+                  ->from('billing_farmer_records AS bfr')
+                  ->join('reg_farmers AS f', 'bfr.farmer = f.id', 'left')
+                  ->join('reg_companies AS c', 'bfr.Company = c.id', 'left')
+                  ->get();
 
-                    <td>
-                        ya@gmail.com
-                    </td>
-
-                    <td>
-                        20
-                    </td>
-
-                    <td>
-                        fsgg
-                    </td>
-
-                    <td>
-                        2043561265
-                    </td>
-
-                    <td>
-                        sf
-                    </td>
-
-                    <td>
-                        er
-                    </td>
-
-                    <td>
-                        completed
-                    </td>
-
-                    <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
-                    </td>
-
-                </tr>
-
-                <tr>
-                    <td>
-                        sdf
-                    </td>
-
-                    <td>
-                        sd@gmail.com
-                    </td>
-
-                    <td>
-                        30
-                    </td>
-
-                    <td>
-                        fwfg
-                    </td>
-
-                    <td>
-                        3032456787
-                    </td>
-
-                    <td>
-                        sh
-                    </td>
-
-                    <td>
-                        dssh
-                    </td>
-
-                    <td>
-                        completed
-                    </td>
-
-
-                    <td>
-                        <a class="btn btn-success" href="#">Edit</a>
-                        <a class="btn btn-danger" href="#">Delete</a>
-                    </td>
-
-                </tr>
-
+               
+              foreach ($query->result() as $row): ?>
+                  <tr>
+                      <td><?php echo $row->farmer_billing_num; ?></td>
+                      <td><?php echo $row->farmer; ?></td> <!-- Farmer's Name -->
+                      <td><?php echo $row->Company; ?></td> <!-- Company's Name -->
+                      <td><?php echo $row->commission; ?></td>
+                      <td><?php echo $row->grand_total; ?></td>
+                      <td><?php echo $row->final_total; ?></td>
+                      <td><?php echo $row->total_dues; ?></td>
+                      <td><?php echo $row->payment_status; ?></td>
+                      <td>
+                          <a class="btn btn-success" href="http://localhost:8080/#/editAgentBilling/<?php echo $row->id; ?>">Edit</a>
+                          <a href="<?php echo site_url('index.php/Home/FarmersBillingList/delete_BillingFarmer/' . $row->id); ?>" 
+                             class="btn btn-danger"
+                             onclick="return confirm('Are you sure you want to delete this record?');">
+                             Delete
+                          </a>
+                      </td>
+                  </tr>
+              <?php endforeach; 
+               
+                  ?>
             </tbody>
         </table>
-
-
 
 
         <!-- /.content -->

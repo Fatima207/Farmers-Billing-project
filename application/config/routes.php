@@ -103,10 +103,14 @@ $route['Home/ReptDaybooklist/update_ReportDaybook/(:any)'] = 'Home/update_Report
 
 // $route["(:any)/(:any)/(:any)"] = "Home/index/$1";
 
+$route['(:any)'] = 'Home/index';
+
+$route['generate-billing-number'] = 'BillingController/generate_billing_number';
+$route['index.php/Home/FarmersBillingList/delete_BillingFarmer/(:num)'] = 'index.php/Home/FarmersBillingList/delete_BillingFarmer/$1';
+
+// In routes.php
+$route['edit_BillingAgent/(:num)'] = 'dairy/index.php/HomeHome/edit_BillingAgent/$1'; // Make sure this matches the correct method
 
 
 
-
-
-
-
+ 

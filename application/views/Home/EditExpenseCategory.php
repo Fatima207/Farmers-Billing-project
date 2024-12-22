@@ -40,14 +40,12 @@
                                         <label for="Amount" class="">Amount</label><br>
                                         <input type="number" required="" placeholder="Enter Qty" name="amount" class="form-control" value="<?= $add_categories->amount ?>">
                                     </div>
+                                    
                                     <div class="form-group">
-                                        <label>Expense Date & Time</label>
-                                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                            <input type="text" class="form-control datetimepicker-input" name="expense_date" data-target="#reservationdate" value="<?= $add_categories->expense_date ?>" />
-                                            <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                                <div class="input-group-text "><i class="fa fa-calendar"></i></div>
-                                            </div>
-                                       </div>
+                                        <label for="expense_date">Expense Date</label>
+                                        <input type="date" name="expense_date" id="expense_date" class="form-control"
+                                            value="<?= isset($add_categories->expense_date) ? date('Y-m-d', strtotime($add_categories->expense_date)) : '' ?>" required>
+
                                     </div>
 
                                 </div>

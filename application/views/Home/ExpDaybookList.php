@@ -42,14 +42,19 @@
             <tbody>
                 <tr>
                 <?php
-                    $query = $this->db->get('expense_daybook');
+                    // $query = $this->db->get('expense_daybook');
+                    $query = $this->db->select('bfr.*, f.name AS Company, c.name AS Category')
+                    ->from('expense_daybook AS bfr')
+                    ->join('reg_companies AS f', 'bfr.Company = f.id', 'left')
+                    ->join('add_categories AS c', 'bfr.Category = c.id', 'left')
+                    ->get();
                     foreach ($query->result() as $row): ?>
 
                         <td><?php echo $row->expense_by; ?></td>
                         <td><?php echo $row->Amount; ?></td>
                         <td><?php echo $row->Company; ?></td>
                         <td><?php echo $row->Category; ?></td>
-                        <td><?php echo $row->Expense_date; ?></td>
+                        <td><?php echo date('Y-m-d', strtotime($row->Expense_date)); ?></td>
                         <td>
                             <a class="btn btn-success" href="<?php echo base_url('index.php/Home/ExpDaybookList/edit_ExpenseDaybook/' .$row->id)?>">Edit</a>
                             <a href="<?php echo base_url('index.php/Home/ExpDaybookList/delete_ExpenseDaybook/' .$row->id)?>"class="btn btn-danger">Delete</a>

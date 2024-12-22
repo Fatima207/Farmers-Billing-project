@@ -43,14 +43,21 @@
             <tbody>
                 <tr>
                 <?php
-                    $query = $this->db->get('reports_daybook');
+                    // $query = $this->db->get('reports_daybook');
+
+                    $query = $this->db->select('bfr.*, f.name AS companies, c.name AS categories')
+                    ->from('reports_daybook AS bfr')
+                    ->join('reg_companies AS f', 'bfr.companies = f.id', 'left')
+                    ->join('add_categories AS c', 'bfr.categories = c.id', 'left')
+                    ->get();
+
                     foreach ($query->result() as $row): ?>
 
                         <td><?php echo $row->expenses_by; ?></td>
                         <td><?php echo $row->amount; ?></td>
                         <td><?php echo $row->companies; ?></td>
                         <td><?php echo $row->categories; ?></td>
-                        <td><?php echo $row->expense_date; ?></td>
+                        <td><?php echo date('Y-m-d', strtotime($row->expense_date)); ?></td>
                        
                         <td>
                             <a class="btn btn-success" href="<?php echo base_url('index.php/Home/ReptDaybooklist/edit_ReportDaybook/' .$row->id)?>">Edit</a>

@@ -154,7 +154,7 @@
                   <router-link to="/BillingFarmer" class="nav-link"> New Billing</router-link>
                 </li>
                 <li class="nav-item">
-                  <a :href="farmerListSrc" class="nav-link">View All</a>
+                  <a :href="BillingfarmerListSrc" class="nav-link">View All</a>
                 </li>
               </ul>
             </li>
@@ -171,7 +171,7 @@
                   <router-link to="/BillingAgent" class="nav-link"> New Billing</router-link>
                 </li>
                 <li class="nav-item">
-                  <a :href="agentsListsrc" class="nav-link">View All</a>
+                  <a :href="BillingAgentsListsrc" class="nav-link">View All</a>
                 </li>
               </ul>
             </li>
@@ -187,7 +187,7 @@
                   <router-link to="/BillingRetailer" class="nav-link"> New Billing</router-link>
                 </li>
                 <li class="nav-item">
-                  <a :href="retailerListSrc" class="nav-link">View All</a>
+                  <a :href="BillingretailerListSrc" class="nav-link">View All</a>
                 </li>
               </ul>
             </li>
@@ -465,20 +465,21 @@
                           <label class="ml-5">Total Quantity: {{ calculateTotalQuantity(product) }}</label>
 
                           <!-- Flex container for fields -->
-                          <div v-for="(field, fieldIndex) in product.fields || []" :key="fieldIndex"
-                            class="d-flex flex-wrap" style="gap: 20px;">
-
+                          <div v-for="(field, index) in product.fields || []" :key="index" class="d-flex flex-wrap"
+                            style="gap: 20px;">
+                            <!-- <p>Field {{ index + 1 }}</p> -->
                             <!-- Qty field -->
+                            <input type="hidden" name="product_id[]" v-model="fields.product_id">
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Qty</label>
-                              <input type="number" v-model="field.qty" required placeholder="Enter Qty"
+                              <input type="number" name="qty[]" v-model="field.qty" required placeholder="Enter Qty"
                                 style="width:100%; padding: 0px; box-sizing: border-box;" />
                             </div>
 
                             <!-- Unit field -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Unit</label>
-                              <select v-model="field.unit" style="width: 100%; padding: 0px;">
+                              <select v-model="field.unit" name="unit[]" style="width: 100%; padding: 0px;">
                                 <option value="kg">kg</option>
                                 <option value="g">g</option>
                                 <option value="pound">pound</option>
@@ -488,8 +489,8 @@
                             <!-- Price field -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Price</label>
-                              <input type="number" v-model="field.price" required placeholder="Enter Price"
-                                style="width: 100%; padding: 0px; box-sizing: border-box;" />
+                              <input type="number" name="price[]" v-model="field.price" required
+                                placeholder="Enter Price" style="width: 100%; padding: 0px; box-sizing: border-box;" />
                             </div>
 
                             <!-- Amount calculation and remove button -->
@@ -598,7 +599,8 @@
                   <!-- Payment Status -->
                   <div style="margin-right: 20px;">
                     <label for="paymentStatus" style="display: block;">Payment Status</label>
-                    <select name="payment_status" id="paymentStatus"  v-model="paymentStatus" style="width: 150px; height: 40px;" required>
+                    <select name="payment_status" id="paymentStatus" v-model="paymentStatus"
+                      style="width: 150px; height: 40px;" required>
                       <option value="" disabled selected>Payment Status</option>
                       <option value="Completed">Completed</option>
                       <option value="Pending">Pending</option>
@@ -682,7 +684,7 @@ export default {
       paymentStatus: "",
       agents: [],              // This will store the list of Agentss from the backend
       selectedAgents: '',      // This stores the selected farmer ID from the dropdown
-
+      billingList: [], // Array to store the billing list
       comp: [],
       selectedCompanies: '',
       selectedProductIds: [],
@@ -691,6 +693,9 @@ export default {
         { id: 2, name: "Whales", fields: [] },
         { id: 3, name: "Katla", fields: [] },
         { id: 4, name: "Shark", fields: [] },
+      ],
+      product: [
+        { product_id: '', qty: '', unit: '', price: '' }
       ],
       // selectedProducts:'',
       selectedProducts: [],
@@ -897,17 +902,24 @@ export default {
     ProfitLossSrc() {
       return `http://localhost/dairy/index.php/Home/ProfitLoss`
     },
+    BillingAgentsListsrc() {
+      return `http://localhost/dairy/index.php/Home/AgentsBillingList`
+    },
+    BillingfarmerListSrc() {
+      return `http://localhost/dairy/index.php/Home/FarmersBillingList`
 
+    },
+    BillingretailerListSrc() {
+      return `http://localhost/dairy/index.php/Home/RetailersBillingList`
+
+    }
   },
 
   mounted() {
     this.getAgents();
     this.getCompanies();
     this.getProducts();
-    // this.submitForm();
-    // if (!sessionStorage.getItem('formSubmitted')) {
-    //   sessionStorage.setItem('formSubmitted', 'false');
-    // }
+    // this.saveProductDetails();
     // Safely initialize flatpickr when the component is mounted
     if (this.$refs.datepicker) {
       this.datepickerInstance = flatpickr(this.$refs.datepicker, {
@@ -925,22 +937,51 @@ export default {
     }
   },
   methods: {
+    // saveProductDetails() {
+    //   const data = {
+    //     product_id: this.product_id, // Replace with actual data variables
+    //     qty: this.qty,
+    //     unit: this.unit,
+    //     price: this.price,
+    //   };
+    //   axios
+    //     .post('http://localhost/dairy/index.php/Home/saveAgentsProductDetails', data, {
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //       },
+    //       withCredentials: true,
+    //     })
+    //     .then((response) => {
+    //       console.log('Server response:', response.data); // Debugging
+    //       if (response.data.status === 'success') {
+    //         console.log('Product details saved successfully');
+    //       }
+    //     })
+    //     .catch((error) => {
+    //       console.error('Axios error:', error);
+    //       alert('An error occurred while saving the product details.');
+    //     });
+    // },
 
     submitForm() {
       if (!this.selectedAgents) {
         alert("Please select an agent.");
         return; // Prevent the form from being submitted
       }
+
       console.log("Payment Status:", this.paymentStatus);
 
       if (this.paymentStatus !== "Completed") {
         alert("Payment status must be 'Completed' to submit the form.");
         return; // Prevent submission
       }
+
+      // Prepare data for billing agent product records
       const formData = new FormData(this.$refs.billingForm);
 
       console.log('Submitting form data:', [...formData.entries()]); // Debugging
 
+      // First, save the product details to billing_agent_product_records
       axios
         .post('http://localhost/dairy/index.php/Home/NewAgentsBilling', formData, {
           headers: {
@@ -963,6 +1004,7 @@ export default {
           alert('An error occurred while saving the billing record.');
         });
     },
+
 
 
 

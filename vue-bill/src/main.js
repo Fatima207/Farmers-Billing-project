@@ -25,3 +25,4 @@ createApp(App)
 .component("flat-pickr",flatPickr)
 .use(router)
 .mount('#app');
+

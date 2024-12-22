@@ -40,13 +40,8 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label>Expense Date</label>
-                                        <div class="input-group date" id="reservationdate" data-target-input="nearest">
-                                            <input type="text" class="form-control datetimepicker-input" data-target="#reservationdate" name="expense_date">
-                                            <div class="input-group-append" data-target="#reservationdate" data-toggle="datetimepicker">
-                                                <div class="input-group-text"><i class="fa fa-calendar"></i></div>
-                                            </div>
-                                        </div>
+                                        <label for="expense_date">Expense Date</label>
+                                        <input type="date" name="expense_date" id="expense_date" class="form-control" required>
                                     </div>
 
 
@@ -68,7 +63,7 @@
                                         <label>Categories</label>
                                         <select name="categories" id="categories" class="form-control">
                                             <option value="" default hidden>Categories</option>
-                                            <?php foreach ($ExpCategorieslist as $reg) {
+                                            <?php foreach ($ExpCategoryList as $reg) {
 
                                             ?>
                                                 <option value="<?php echo $reg->id ?>"><?php echo $reg->name ?></option>

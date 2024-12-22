@@ -306,7 +306,7 @@
 									</a>
 								</li>
 								<li class="nav-item">
-									<a href="<?php echo base_url() ?>index.php/Home/RetList" class="nav-link">
+									<a href="<?php echo base_url() ?>index.php/Home/RetailersBillingList" class="nav-link">
 										<i class="far fa-circle nav-icon"></i>
 										<p>View All</p>
 									</a>
