@@ -773,10 +773,7 @@ class Home extends CI_Controller
 		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 			exit(0); // Handle preflight request
 		}
-		// echo "<pre>";
-		// print_r($_POST);
-		// echo "</pre>";
-		// Validate input data
+	
 		if (!$this->input->post('agent')) {
 			log_message('error', 'Agent is missing.');
 			echo json_encode(['status' => 'error', 'message' => 'Agent is required.']);
@@ -784,7 +781,10 @@ class Home extends CI_Controller
 		}
 		$paymentStatus = $this->input->post('payment_status');
 		if ($paymentStatus !== 'Completed') {
-			echo json_encode(['status' => 'error', 'message' => 'Payment status must be "Completed"']);
+			echo json_encode([
+				'status' => 'success',
+				'redirect_url' => 'http://localhost/dairy/index.php/Home/AgentsBillingList', // Redirection URL
+			]);
 			exit;
 		}
 		$billing_number = $this->generate_billing_number();
@@ -817,7 +817,8 @@ class Home extends CI_Controller
 			echo json_encode(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()]);
 		};
 
-		return; // Avoid redirecting for API requests
+		return;
+		
 		$data['RegAgentList'] = $this->Home_model->get_agents();
 		$data['RegCompaniesList'] = $this->Home_model->get_companies();
 		$data['ProductList'] = $this->Home_model->get_products();
@@ -835,16 +836,68 @@ class Home extends CI_Controller
 		$this->load->view('Home/BillingAgentList');
 		$this->load->view('Partials/footer');
 	}
-	public function saveAgentsProductDetails() {
-		$data = $this->input->post();
-		if (empty($data['product_id']) || empty($data['qty']) || empty($data['price'])) {
-			echo json_encode(['status' => 'error', 'message' => 'Missing required fields']);
+	public function saveAgentsProductDetails()
+	{
+		header('Access-Control-Allow-Origin: http://localhost:8080'); // Allow frontend
+		header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow methods
+		header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization'); // Allow headers
+		header('Access-Control-Allow-Credentials: true'); // Allow credentials
+
+		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+			exit(0);
+		}
+
+		// Get input data
+		$input = json_decode(file_get_contents('php://input'), true);
+
+		if (!$input || !is_array($input)) {
+			echo json_encode(['status' => 'error', 'message' => 'Invalid payload.']);
 			return;
 		}
-		// Save to database logic here...
-		echo json_encode(['status' => 'success']);
+
+		$batch_data = [];
+
+		foreach ($input as $productData) {
+			if (empty($productData['product_id']) || !is_array($productData['fields'])) {
+				echo json_encode(['status' => 'error', 'message' => 'Invalid product data.']);
+				return;
+			}
+
+			foreach ($productData['fields'] as $field) {
+				if (isset($field['qty'], $field['unit'], $field['price'])) {
+					$batch_data[] = [
+						'product_id' => $productData['product_id'],
+						'qty'        => $field['qty'],
+						'unit'       => $field['unit'],
+						'price'      => $field['price']
+					];
+				} else {
+					echo json_encode(['status' => 'error', 'message' => 'Invalid field data.']);
+					return;
+				}
+			}
+		}
+
+		// Log the received data for debugging
+		log_message('info', 'Received product data: ' . print_r($batch_data, true));
+
+		try {
+			// Save the batch data using the model
+			$saved = $this->Home_model->save_agentsBillingproductDetails($batch_data);
+
+			if ($saved) {
+				echo json_encode(['status' => 'success', 'message' => 'Product details saved successfully.']);
+			} else {
+				echo json_encode(['status' => 'error', 'message' => 'Failed to save product details.']);
+			}
+		} catch (Exception $e) {
+			log_message('error', 'Exception: ' . $e->getMessage());
+			echo json_encode(['status' => 'error', 'message' => 'An internal error occurred.']);
+		}
 	}
-	
+
+
+
 	public function delete_AgentBilling($id)
 	{
 		$this->load->model('Home_model');

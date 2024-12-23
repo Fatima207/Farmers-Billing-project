@@ -452,13 +452,13 @@
                   </div>
 
                   <!-- Second Section: Display selected product details -->
+                  <!-- Second Section: Display selected product details -->
                   <div class="col-md-7"
                     style="display: flex; flex-direction: column; padding-left: 5px; padding-right: 5px;">
                     <div class="card card-row card-primary mx-2 text-sm font-small"
                       style="border: 1px solid black; border-radius: 8px; flex: 1;">
                       <div class="card-body">
                         <div v-for="product in fields" :key="product.id" class="mb-4">
-
                           <h5>{{ product.name }}</h5>
                           <button @click="addField(product)" class="btn btn-success">+</button>
                           <label class="mx-5">Total Amount: Rs {{ calculateTotalAmount(product) }}</label>
@@ -467,9 +467,9 @@
                           <!-- Flex container for fields -->
                           <div v-for="(field, index) in product.fields || []" :key="index" class="d-flex flex-wrap"
                             style="gap: 20px;">
-                            <!-- <p>Field {{ index + 1 }}</p> -->
+                            <input type="hidden" name="product_id[]" v-model="product.id" />
+
                             <!-- Qty field -->
-                            <input type="hidden" name="product_id[]" v-model="fields.product_id">
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Qty</label>
                               <input type="number" name="qty[]" v-model="field.qty" required placeholder="Enter Qty"
@@ -497,9 +497,7 @@
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Amount: Rs {{ calculateAmount(field.price, field.qty) }}</label>
                               <button @click="removeField(product, index)" class="btn btn-danger"
-                                style="margin-top: 5px; width: 50px; font-size: 14px; padding: 0px;">
-                                -
-                              </button>
+                                style="margin-top: 5px; width: 50px; font-size: 14px; padding: 0px;">-</button>
                             </div>
                           </div>
                         </div>
@@ -694,9 +692,9 @@ export default {
         { id: 3, name: "Katla", fields: [] },
         { id: 4, name: "Shark", fields: [] },
       ],
-      product: [
-        { product_id: '', qty: '', unit: '', price: '' }
-      ],
+      // product: [
+      //   { product_id: '', qty: '', unit: '', price: '' }
+      // ],
       // selectedProducts:'',
       selectedProducts: [],
       invoiceDate: null, // You can set a default date if needed
@@ -937,75 +935,69 @@ export default {
     }
   },
   methods: {
-    // saveProductDetails() {
-    //   const data = {
-    //     product_id: this.product_id, // Replace with actual data variables
-    //     qty: this.qty,
-    //     unit: this.unit,
-    //     price: this.price,
-    //   };
-    //   axios
-    //     .post('http://localhost/dairy/index.php/Home/saveAgentsProductDetails', data, {
-    //       headers: {
-    //         'Content-Type': 'application/json',
-    //       },
-    //       withCredentials: true,
-    //     })
-    //     .then((response) => {
-    //       console.log('Server response:', response.data); // Debugging
-    //       if (response.data.status === 'success') {
-    //         console.log('Product details saved successfully');
-    //       }
-    //     })
-    //     .catch((error) => {
-    //       console.error('Axios error:', error);
-    //       alert('An error occurred while saving the product details.');
-    //     });
-    // },
 
     submitForm() {
-      if (!this.selectedAgents) {
-        alert("Please select an agent.");
-        return; // Prevent the form from being submitted
-      }
+  if (!this.selectedAgents) {
+    alert("Please select an agent.");
+    return; // Prevent form submission
+  }
 
-      console.log("Payment Status:", this.paymentStatus);
+  if (this.paymentStatus !== "Completed") {
+    alert("Payment status must be 'Completed' to submit the form.");
+    return; // Prevent form submission
+  }
 
-      if (this.paymentStatus !== "Completed") {
-        alert("Payment status must be 'Completed' to submit the form.");
-        return; // Prevent submission
-      }
+  // Prepare data for billing agent product records
+  const payload = this.fields.map((product) => ({
+    product_id: product.id,
+    fields: product.fields.map((field) => ({
+      qty: field.qty,
+      unit: field.unit,
+      price: field.price,
+    })),
+  }));
 
-      // Prepare data for billing agent product records
-      const formData = new FormData(this.$refs.billingForm);
+  console.log("Submitting product payload:", payload); // Debugging
 
-      console.log('Submitting form data:', [...formData.entries()]); // Debugging
+  axios
+    .post("http://localhost/dairy/index.php/Home/saveAgentsProductDetails", payload, {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      withCredentials: true,
+    })
+    .then((response) => {
+      if (response.data.status === "success") {
+        console.log("Product details saved successfully.");
 
-      // First, save the product details to billing_agent_product_records
-      axios
-        .post('http://localhost/dairy/index.php/Home/NewAgentsBilling', formData, {
+        // Prepare form data for agents_billing_record
+        const formData = new FormData(this.$refs.billingForm);
+
+        return axios.post("http://localhost/dairy/index.php/Home/NewAgentsBilling", formData, {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
           withCredentials: true,
-        })
-        .then((response) => {
-          console.log('Server response:', response.data); // Debugging
-          if (response.data.status === 'success') {
-
-            alert('Billing record saved successfully!');
-            // Redirect to the URL provided by the backend
-            window.location.href = response.data.redirect_url;
-          }
-
-        })
-        .catch((error) => {
-          console.error('Axios error:', error);
-          alert('An error occurred while saving the billing record.');
         });
-    },
-
-
+      } else {
+        throw new Error(response.data.message || "Failed to save product details.");
+      }
+    })
+    .then((response) => {
+      if (response.data.status === "success") {
+        console.log("Billing record saved successfully!");
+        window.location.href = response.data.redirect_url;
+          
+        // alert("Records saved successfully.");
+        // Optionally, reset the form or redirect
+        // this.$refs.billingForm.reset();
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error.response?.data || error.message || error);
+      alert("An error occurred while saving the records.");
+    });
+},
 
 
     openDatePicker() {
@@ -1056,7 +1048,8 @@ export default {
       this.fields = this.fields.filter((product) => this.selectedProductIds.includes(product.id));
     },
     addField(product) {
-      product.fields.push({ qty: 0, unit: "kg", price: 0 });
+      product.fields.push({ product_id: '', qty: 0, unit: "", price: 0 });
+      console.log("Updated Fields:", product.fields); // Verify the updated fields
     },
     removeField(product, index) {
       if (!product.fields) return; // Safeguard
@@ -1066,8 +1059,6 @@ export default {
         this.selectedProductIds = this.selectedProductIds.filter((id) => id !== product.id);
       }
     },
-
-
     calculateAmount(price, qty) {
       return price * qty || 0;
     },

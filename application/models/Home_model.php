@@ -321,13 +321,14 @@ class Home_model extends CI_Model
   }
   
 
-  public function save_agentsBillingproductDetails($data)
+  public function save_agentsBillingproductDetails($batch_data)
   {
-    $this->db->set($data);
-    $this->db->insert('billing_agent_product_records', $data);
-    return $this->db->insert_id();
-    $query = $this->db->get('billing_agent_product_records');
-    return $query->result();
+    // $this->db->set($batch_data);
+    // $this->db->insert('billing_agent_product_records', $batch_data);
+    // return $this->db->insert_id();
+    // $query = $this->db->get('billing_agent_product_records');
+    // return $query->result();
+    return $this->db->insert_batch('billing_agent_product_records', $batch_data);
   }
 
   public function get_retailersBilling($postData)
