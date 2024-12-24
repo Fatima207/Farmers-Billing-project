@@ -364,13 +364,13 @@
                 <!-- select -->
                 <div class="col-md-2">
 
-<label for="Retailers">Select Retailer:</label>
-<select id="Retailers" v-model="selectedRetailers">
-  <option v-for="Retailer in retailers" :key="Retailer.id" :value="Retailer.id">
-    {{ Retailer.name }}
-  </option>
-</select>
-</div>
+                  <label for="Retailers">Select Retailer:</label>
+                  <select id="Retailers" name="retailer" v-model="selectedRetailers" required>
+                    <option v-for="Retailer in retailers" :key="Retailer.id" :value="Retailer.id">
+                      {{ Retailer.name }}
+                    </option>
+                  </select>
+                </div>
 
                 <!-- select -->
                 <!-- for company -->
@@ -395,28 +395,28 @@
                       <div class="card-body table-responsive p-0"
                         style="height: 100px; border:1px solid black;margin-right: 7px;">
                         <table class="table table-head-fixed text-nowrap" id="recordListing">
-                        <thead>
-                          <tr>
-                            <th>Retailer Name</th>
-                            <th>Retailer code</th>
-                            <th>Address</th>
-                            <th>Contact Number</th>
+                          <thead>
+                            <tr>
+                              <th>Retailer Name</th>
+                              <th>Retailer code</th>
+                              <th>Address</th>
+                              <th>Contact Number</th>
 
-                          </tr>
-                        </thead>
-                        <tbody>
+                            </tr>
+                          </thead>
+                          <tbody>
 
-                           <!-- If a farmer is selected, display their details -->
-        <tr v-if="selectedRetailersDetails">
-          <td>{{ selectedRetailersDetails.name }}</td>
-          <td>{{ selectedRetailersDetails.code }}</td>
-          <td>{{ selectedRetailersDetails.address }}</td>
-          <td>{{ selectedRetailersDetails.contact_number }}</td>
-        </tr>
+                            <!-- If a farmer is selected, display their details -->
+                            <tr v-if="selectedRetailersDetails">
+                              <td>{{ selectedRetailersDetails.name }}</td>
+                              <td>{{ selectedRetailersDetails.code }}</td>
+                              <td>{{ selectedRetailersDetails.address }}</td>
+                              <td>{{ selectedRetailersDetails.contact_number }}</td>
+                            </tr>
 
-                        </tbody>
+                          </tbody>
 
-                      </table>
+                        </table>
 
                       </div>
                       <!-- /.card-body -->
@@ -458,27 +458,27 @@
                       style="border: 1px solid black; border-radius: 8px; flex: 1;">
                       <div class="card-body">
                         <div v-for="product in fields" :key="product.id" class="mb-4">
-
                           <h5>{{ product.name }}</h5>
                           <button @click="addField(product)" class="btn btn-success">+</button>
                           <label class="mx-5">Total Amount: Rs {{ calculateTotalAmount(product) }}</label>
                           <label class="ml-5">Total Quantity: {{ calculateTotalQuantity(product) }}</label>
 
                           <!-- Flex container for fields -->
-                          <div v-for="(field, fieldIndex) in product.fields || []" :key="fieldIndex"
-                            class="d-flex flex-wrap" style="gap: 20px;">
+                          <div v-for="(field, index) in product.fields || []" :key="index" class="d-flex flex-wrap"
+                            style="gap: 20px;">
+                            <input type="hidden" name="product_id[]" v-model="product.id" />
 
                             <!-- Qty field -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Qty</label>
-                              <input type="number" v-model="field.qty" required placeholder="Enter Qty"
+                              <input type="number" name="qty[]" v-model="field.qty" required placeholder="Enter Qty"
                                 style="width:100%; padding: 0px; box-sizing: border-box;" />
                             </div>
 
                             <!-- Unit field -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Unit</label>
-                              <select v-model="field.unit" style="width: 100%; padding: 0px;">
+                              <select v-model="field.unit" name="unit[]" style="width: 100%; padding: 0px;">
                                 <option value="kg">kg</option>
                                 <option value="g">g</option>
                                 <option value="pound">pound</option>
@@ -488,17 +488,15 @@
                             <!-- Price field -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Price</label>
-                              <input type="number" v-model="field.price" required placeholder="Enter Price"
-                                style="width: 100%; padding: 0px; box-sizing: border-box;" />
+                              <input type="number" name="price[]" v-model="field.price" required
+                                placeholder="Enter Price" style="width: 100%; padding: 0px; box-sizing: border-box;" />
                             </div>
 
                             <!-- Amount calculation and remove button -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Amount: Rs {{ calculateAmount(field.price, field.qty) }}</label>
                               <button @click="removeField(product, index)" class="btn btn-danger"
-                                style="margin-top: 5px; width: 50px; font-size: 14px; padding: 0px;">
-                                -
-                              </button>
+                                style="margin-top: 5px; width: 50px; font-size: 14px; padding: 0px;">-</button>
                             </div>
                           </div>
                         </div>
@@ -771,8 +769,8 @@ export default {
     totalSelectedProducts() {
       return this.selectedProductIds.length;
     },
-     
-      selectedRetailersDetails() {
+
+    selectedRetailersDetails() {
       // Find the farmer object that matches the selected farmer's ID
       return this.retailers.find(retailer => retailer.id === this.selectedRetailers);
     },
@@ -934,39 +932,64 @@ export default {
 
     submitForm() {
       if (!this.selectedRetailers) {
-        alert("Please select a farmer.");
-        return; // Prevent the form from being submitted
+        alert("Please select a Retailer.");
+        return; // Prevent form submission
       }
-      console.log("Payment Status:", this.paymentStatus);
 
       if (this.paymentStatus !== "Completed") {
         alert("Payment status must be 'Completed' to submit the form.");
-        return; // Prevent submission
+        return; // Prevent form submission
       }
-      const formData = new FormData(this.$refs.billingForm);
 
-      console.log('Submitting form data:', [...formData.entries()]); // Debugging
+      // Prepare data for billing Retailer product records
+      const payload = this.fields.map((product) => ({
+        product_id: product.id,
+        fields: product.fields.map((field) => ({
+          qty: field.qty,
+          unit: field.unit,
+          price: field.price,
+        })),
+      }));
+
+      console.log("Submitting product payload:", payload); // Debugging
 
       axios
-        .post('http://localhost/dairy/index.php/Home/NewRetailersBilling', formData, {
+        .post("http://localhost/dairy/index.php/Home/saveRetailersProductDetails", payload, {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "application/json",
           },
           withCredentials: true,
         })
         .then((response) => {
-          console.log('Server response:', response.data); // Debugging
-          if (response.data.status === 'success') {
+          if (response.data.status === "success") {
+            console.log("Product details saved successfully.");
 
-            alert('Billing record saved successfully!');
-            // Redirect to the URL provided by the backend
-            window.location.href = response.data.redirect_url;
+            // Prepare form data for agents_billing_record
+            const formData = new FormData(this.$refs.billingForm);
+
+            return axios.post("http://localhost/dairy/index.php/Home/NewRetailersBilling", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              withCredentials: true,
+            });
+          } else {
+            throw new Error(response.data.message || "Failed to save product details.");
           }
+        })
+        .then((response) => {
+          if (response.data.status === "success") {
+            console.log("Billing record saved successfully!");
+            window.location.href = response.data.redirect_url;
 
+            // alert("Records saved successfully.");
+            // Optionally, reset the form or redirect
+            // this.$refs.billingForm.reset();
+          }
         })
         .catch((error) => {
-          console.error('Axios error:', error);
-          alert('An error occurred while saving the billing record.');
+          console.error("Error:", error.response?.data || error.message || error);
+          alert("An error occurred while saving the records.");
         });
     },
 
@@ -1059,7 +1082,7 @@ export default {
           console.error(error); // Log errors if the request fails
         });
     },
-  
+
     getCompanies() {
       axios.get('http://localhost/dairy/index.php/Home/get_companies')
         .then((response) => {

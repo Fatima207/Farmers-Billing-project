@@ -937,67 +937,67 @@ export default {
   methods: {
 
     submitForm() {
-  if (!this.selectedAgents) {
-    alert("Please select an agent.");
-    return; // Prevent form submission
-  }
+      if (!this.selectedAgents) {
+        alert("Please select an agent.");
+        return; // Prevent form submission
+      }
 
-  if (this.paymentStatus !== "Completed") {
-    alert("Payment status must be 'Completed' to submit the form.");
-    return; // Prevent form submission
-  }
+      if (this.paymentStatus !== "Completed") {
+        alert("Payment status must be 'Completed' to submit the form.");
+        return; // Prevent form submission
+      }
 
-  // Prepare data for billing agent product records
-  const payload = this.fields.map((product) => ({
-    product_id: product.id,
-    fields: product.fields.map((field) => ({
-      qty: field.qty,
-      unit: field.unit,
-      price: field.price,
-    })),
-  }));
+      // Prepare data for billing agent product records
+      const payload = this.fields.map((product) => ({
+        product_id: product.id,
+        fields: product.fields.map((field) => ({
+          qty: field.qty,
+          unit: field.unit,
+          price: field.price,
+        })),
+      }));
 
-  console.log("Submitting product payload:", payload); // Debugging
+      console.log("Submitting product payload:", payload); // Debugging
 
-  axios
-    .post("http://localhost/dairy/index.php/Home/saveAgentsProductDetails", payload, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-      withCredentials: true,
-    })
-    .then((response) => {
-      if (response.data.status === "success") {
-        console.log("Product details saved successfully.");
-
-        // Prepare form data for agents_billing_record
-        const formData = new FormData(this.$refs.billingForm);
-
-        return axios.post("http://localhost/dairy/index.php/Home/NewAgentsBilling", formData, {
+      axios
+        .post("http://localhost/dairy/index.php/Home/saveAgentsProductDetails", payload, {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
           withCredentials: true,
+        })
+        .then((response) => {
+          if (response.data.status === "success") {
+            console.log("Product details saved successfully.");
+
+            // Prepare form data for agents_billing_record
+            const formData = new FormData(this.$refs.billingForm);
+
+            return axios.post("http://localhost/dairy/index.php/Home/NewAgentsBilling", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              withCredentials: true,
+            });
+          } else {
+            throw new Error(response.data.message || "Failed to save product details.");
+          }
+        })
+        .then((response) => {
+          if (response.data.status === "success") {
+            console.log("Billing record saved successfully!");
+            window.location.href = response.data.redirect_url;
+
+            // alert("Records saved successfully.");
+            // Optionally, reset the form or redirect
+            // this.$refs.billingForm.reset();
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error.response?.data || error.message || error);
+          alert("An error occurred while saving the records.");
         });
-      } else {
-        throw new Error(response.data.message || "Failed to save product details.");
-      }
-    })
-    .then((response) => {
-      if (response.data.status === "success") {
-        console.log("Billing record saved successfully!");
-        window.location.href = response.data.redirect_url;
-          
-        // alert("Records saved successfully.");
-        // Optionally, reset the form or redirect
-        // this.$refs.billingForm.reset();
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error.response?.data || error.message || error);
-      alert("An error occurred while saving the records.");
-    });
-},
+    },
 
 
     openDatePicker() {

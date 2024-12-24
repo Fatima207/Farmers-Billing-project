@@ -273,6 +273,19 @@ class Home_model extends CI_Model
 
     return $query->row(); // Return the last record
   }
+
+  public function get_last_billing_Retailer()
+  {
+    $this->db->select('retailer_billing_num');
+    $this->db->from('billing_retailer_records');
+    $this->db->order_by('id', 'DESC'); // Assuming 'id' is the primary key
+    $this->db->limit(1);
+    $query = $this->db->get();
+
+    return $query->row(); // Return the last record
+  }
+
+
   public function edit_BillingAgent($id)
   {
     $query = $this->db->get_where('billing_agent_records', ['id' => $id]);
@@ -282,6 +295,38 @@ class Home_model extends CI_Model
     }
     return false;
   }
+  public function edit_BillingAgentProducts($id)
+  {
+    $query = $this->db->get_where('billing_agent_product_records', ['id' => $id]);
+    // return $query->row();
+    if ($query->num_rows() > 0) {
+      return $query->row_array(); // Return the record as an associative array
+    }
+    return false;
+  }
+  public function update_BillingAgentProducts($id, $batch_data)
+  {
+    $this->db->where('id', $id);
+    return $this->db->update('billing_agent_product_records', $batch_data); // Update the record
+  }
+  // public function edit_BillingAgent($id)
+  // {
+  //     $this->db->select('
+  //         billing_agent_records.*,
+  //         billing_agent_product_records.*
+  //     ');
+  //     $this->db->from('billing_agent_records');
+  //     $this->db->join('billing_agent_product_records', 'billing_agent_product_records.billing_agent_id = billing_agent_records.id', 'left');
+  //     $this->db->where('billing_agent_records.id', $id);
+  
+  //     $query = $this->db->get();
+  
+  //     if ($query->num_rows() > 0) {
+  //         return $query->result_array(); // Return all rows as an associative array
+  //     }
+  //     return false;
+  // }
+  
 
 
 
@@ -289,9 +334,19 @@ class Home_model extends CI_Model
   {
     return $this->db->delete('billing_agent_records', ['id' => $id]);
   }
-  public function update_BillingAgent($id, $postData)
+  public function update_BillingAgent($id, $data)
   {
-    return $this->db->update('billing_agent_records', $postData, ['id' => $id]);
+    $this->db->where('id', $id);
+    return $this->db->update('billing_agent_records', $data); // Update the record
+  }
+
+  public function delete_BillingRetailer($id)
+  {
+    return $this->db->delete('billing_retailer_records', ['id' => $id]);
+  }
+  public function update_BillingRetailer($id, $postData)
+  {
+    return $this->db->update('billing_retailer_records', $postData, ['id' => $id]);
   }
 
 
@@ -319,17 +374,6 @@ class Home_model extends CI_Model
     }
     return false;
   }
-  
-
-  public function save_agentsBillingproductDetails($batch_data)
-  {
-    // $this->db->set($batch_data);
-    // $this->db->insert('billing_agent_product_records', $batch_data);
-    // return $this->db->insert_id();
-    // $query = $this->db->get('billing_agent_product_records');
-    // return $query->result();
-    return $this->db->insert_batch('billing_agent_product_records', $batch_data);
-  }
 
   public function get_retailersBilling($postData)
   {
@@ -339,6 +383,24 @@ class Home_model extends CI_Model
     }
     return false;
   }
+
+  public function save_agentsBillingproductDetails($batch_data)
+  {
+    return $this->db->insert_batch('billing_agent_product_records', $batch_data);
+  }
+
+
+  public function save_farmersBillingproductDetails($batch_data)
+  {
+    return $this->db->insert_batch('billing_farmer_product_records', $batch_data);
+  }
+
+  public function save_RetailersBillingproductDetails($batch_data)
+  {
+    return $this->db->insert_batch('billing_retailer_product_records', $batch_data);
+  }
+
+
   public function delete_BillingFarmer($id)
   {
     // Ensure the ID is valid

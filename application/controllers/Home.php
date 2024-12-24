@@ -637,6 +637,7 @@ class Home extends CI_Controller
 			return '0001';
 		}
 	}
+
 	public function NewFarmersBilling()
 	{
 		header('Access-Control-Allow-Origin: http://localhost:8080'); // Allow frontend
@@ -647,19 +648,21 @@ class Home extends CI_Controller
 		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 			exit(0); // Handle preflight request
 		}
-		// Validate input data
+
 		if (!$this->input->post('farmer')) {
-			log_message('error', 'Farmer is missing.');
-			echo json_encode(['status' => 'error', 'message' => 'farmer is required.']);
+			log_message('error', 'farmer is missing.');
+			echo json_encode(['status' => 'error', 'message' => 'Agent is required.']);
 			return;
 		}
 		$paymentStatus = $this->input->post('payment_status');
 		if ($paymentStatus !== 'Completed') {
-			echo json_encode(['status' => 'error', 'message' => 'Payment status must be "Completed"']);
+			echo json_encode([
+				'status' => 'success',
+				'redirect_url' => 'http://localhost/dairy/index.php/Home/AgentsBillingList', // Redirection URL
+			]);
 			exit;
 		}
 		$billing_number = $this->farmer_BillingNumGenerate();
-
 
 
 		$postData = [
@@ -689,8 +692,8 @@ class Home extends CI_Controller
 			echo json_encode(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()]);
 		};
 
+		return;
 
-		return; // Avoid redirecting for API requests
 		$data['RegFarmerList'] = $this->Home_model->get_farmers();
 		$data['RegCompaniesList'] = $this->Home_model->get_companies();
 		$data['ProductList'] = $this->Home_model->get_products();
@@ -699,23 +702,81 @@ class Home extends CI_Controller
 		$this->load->view('vue-bill/src/components/BillingFarmer.vue', $data);
 		$this->load->view('Partials/footer');
 	}
-
 	public function FarmersBillingList()
 	{
-		// $data['query'] = $this->Home_model->get_farmersBilling();		
+		$data['billing_list'] = $this->db->select('bfr.*, f.name AS farmer, c.name AS company')
+			->from('billing_farmer_records AS bfr')
+			->join('reg_farmers AS f', 'bfr.farmer = f.id', 'left')
+			->join('reg_companies AS c', 'bfr.company = c.id', 'left')
+			->get()
+			->result();
 		$this->load->view('Partials/header');
-		$this->load->view('Home/BillingFarmerList');
+		$this->load->view('Home/BillingFarmerList', $data);
 		$this->load->view('Partials/footer');
+	}
+	public function savefarmersProductDetails()
+	{
+		header('Access-Control-Allow-Origin: http://localhost:8080'); // Allow frontend
+		header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow methods
+		header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization'); // Allow headers
+		header('Access-Control-Allow-Credentials: true'); // Allow credentials
+
+		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+			exit(0);
+		}
+
+		// Get input data
+		$input = json_decode(file_get_contents('php://input'), true);
+
+		if (!$input || !is_array($input)) {
+			echo json_encode(['status' => 'error', 'message' => 'Invalid payload.']);
+			return;
+		}
+
+		$batch_data = [];
+
+		foreach ($input as $productData) {
+			if (empty($productData['product_id']) || !is_array($productData['fields'])) {
+				echo json_encode(['status' => 'error', 'message' => 'Invalid product data.']);
+				return;
+			}
+
+			foreach ($productData['fields'] as $field) {
+				if (isset($field['qty'], $field['unit'], $field['price'])) {
+					$batch_data[] = [
+						'product_id' => $productData['product_id'],
+						'qty'        => $field['qty'],
+						'unit'       => $field['unit'],
+						'price'      => $field['price']
+					];
+				} else {
+					echo json_encode(['status' => 'error', 'message' => 'Invalid field data.']);
+					return;
+				}
+			}
+		}
+
+		// Log the received data for debugging
+		log_message('info', 'Received product data: ' . print_r($batch_data, true));
+
+		try {
+			// Save the batch data using the model
+			$saved = $this->Home_model->save_farmersBillingproductDetails($batch_data);
+
+			if ($saved) {
+				echo json_encode(['status' => 'success', 'message' => 'Product details saved successfully.']);
+			} else {
+				echo json_encode(['status' => 'error', 'message' => 'Failed to save product details.']);
+			}
+		} catch (Exception $e) {
+			log_message('error', 'Exception: ' . $e->getMessage());
+			echo json_encode(['status' => 'error', 'message' => 'An internal error occurred.']);
+		}
 	}
 	public function delete_BillingFarmer($id)
 	{
 		$this->load->model('Home_model');
-
-		// Attempt to delete the record
 		$this->Home_model->delete_BillingFarmer($id);
-
-
-		// Redirect to the Farmers Billing List page
 		redirect(site_url('index.php/Home/FarmersBillingList'));
 	}
 
@@ -747,7 +808,10 @@ class Home extends CI_Controller
 	// 	$this->load->model('Home_model');
 	// 	redirect(site_url('index.php/Home/BillingFarmerList'));
 	// }
-	private function generate_billing_number()
+
+
+	// Agents
+	private function Agents_BillingNumGenerate()
 	{
 		// Get the latest record from the billing table
 		$last_billing = $this->Home_model->get_last_billing_agents();
@@ -761,8 +825,6 @@ class Home extends CI_Controller
 			return '0001';
 		}
 	}
-
-	// Agents
 	public function NewAgentsBilling()
 	{
 		header('Access-Control-Allow-Origin: http://localhost:8080'); // Allow frontend
@@ -773,7 +835,7 @@ class Home extends CI_Controller
 		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 			exit(0); // Handle preflight request
 		}
-	
+
 		if (!$this->input->post('agent')) {
 			log_message('error', 'Agent is missing.');
 			echo json_encode(['status' => 'error', 'message' => 'Agent is required.']);
@@ -787,7 +849,7 @@ class Home extends CI_Controller
 			]);
 			exit;
 		}
-		$billing_number = $this->generate_billing_number();
+		$billing_number = $this->Agents_BillingNumGenerate();
 
 
 		$postData = [
@@ -818,7 +880,7 @@ class Home extends CI_Controller
 		};
 
 		return;
-		
+
 		$data['RegAgentList'] = $this->Home_model->get_agents();
 		$data['RegCompaniesList'] = $this->Home_model->get_companies();
 		$data['ProductList'] = $this->Home_model->get_products();
@@ -827,13 +889,17 @@ class Home extends CI_Controller
 		$this->load->view('vue-bill/src/components/BillingAgent.vue', $data);
 		$this->load->view('Partials/footer');
 	}
-
-
 	public function AgentsBillingList()
 	{
-		// $postData['query'] = $this->Home_model->get_agentsBilling();
+
+		$data['billing_list'] = $this->db->select('bfr.*, f.name AS agent, c.name AS company')
+			->from('billing_agent_records AS bfr')
+			->join('reg_agents AS f', 'bfr.agent = f.id', 'left')
+			->join('reg_companies AS c', 'bfr.company = c.id', 'left')
+			->get()
+			->result();
 		$this->load->view('Partials/header');
-		$this->load->view('Home/BillingAgentList');
+		$this->load->view('Home/BillingAgentList', $data);
 		$this->load->view('Partials/footer');
 	}
 	public function saveAgentsProductDetails()
@@ -895,17 +961,13 @@ class Home extends CI_Controller
 			echo json_encode(['status' => 'error', 'message' => 'An internal error occurred.']);
 		}
 	}
-
-
-
 	public function delete_AgentBilling($id)
 	{
+
+
 		$this->load->model('Home_model');
-		if ($this->Home_->delete_BillingAgent($id)) {
-			echo json_encode(['status' => 'success', 'message' => 'Record deleted successfully']);
-		} else {
-			echo json_encode(['status' => 'error', 'message' => 'Failed to delete record']);
-		}
+		$this->Home_model->delete_BillingAgent($id);
+		redirect(site_url('index.php/Home/AgentsBillingList'));
 	}
 	public function edit_BillingAgent($id)
 	{
@@ -918,133 +980,307 @@ class Home extends CI_Controller
 			exit(0); // Handle preflight request
 		}
 
-		$this->load->view('Partials/header');
+		$this->load->model('Home_model');
+
+		$billingRecord = $this->Home_model->edit_BillingAgent($id);
+
+		if ($billingRecord) {
+			echo json_encode([
+				'status' => 'success',
+				'data' => $billingRecord,
+			]); // Send JSON response
+		} else {
+			echo json_encode([
+				'status' => 'error',
+				'message' => 'No record found for the provided ID.',
+			]);
+		}
+		return; // Stop further rendering
+	}
+
+	public function update_BillingAgent()
+	{
+		header('Access-Control-Allow-Origin: http://localhost:8080'); // Allow frontend
+		header('Access-Control-Allow-Methods: POST'); // Allow POST method
+		header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization'); // Allow headers
+		header('Access-Control-Allow-Credentials: true'); // Allow credentials
+
+		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+			exit(0); // Handle preflight request
+		}
+
+		$id = $this->input->post('id'); // ID of the record to update
+		$postData = [
+			'billing_number' => $this->input->post('billing_number'),
+			'agent'          => $this->input->post('agent'),
+			'company'        => $this->input->post('company'),
+			'commission'     => $this->input->post('commission'),
+			'grand_total'    => $this->input->post('grand_total'),
+			'final_total'    => $this->input->post('final_total'),
+			'total_dues'     => $this->input->post('total_dues'),
+			'payment_status' => $this->input->post('payment_status'),
+						
+		];
+		
+		$this->load->model('Home_model');
+		$result = $this->Home_model->update_BillingAgent($id, $postData);
+
+		if ($result) {
+			echo json_encode([
+				'status' => 'success',
+				'message' => 'Record updated successfully.',
+				// 'redirect_url' => 'http://localhost/dairy/index.php/Home/AgentsBillingList', // Redirection URL
+			]);
+		} else {
+			echo json_encode(['status' => 'error', 'message' => 'Failed to update record.']);
+		}
+	}
+
+	public function edit_BillingAgentProducts($id)
+	{
+		header('Access-Control-Allow-Origin: http://localhost:8080'); // Allow frontend
+		header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow methods
+		header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization'); // Allow headers
+		header('Access-Control-Allow-Credentials: true'); // Allow credentials
+
+		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+			exit(0); // Handle preflight request
+		}
 
 		$this->load->model('Home_model');
-		$data['billing_agent_records'] = $this->Home_model->edit_BillingAgent($id);
-		echo json_encode($data); // Return JSON response for Vue
-		$this->load->view('vue-bill/src/components/editAgentBilling.vue', $data);
-		$this->load->view('Partials/footer');
+
+		$billingRecord = $this->Home_model->edit_BillingAgentProducts($id);
+
+		if ($billingRecord) {
+			echo json_encode([
+				'status' => 'success',
+				'data' => $billingRecord,
+			]); // Send JSON response
+		} else {
+			echo json_encode([
+				'status' => 'error',
+				'message' => 'No record found for the provided ID.',
+			]);
+		}
+		return; // Stop further rendering
 	}
-	// public function update_BillingAgent($id)
-	// {
-	// 	if (!$this->input->post('agent')) {
-	// 		log_message('error', 'Agent is missing.');
-	// 		echo json_encode(['status' => 'error', 'message' => 'Agent is required.']);
-	// 		return;
-	// 	}
-	// 	$paymentStatus = $this->input->post('payment_status');
-	// 	if ($paymentStatus !== 'Completed') {
-	// 		echo json_encode(['status' => 'error', 'message' => 'Payment status must be "Completed"']);
-	// 		exit;
-	// 	};
-	// 	$postData = [
-	// 		'billing_number' =>  $this->input->post('billing_number'),
-	// 		'agent'          => $this->input->post('agent'),
-	// 		'company'        => $this->input->post('company'),
-	// 		'commission' => $this->input->post('commission'),
-	// 		'grand_total' => $this->input->post('grand_total'),
-	// 		'final_total' =>  $this->input->post('final_total'),
-	// 		'total_dues' =>  $this->input->post('total_dues'),
-	// 		'payment_status' => $paymentStatus,
-	// 	];
-
-	// 	try {
-	// 		$resp = $this->Home_model->update_BillingAgent($postData);
-	// 		log_message('error', 'Failed to save billing.');
-	// 		if ($resp) {
-	// 			echo json_encode([
-	// 				'status' => 'success',
-	// 				'redirect_url' => 'http://localhost/dairy/index.php/Home/AgentsBillingList', // Redirection URL
-	// 			]);
-	// 		} else { // Failure response
-	// 			echo json_encode(['status' => 'error', 'message' => 'It seems you didn\'t change anything !']);
-	// 		}
-	// 	} catch (Exception $e) {
-	// 		// Exception handling
-	// 		echo json_encode(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()]);
-	// 	};
-
-
-	// 	return; // Avoid redirecting for API requests
-	// 	$data['RegAgentList'] = $this->Home_model->get_agents();
-	// 	$data['RegCompaniesList'] = $this->Home_model->get_companies();
-	// 	$data['ProductList'] = $this->Home_model->get_products();
-	// }
-	public function update_BillingAgent($id)
+	public function update_BillingAgentProducts()
 	{
-		header('Access-Control-Allow-Origin: http://localhost:8080');
-		header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
-		header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization');
-		header('Access-Control-Allow-Credentials: true');
+		header('Access-Control-Allow-Origin: http://localhost:8080'); // Allow frontend
+		header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow methods
+		header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization'); // Allow headers
+		header('Access-Control-Allow-Credentials: true'); // Allow credentials
 
 		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 			exit(0);
 		}
+		$id = $this->input->post('id'); // ID of the record to update
+		
+		// Get input data
+		$input = json_decode(file_get_contents('php://input'), true);
 
-		$data = json_decode(file_get_contents("php://input"), true);
+		if (!$input || !is_array($input)) {
+			echo json_encode(['status' => 'error', 'message' => 'Invalid payload.']);
+			return;
+		}
 
-		$updateData = [
-			'billing_number' => $data['billing_number'],
-			'agents' => $data['agents'],
-			'company' => $data['company'],
-			'commission' => $data['commission'],
-			'grand_total' => $data('grand_total'),
-			'final_total' => $data('final_total'),
-			'total_dues' => $data('total_dues'),
-			'payment_status' => $data('payment_status')
-			// Add other fields here
-		];
+		$batch_data = [];
 
-		$this->db->where('id', $id);
-		if ($this->db->update('billing_agent_records', $updateData)) {
-			echo json_encode(['status' => 'success', 'message' => 'Record updated successfully']);
+		foreach ($input as $productData) {
+			if (empty($productData['product_id']) || !is_array($productData['fields'])) {
+				echo json_encode(['status' => 'error', 'message' => 'Invalid product data.']);
+				return;
+			}
+
+			foreach ($productData['fields'] as $field) {
+				if (isset($field['qty'], $field['unit'], $field['price'])) {
+					$batch_data[] = [
+						'product_id' => $productData['product_id'],
+						'qty'        => $field['qty'],
+						'unit'       => $field['unit'],
+						'price'      => $field['price']
+					];
+				} else {
+					echo json_encode(['status' => 'error', 'message' => 'Invalid field data.']);
+					return;
+				}
+			}
+		}
+
+		// Log the received data for debugging
+		log_message('info', 'Received product data: ' . print_r($batch_data, true));
+	
+		$this->load->model('Home_model');
+		$result = $this->Home_model->update_BillingAgentProducts($id, $batch_data);
+
+		if ($result) {
+			echo json_encode([
+				'status' => 'success',
+				'message' => 'Record updated successfully.',
+				// 'redirect_url' => 'http://localhost/dairy/index.php/Home/AgentsBillingList', // Redirection URL
+			]);
 		} else {
-			echo json_encode(['status' => 'error', 'message' => 'Failed to update record']);
+			echo json_encode(['status' => 'error', 'message' => 'Failed to update record.']);
 		}
 	}
+	// Retailers billing section
 
-	// Retailers
-	public function RetBilling()
+	private function Retailers_BillingNumGenerate()
 	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-			);
-			$resp = $this->Home_model->save($data);
+		// Get the latest record from the billing table
+		$last_billing = $this->Home_model->get_last_billing_Retailer();
+
+		if ($last_billing) {
+			// Increment the billing number
+			$last_number = (int) $last_billing->retailer_billing_num;
+			return sprintf('%04d', $last_number + 1); // Generates 0001, 0002, etc.
+		} else {
+			// Start with 0001 if no record exists
+			return '0001';
+		}
+	}
+	public function NewRetailersBilling()
+	{
+		header('Access-Control-Allow-Origin: http://localhost:8080'); // Allow frontend
+		header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow methods
+		header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization'); // Allow headers
+		header('Access-Control-Allow-Credentials: true'); // Allow credentials
+
+		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+			exit(0); // Handle preflight request
+		}
+
+		if (!$this->input->post('retailer')) {
+			log_message('error', 'Retailers is missing.');
+			echo json_encode(['status' => 'error', 'message' => 'Retailer is required.']);
+			return;
+		}
+		$paymentStatus = $this->input->post('payment_status');
+		if ($paymentStatus !== 'Completed') {
+			echo json_encode([
+				'status' => 'success',
+				'redirect_url' => 'http://localhost/dairy/index.php/Home/RetailersBillingList', // Redirection URL
+			]);
 			exit;
 		}
+		$billing_number = $this->Retailers_BillingNumGenerate();
+
+
+		$postData = [
+			'retailer_billing_num' => $billing_number,
+			'retailer'          => $this->input->post('retailer'),
+			'company'        => $this->input->post('company'),
+			'commission' => $this->input->post('commission'),
+			'grand_total' => $this->input->post('grand_total'),
+			'final_total' =>  $this->input->post('final_total'),
+			'total_dues' =>  $this->input->post('total_dues'),
+			'payment_status' => $paymentStatus,
+		];
+
+		try {
+			$resp = $this->Home_model->get_retailersBilling($postData);
+			log_message('error', 'Failed to save billing.');
+			if ($resp) {
+				echo json_encode([
+					'status' => 'success',
+					'redirect_url' => 'http://localhost/dairy/index.php/Home/RetailersBillingList', // Redirection URL
+				]);
+			} else { // Failure response
+				echo json_encode(['status' => 'error', 'message' => 'Failed to save billing record.']);
+			}
+		} catch (Exception $e) {
+			// Exception handling
+			echo json_encode(['status' => 'error', 'message' => 'An error occurred: ' . $e->getMessage()]);
+		};
+
+		return;
+
 		$data['RegRetailersList'] = $this->Home_model->get_retailers();
 		$data['RegCompaniesList'] = $this->Home_model->get_companies();
 		$data['ProductList'] = $this->Home_model->get_products();
 
 
 		$this->load->view('Partials/header');
-		$this->load->view('Home/BillingRetailer.php', $data);
+		$this->load->view('vue-bill/src/components/BillingRetailer.vue', $data);
 		$this->load->view('Partials/footer');
 	}
 	public function RetailersBillingList()
 	{
-		if ($this->input->post()) {
-			//have post
-			$data = array(
-				'name' => $this->input->post("name")
-				//'name' =>'description')
-			);
-			//echo $this->input->post("name");
-			$resp = $this->Home_model->save($data);
-			// if($resp>0){
-
-			// }
-
-			exit;
-		}
+		$data['billing_list'] = $this->db->select('bfr.*, r.name AS retailer, c.name AS company')
+			->from('billing_retailer_records AS bfr')
+			->join('reg_retailers AS r', 'bfr.retailer = r.id', 'left')
+			->join('reg_companies AS c', 'bfr.company = c.id', 'left')
+			->get()
+			->result();
 		$this->load->view('Partials/header');
-		$this->load->view('Home/BillingRetailerlist');
+		$this->load->view('Home/BillingretailerList', $data);
 		$this->load->view('Partials/footer');
 	}
+	public function saveRetailersProductDetails()
+	{
+		header('Access-Control-Allow-Origin: http://localhost:8080'); // Allow frontend
+		header('Access-Control-Allow-Methods: GET, POST, OPTIONS'); // Allow methods
+		header('Access-Control-Allow-Headers: Origin, Content-Type, Accept, Authorization'); // Allow headers
+		header('Access-Control-Allow-Credentials: true'); // Allow credentials
 
+		if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+			exit(0);
+		}
+
+		// Get input data
+		$input = json_decode(file_get_contents('php://input'), true);
+
+		if (!$input || !is_array($input)) {
+			echo json_encode(['status' => 'error', 'message' => 'Invalid payload.']);
+			return;
+		}
+
+		$batch_data = [];
+
+		foreach ($input as $productData) {
+			if (empty($productData['product_id']) || !is_array($productData['fields'])) {
+				echo json_encode(['status' => 'error', 'message' => 'Invalid product data.']);
+				return;
+			}
+
+			foreach ($productData['fields'] as $field) {
+				if (isset($field['qty'], $field['unit'], $field['price'])) {
+					$batch_data[] = [
+						'product_id' => $productData['product_id'],
+						'qty'        => $field['qty'],
+						'unit'       => $field['unit'],
+						'price'      => $field['price']
+					];
+				} else {
+					echo json_encode(['status' => 'error', 'message' => 'Invalid field data.']);
+					return;
+				}
+			}
+		}
+
+		// Log the received data for debugging
+		log_message('info', 'Received product data: ' . print_r($batch_data, true));
+
+		try {
+			// Save the batch data using the model
+			$saved = $this->Home_model->save_RetailersBillingproductDetails($batch_data);
+
+			if ($saved) {
+				echo json_encode(['status' => 'success', 'message' => 'Product details saved successfully.']);
+			} else {
+				echo json_encode(['status' => 'error', 'message' => 'Failed to save product details.']);
+			}
+		} catch (Exception $e) {
+			log_message('error', 'Exception: ' . $e->getMessage());
+			echo json_encode(['status' => 'error', 'message' => 'An internal error occurred.']);
+		}
+	}
+	public function delete_BillingRetailer($id)
+	{
+		$this->load->model('Home_model');
+		$this->Home_model->delete_BillingRetailer($id);
+		redirect(site_url('index.php/Home/RetailersBillingList'));
+	}
 	// Expenses
 	// Categories
 	public function ExpCategories()

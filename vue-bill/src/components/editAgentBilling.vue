@@ -324,7 +324,7 @@
           <div class="container-fluid">
             <div class="row mb-2">
               <div class="col-sm-6">
-                <h1>New Agent Billing</h1>
+                <h1>Edit Agent Billing</h1>
               </div>
 
             </div>
@@ -332,7 +332,7 @@
           <!-- /.container-fluid -->
         </section>
 
-        <form ref="billingForm" @submit.prevent="updateAgentBilling" >
+        <form @submit.prevent="submitForm">
           <!-- billing page main content  -->
           <div class="card-body" style='justify-content: space-between;'>
 
@@ -362,26 +362,24 @@
                 <!-- for Agents  -->
                 <!-- select -->
                 <div class="col-md-2">
-                  <!-- <div v-if="$billing_agent_records && $billing_agent_records.agent"> -->
                   <!-- <input type="text" name="billing_number" v-model="billingNumber"> -->
                   <label for="Agents">Select Agents:</label>
 
-                  <select id="Agents" name="agent" v-model="person.selectedAgents" value="formData.agent"   required>
-                    <option v-for="Agents in agents" :key="Agents.id" value="Agents.id">
+                  <select id="Agents" name="agent" v-model="form.agent" required>
+                    <option v-for="Agents in agents" :key="Agents.id" :value="Agents.id">
                       {{ Agents.name }}
                     </option>
                   </select>
-                <!-- </div> -->
-              </div>
+                </div>
 
                 <!-- select -->
                 <!-- for company -->
                 <div class="col-md-2">
 
                   <label for="companies">Select companies:</label>
-                  <select id="companies" name="company" v-model="person.selectedCompanies" value="formData.company" required>
-                    <option v-for="company in comp" :key="company.id" value="company.id">
-                      {{ company.name }}
+                  <select id="companies" name="company" v-model="form.company" required>
+                    <option v-for="companies in comp" :key="companies.id" :value="companies.id">
+                      {{ companies.name }}
                     </option>
                   </select>
                 </div>
@@ -444,9 +442,9 @@
                     style="display: flex; flex-direction: column; padding-right: 5px; height:250px;">
                     <div class="form-group">
                       <label>Select Products</label>
-                      <select id="Products" v-model="selectedProductIds" @change="updateSelectedProducts" multiple
+                      <select id="Products" v-model="product_id" @change="updateSelectedProducts" multiple
                         class="form-control">
-                        <option v-for="product in prod" :key="product.id" value="product.id">
+                        <option v-for="product in prod" :key="product.id" :value="product.id">
                           {{ product.name }}
                         </option>
                       </select>
@@ -460,27 +458,27 @@
                       style="border: 1px solid black; border-radius: 8px; flex: 1;">
                       <div class="card-body">
                         <div v-for="product in fields" :key="product.id" class="mb-4">
-
                           <h5>{{ product.name }}</h5>
                           <button @click="addField(product)" class="btn btn-success">+</button>
                           <label class="mx-5">Total Amount: Rs {{ calculateTotalAmount(product) }}</label>
                           <label class="ml-5">Total Quantity: {{ calculateTotalQuantity(product) }}</label>
 
                           <!-- Flex container for fields -->
-                          <div v-for="(field, fieldIndex) in product.fields || []" :key="fieldIndex"
-                            class="d-flex flex-wrap" style="gap: 20px;">
+                          <div v-for="(field, index) in product.fields || []" :key="index" class="d-flex flex-wrap"
+                            style="gap: 20px;">
+                            <input type="hidden" name="product_id[]" v-model="product.id" />
 
                             <!-- Qty field -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Qty</label>
-                              <input type="number" v-model="field.qty" required placeholder="Enter Qty"
+                              <input type="number" name="qty[]" v-model="field.qty" required placeholder="Enter Qty"
                                 style="width:100%; padding: 0px; box-sizing: border-box;" />
                             </div>
 
                             <!-- Unit field -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Unit</label>
-                              <select v-model="field.unit" style="width: 100%; padding: 0px;">
+                              <select v-model="field.unit" name="unit[]" style="width: 100%; padding: 0px;">
                                 <option value="kg">kg</option>
                                 <option value="g">g</option>
                                 <option value="pound">pound</option>
@@ -490,17 +488,15 @@
                             <!-- Price field -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Price</label>
-                              <input type="number" v-model="field.price" required placeholder="Enter Price"
-                                style="width: 100%; padding: 0px; box-sizing: border-box;" />
+                              <input type="number" name="price[]" v-model="field.price" required
+                                placeholder="Enter Price" style="width: 100%; padding: 0px; box-sizing: border-box;" />
                             </div>
 
                             <!-- Amount calculation and remove button -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Amount: Rs {{ calculateAmount(field.price, field.qty) }}</label>
                               <button @click="removeField(product, index)" class="btn btn-danger"
-                                style="margin-top: 5px; width: 50px; font-size: 14px; padding: 0px;">
-                                -
-                              </button>
+                                style="margin-top: 5px; width: 50px; font-size: 14px; padding: 0px;">-</button>
                             </div>
                           </div>
                         </div>
@@ -514,13 +510,13 @@
                       <div class="card-body">
                         <p class="text-center">Final total: Rs {{ totalAmount }}</p>
                         <!-- Add a hidden input to include totalAmount in the form submission -->
-                        <input type="hidden" name="final_total" v-model="person.finaltotal" value="formData.final_total" />
+                        <input type="hidden" v-model="form.final_total" name="final_total" />
 
 
                         <!-- Commission input -->
                         <label for="commission">Commission in %</label>
-                        <input type="number" v-model.number="commissionPercentage" v-model="person.commission" placeholder="0" class="w-25"
-                          name="commission" value="formData.commission" /><br>
+                        <input type="number" v-model.number="form.commission" placeholder="0" class="w-25"
+                          name="commission" /><br>
 
                         <label class="font-small">Commission amount: Rs {{ commissionAmount }}</label>
 
@@ -568,8 +564,8 @@
                           <button>
                             <label for="grandTotal">Grand Total: Rs
                               <span>{{ grandTotal }}</span>
-                            </label>
-                            <input type="hidden" name="grand_total" v-model="person.grandTotal" value="formData.grand_total" />
+                            </label>:value
+                            <input type="hidden" name="grand_total" v-model="form.grand_total" />
 
 
                             <!-- Add a hidden input to send grand_total with the form -->
@@ -581,9 +577,6 @@
                   </div>
 
                 </div>
-
-
-
 
                 <!-- Additional footer or total information -->
                 <div class="d-flex align-items-center justify-content-start gap-3 mt-3" style="margin-left:150px;">
@@ -600,8 +593,8 @@
                   <!-- Payment Status -->
                   <div style="margin-right: 20px;">
                     <label for="paymentStatus" style="display: block;">Payment Status</label>
-                    <select name="payment_status" id="paymentStatus" value="formData.payment_status"
-                      v-model="person.paymentStatus" style="width: 150px; height: 40px;" required>
+                    <select name="payment_status" id="paymentStatus" v-model="form.payment_status"
+                      style="width: 150px; height: 40px;" required>
                       <option value="" disabled selected>Payment Status</option>
                       <option value="Completed">Completed</option>
                       <option value="Pending">Pending</option>
@@ -638,7 +631,7 @@
                   <!-- Total Dues -->
                   <div style="margin-left: 20px;">
                     <label for="totalDues" style="display: block;">Total Dues : {{ totalDues }}</label>
-                    <input type="hidden" name="total_dues" v-model="person.totaldues" value="formData.total_dues" />
+                    <input type="hidden" v-model="form.total_dues" name="total_dues" />
                   </div>
 
                   <!-- Buttons -->
@@ -676,48 +669,42 @@ import 'flatpickr/dist/flatpickr.css'; // Import flatpickr CSS
 import axios from 'axios';
 
 export default {
-  props: ['billingAgentRecords'],
-  // props: ['id'], 
-  // Accept the ID from route params
-  
+
+
+
   data() {
 
     return {
-
-
-      person: {
-        totaldues: '',
-        paymentStatus: '',
-        grandTotal: '',
-        commission: '',
-        finaltotal: '',
-        selectedCompanies: '',
-        selectedAgents: '',
-      },
-
-
-      $billing_agent_records: {},
-      paymentStatus: "",
+      // paymentStatus: "",
       agents: [],              // This will store the list of Agentss from the backend
-      selectedAgents: null,      // This stores the selected farmer ID from the dropdown
-      // localBillingAgentRecords: { ...this.billingAgentRecords } ,// Create a copy of the prop
+      billingList: [], // Array to store the billing list
       comp: [],
-      selectedCompanies: null,
-      selectedProductIds: [],
+      product_id: [],
       prod: [
         { id: 1, name: "Goldfish", fields: [] },
         { id: 2, name: "Whales", fields: [] },
         { id: 3, name: "Katla", fields: [] },
         { id: 4, name: "Shark", fields: [] },
       ],
-      // selectedProducts:'',
+
       selectedProducts: [],
       invoiceDate: null, // You can set a default date if needed
       config: {
         dateFormat: "Y-m-d", // Your desired date format
         allowInput: true
       },
+      form: {
 
+        agent: '',
+        company: '',
+        commission: '',
+        grand_total: '',
+        final_total: '',
+        total_dues: '',
+        payment_status: '',
+        product_id:'',
+        
+      },
       // selectedAgents: null,
       menuState: {
 
@@ -769,7 +756,7 @@ export default {
       imageSrc1: "/images/laravel3.png",
       imageSrc2: "/images/avatar5.png",
       dashboardText: "Dashboard",
-      commissionPercentage: 0, // Initialize as 0
+      commission: 0, // Initialize as 0
       arhatCoolie: 0,
       britty: 0,
       dan: 0,
@@ -786,11 +773,11 @@ export default {
   },
   computed: {
     totalSelectedProducts() {
-      return this.selectedProductIds.length;
+      return this.product_id.length;
     },
     selectedAgentsDetails() {
       // Find the Agents object that matches the selected Agents's ID
-      return this.agents.find(Agents => Agents.id === this.selectedAgents);
+      return this.agents.find(Agents => Agents.id === this.agent);
     },
     selectedProductNames() {
       return this.selectedProducts
@@ -806,7 +793,7 @@ export default {
     },
     commissionAmount() {
       const validTotal = isNaN(this.totalAmount) || this.totalAmount <= 0 ? 0 : this.totalAmount;
-      const validPercentage = isNaN(this.commissionPercentage) || this.commissionPercentage <= 0 ? 0 : this.commissionPercentage;
+      const validPercentage = isNaN(this.commission) || this.commission <= 0 ? 0 : this.commission;
       return (validTotal * validPercentage) / 100;
     },
     totalCharged() {
@@ -929,19 +916,11 @@ export default {
   },
 
   mounted() {
-    // const agentId = this.$route.params.id; // Assuming the id is in the route params
-    this.fetchPersonData();
-
-    // console.log('Editing billing for ID:', this.id);
-    // Fetch the details for this ID
-
     this.getAgents();
     this.getCompanies();
     this.getProducts();
-    // this.fetchAgentBillingDetails();
-
-
-
+    // this.saveProductDetails();
+    // Safely initialize flatpickr when the component is mounted
     if (this.$refs.datepicker) {
       this.datepickerInstance = flatpickr(this.$refs.datepicker, {
         dateFormat: "Y-m-d", // Customize your date format
@@ -957,40 +936,63 @@ export default {
       console.error("Datepicker ref not found");
     }
   },
+  created() {
+    const id = this.$route.params.id; // Fetch ID from route
+    this.fetchBillingDetails(id);
+  },
   methods: {
 
-    async fetchPersonData() {
-      const personId = this.$route.params.id;
-      try {
-        const response = await axios.get(`http://localhost/dairy/index.php/Home/edit_BillingAgent/${personId}`); // Get the data of the person
-        this.person = response.data;  // Pre-fill the form fields with the person's data
-      } catch (error) {
-        console.error('Error fetching person data:', error);
-      }
-    },
-  
-    updateAgent() {
-      let formData = new FormData();
-      formData.append('agents', this.agents);
-      formData.append('company', this.company);
-      formData.append('commission', this.commission);
-      // Add more fields if needed
-
-      const agentId = this.$route.params.id;
-
-      axios.put(`http://localhost/dairy/index.php/Home/update_BillingAgent/${agentId}`,  this.person)
-        .then(response => {
-          if (response.data.status === 'success') {
-            alert('Agent updated successfully!');
-            this.$router.push('/agentBillingList'); // Redirect after success
+    fetchBillingDetails(id) {
+      fetch(`http://localhost/dairy/index.php/Home/edit_BillingAgent/${id}`, {
+        method: 'GET',
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === 'success') {
+            this.form = data.data; // Populate form with fetched data
           } else {
-            alert('Failed to update agent.');
+            alert(data.message || 'Failed to fetch details');
           }
         })
-        .catch(error => {
-          console.error("Error updating agent:", error);
-        });
+        .catch((error) => console.error('Error:', error));
     },
+    fetchBillingDetails2(id) {
+      fetch(`http://localhost/dairy/index.php/Home/edit_BillingAgentProducts/${id}`, { 
+        method: 'GET',
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === 'success') {
+            this.form = data.data; // Populate form with fetched data
+          } else {
+            alert(data.message || 'Failed to fetch details');
+          }
+        })
+        .catch((error) => console.error('Error:', error));
+    },
+    submitForm() {
+      fetch('http://localhost/dairy/index.php/Home/update_BillingAgent', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(this.form), // Send updated form data
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.status === 'success') {
+            alert('Record updated successfully.');
+            // Redirect to the AgentsBillingList page
+            window.location.href = 'http://localhost/dairy/index.php/Home/AgentsBillingList';
+          } else {
+            alert(data.message || 'Failed to update record.');
+          }
+        })
+        .catch((error) => console.error('Error:', error));
+    },
+
+
+
     openDatePicker() {
       // Open the flatpickr calendar when the icon is clicked
       if (this.datepickerInstance) {
@@ -999,7 +1001,6 @@ export default {
         console.error("Flatpickr instance not initialized yet");
       }
     },
-
     toggleDropdown(menu) {
       // Toggle the main menu and close all other menus
       Object.keys(this.menuState).forEach(key => {
@@ -1010,7 +1011,6 @@ export default {
         }
       });
     },
-
     toggleSubMenu(menu, subMenu) {
       // Ensure the correct submenu within a specific menu is toggled
       Object.keys(this.menuState[menu].subMenu).forEach(key => {
@@ -1023,9 +1023,10 @@ export default {
     },
 
     // Add a new field, up to the max limit
+
     updateSelectedProducts() {
       // Add new products to the fields array
-      this.selectedProductIds.forEach((id) => {
+      this.product_id.forEach((id) => {
         const product = this.prod.find((p) => p.id === id);
         if (product && !this.fields.find((f) => f.id === product.id)) {
           this.fields.push({
@@ -1037,21 +1038,20 @@ export default {
       });
 
       // Remove products from fields if deselected
-      this.fields = this.fields.filter((product) => this.selectedProductIds.includes(product.id));
+      this.fields = this.fields.filter((product) => this.product_id.includes(product.id));
     },
     addField(product) {
-      product.fields.push({ qty: 0, unit: "kg", price: 0 });
+      product.fields.push({ product_id: '', qty: 0, unit: "", price: 0 });
+      console.log("Updated Fields:", product.fields); // Verify the updated fields
     },
     removeField(product, index) {
       if (!product.fields) return; // Safeguard
       product.fields.splice(index, 1);
       if (product.fields.length === 0) {
         this.fields = this.fields.filter((f) => f.id !== product.id);
-        this.selectedProductIds = this.selectedProductIds.filter((id) => id !== product.id);
+        this.product_id = this.product_id.filter((id) => id !== product.id);
       }
     },
-
-
     calculateAmount(price, qty) {
       return price * qty || 0;
     },
@@ -1079,7 +1079,6 @@ export default {
           console.error(error); // Log errors if the request fails
         });
     },
-
     getCompanies() {
       axios.get('http://localhost/dairy/index.php/Home/get_companies')
         .then((response) => {

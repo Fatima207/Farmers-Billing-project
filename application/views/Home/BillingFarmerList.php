@@ -40,37 +40,30 @@
                 </tr>
             </thead>
             <tbody>
+            <?php if (!empty($billing_list)): ?>
+            <?php foreach ($billing_list as $row): ?>
                 <tr>
-                    <?php
-                  $query = $this->db->select('bfr.*, f.name AS farmer, c.name AS Company')
-                  ->from('billing_farmer_records AS bfr')
-                  ->join('reg_farmers AS f', 'bfr.farmer = f.id', 'left')
-                  ->join('reg_companies AS c', 'bfr.Company = c.id', 'left')
-                  ->get();
-
-               
-              foreach ($query->result() as $row): ?>
-                  <tr>
-                      <td><?php echo $row->farmer_billing_num; ?></td>
-                      <td><?php echo $row->farmer; ?></td> <!-- Farmer's Name -->
-                      <td><?php echo $row->Company; ?></td> <!-- Company's Name -->
-                      <td><?php echo $row->commission; ?></td>
-                      <td><?php echo $row->grand_total; ?></td>
-                      <td><?php echo $row->final_total; ?></td>
-                      <td><?php echo $row->total_dues; ?></td>
-                      <td><?php echo $row->payment_status; ?></td>
-                      <td>
-                          <a class="btn btn-success" href="http://localhost:8080/#/editAgentBilling/<?php echo $row->id; ?>">Edit</a>
-                          <a href="<?php echo site_url('index.php/Home/FarmersBillingList/delete_BillingFarmer/' . $row->id); ?>" 
-                             class="btn btn-danger"
-                             onclick="return confirm('Are you sure you want to delete this record?');">
-                             Delete
-                          </a>
-                      </td>
-                  </tr>
-              <?php endforeach; 
-               
-                  ?>
+                    <td><?php echo $row->farmer_billing_num; ?></td>
+                    <td><?php echo $row->farmer; ?></td>
+                    <td><?php echo $row->company; ?></td>
+                    <td><?php echo $row->commission; ?></td>
+                    <td><?php echo $row->grand_total; ?></td>
+                    <td><?php echo $row->final_total; ?></td>
+                    <td><?php echo $row->total_dues; ?></td>
+                    <td><?php echo $row->payment_status; ?></td>
+                    <td>
+                        <a class="btn btn-success" href="http://localhost:8080/#/editFarmerBilling/<?php echo $row->id; ?>">Edit</a>
+                        <a href="<?php echo base_url('index.php/Home/delete_BillingFarmer/' . $row->id) ?>"
+                           class="btn btn-danger"
+                           onclick="return confirm('Are you sure you want to delete this record?');">Delete</a>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        <?php else: ?>
+            <tr>
+                <td colspan="9">No records found.</td>
+            </tr>
+        <?php endif; ?>
             </tbody>
         </table>
 
