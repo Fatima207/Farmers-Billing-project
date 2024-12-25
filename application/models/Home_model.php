@@ -286,8 +286,8 @@ class Home_model extends CI_Model
   }
 
 
-  public function edit_BillingAgent($id)
-  {
+ public function edit_BillingAgent($id)
+  {   
     $query = $this->db->get_where('billing_agent_records', ['id' => $id]);
     // return $query->row();
     if ($query->num_rows() > 0) {
@@ -295,12 +295,16 @@ class Home_model extends CI_Model
     }
     return false;
   }
+
+  // $data = $this->db->query("SELECT * FROM `billing_agent_records` b inner join billing_agent_product_records ba on b.id=ba.billing_id where b.id =54");
+
+
   public function edit_BillingAgentProducts($id)
   {
     $query = $this->db->get_where('billing_agent_product_records', ['id' => $id]);
     // return $query->row();
     if ($query->num_rows() > 0) {
-      return $query->row_array(); // Return the record as an associative array
+      return $query->result_array(); // Return the record as an associative array
     }
     return false;
   }
@@ -309,23 +313,6 @@ class Home_model extends CI_Model
     $this->db->where('id', $id);
     return $this->db->update('billing_agent_product_records', $batch_data); // Update the record
   }
-  // public function edit_BillingAgent($id)
-  // {
-  //     $this->db->select('
-  //         billing_agent_records.*,
-  //         billing_agent_product_records.*
-  //     ');
-  //     $this->db->from('billing_agent_records');
-  //     $this->db->join('billing_agent_product_records', 'billing_agent_product_records.billing_agent_id = billing_agent_records.id', 'left');
-  //     $this->db->where('billing_agent_records.id', $id);
-  
-  //     $query = $this->db->get();
-  
-  //     if ($query->num_rows() > 0) {
-  //         return $query->result_array(); // Return all rows as an associative array
-  //     }
-  //     return false;
-  // }
   
 
 
@@ -357,15 +344,26 @@ class Home_model extends CI_Model
 
   public function get_agentsBilling($postData)
   {
-
-
     $this->db->insert('billing_agent_records', $postData);
     if ($this->db->affected_rows() > 0) {
       return $this->db->insert_id();
     }
     return false;
   }
-
+  public function get_billing_with_products($billing_id)
+  {
+      $this->db->select('b.id as billing_id, b.billing_number, b.agent, b.company, b.commission, b.grand_total, b.final_total, b.total_dues, b.payment_status, b.created_at, bp.product_id, bp.qty, bp.unit, bp.price');
+      $this->db->from('billing_agent_records b');
+      $this->db->join('billing_agent_product_records bp', 'b.id = bp.billing_id', 'inner');
+      $this->db->where('b.id', $billing_id);
+      $query = $this->db->get();
+  
+      if ($query->num_rows() > 0) {
+          return $query->result_array(); // Return as an array of results
+      }
+      return false; // Return false if no matching records found
+  }
+  
   public function get_farmersBilling($postData)
   {
     $this->db->insert('billing_farmer_records', $postData);
@@ -507,3 +505,9 @@ class Home_model extends CI_Model
     return $query->result_array();  // Return all matching results
   }
 }
+
+
+
+
+
+  

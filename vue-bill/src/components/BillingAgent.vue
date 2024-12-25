@@ -935,7 +935,6 @@ export default {
     }
   },
   methods: {
-
     submitForm() {
       if (!this.selectedAgents) {
         alert("Please select an agent.");
@@ -947,50 +946,59 @@ export default {
         return; // Prevent form submission
       }
 
-      // Prepare data for billing agent product records
-      const payload = this.fields.map((product) => ({
-        product_id: product.id,
-        fields: product.fields.map((field) => ({
-          qty: field.qty,
-          unit: field.unit,
-          price: field.price,
-        })),
-      }));
-
-      console.log("Submitting product payload:", payload); // Debugging
+      // Prepare form data for NewAgentsBilling
+      const formData = new FormData(this.$refs.billingForm);
 
       axios
-        .post("http://localhost/dairy/index.php/Home/saveAgentsProductDetails", payload, {
+        .post("http://localhost/dairy/index.php/Home/NewAgentsBilling", formData, {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
           withCredentials: true,
         })
         .then((response) => {
           if (response.data.status === "success") {
-            console.log("Product details saved successfully.");
+            console.log("Billing record saved successfully.");
 
-            // Prepare form data for agents_billing_record
-            const formData = new FormData(this.$refs.billingForm);
+            // Retrieve the billing_id from the response
+            const billingId = response.data.billing_id;
+            if (!billingId) {
+              throw new Error("Billing ID is missing in the response.");
+            }
 
-            return axios.post("http://localhost/dairy/index.php/Home/NewAgentsBilling", formData, {
+            // Prepare data for billing agent product records
+            const payload = this.fields.map((product) => ({
+              billing_id: billingId, // Include billing_id
+              product_id: product.id,
+              fields: product.fields.map((field) => ({
+                qty: field.qty,
+                unit: field.unit,
+                price: field.price,
+              })),
+            }));
+
+            console.log("Submitting product payload:", payload); // Debugging
+
+            // Call saveAgentsProductDetails API
+            return axios.post("http://localhost/dairy/index.php/Home/saveAgentsProductDetails", payload, {
               headers: {
-                "Content-Type": "multipart/form-data",
+                "Content-Type": "application/json",
               },
               withCredentials: true,
             });
           } else {
-            throw new Error(response.data.message || "Failed to save product details.");
+            throw new Error(response.data.message || "Failed to save billing record.");
           }
         })
         .then((response) => {
           if (response.data.status === "success") {
-            console.log("Billing record saved successfully!");
-            window.location.href = response.data.redirect_url;
-
-            // alert("Records saved successfully.");
+            console.log("Product details saved successfully.");
+            alert("Records saved successfully.");
             // Optionally, reset the form or redirect
             // this.$refs.billingForm.reset();
+            // window.location.href = response.data.redirect_url;
+          } else {
+            throw new Error(response.data.message || "Failed to save product details.");
           }
         })
         .catch((error) => {
@@ -998,6 +1006,7 @@ export default {
           alert("An error occurred while saving the records.");
         });
     },
+
 
 
     openDatePicker() {

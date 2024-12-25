@@ -702,8 +702,8 @@ export default {
         final_total: '',
         total_dues: '',
         payment_status: '',
-        product_id:'',
-        
+        product_id: '',
+
       },
       // selectedAgents: null,
       menuState: {
@@ -939,6 +939,7 @@ export default {
   created() {
     const id = this.$route.params.id; // Fetch ID from route
     this.fetchBillingDetails(id);
+    
   },
   methods: {
 
@@ -956,20 +957,8 @@ export default {
         })
         .catch((error) => console.error('Error:', error));
     },
-    fetchBillingDetails2(id) {
-      fetch(`http://localhost/dairy/index.php/Home/edit_BillingAgentProducts/${id}`, { 
-        method: 'GET',
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === 'success') {
-            this.form = data.data; // Populate form with fetched data
-          } else {
-            alert(data.message || 'Failed to fetch details');
-          }
-        })
-        .catch((error) => console.error('Error:', error));
-    },
+   
+
     submitForm() {
       fetch('http://localhost/dairy/index.php/Home/update_BillingAgent', {
         method: 'POST',
@@ -983,7 +972,7 @@ export default {
           if (data.status === 'success') {
             alert('Record updated successfully.');
             // Redirect to the AgentsBillingList page
-            window.location.href = 'http://localhost/dairy/index.php/Home/AgentsBillingList';
+            // window.location.href = 'http://localhost/dairy/index.php/Home/AgentsBillingList';
           } else {
             alert(data.message || 'Failed to update record.');
           }
