@@ -779,10 +779,6 @@ class Home extends CI_Controller
 		$this->Home_model->delete_BillingFarmer($id);
 		redirect(site_url('index.php/Home/FarmersBillingList'));
 	}
-
-
-
-
 	// Agents
 	private function Agents_BillingNumGenerate()
 	{
@@ -956,6 +952,18 @@ class Home extends CI_Controller
 			echo json_encode(['status' => 'error', 'message' => 'No matching records found.']);
 		}
 	}
+
+	public function get_AgentDetails($id)
+	{
+		// Fetch agent details by ID
+		$this->load->model('Home_model');
+		$agent = $this->Home_model->getAgentById($id); // Fetch agent data by ID
+		if ($agent) {
+			echo json_encode($agent); // Return agent details
+		} else {
+			echo json_encode(['status' => 'error', 'message' => 'Agent not found.']);
+		}
+	}
 	public function edit_BillingAgent($id)
 	{
 		header('Access-Control-Allow-Origin: http://localhost:8080'); // Allow frontend
@@ -974,8 +982,10 @@ class Home extends CI_Controller
 		if ($billingRecord) {
 			echo json_encode([
 				'status' => 'success',
-				'data' => $billingRecord,
-			]); // Send JSON response
+				'data' => $billingRecord[0],
+				'innerData' => $billingRecord,
+				'productData' => $billingRecord,
+			]); // Send JSON reponse
 		} else {
 			echo json_encode([
 				'status' => 'error',

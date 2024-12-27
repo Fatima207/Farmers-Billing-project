@@ -365,7 +365,7 @@
                   <!-- <input type="text" name="billing_number" v-model="billingNumber"> -->
                   <label for="Agents">Select Agents:</label>
 
-                  <select id="Agents" name="agent" v-model="form.agent" required>
+                  <select id="Agents" name="agent" v-model="form.agent" @change="fetchAgentDetails" required>
                     <option v-for="Agents in agents" :key="Agents.id" :value="Agents.id">
                       {{ Agents.name }}
                     </option>
@@ -413,7 +413,12 @@
                               <td>{{ selectedAgentsDetails.address }}</td>
                               <td>{{ selectedAgentsDetails.contact_number }}</td>
                             </tr>
-
+                            <tr v-else>
+                              <td>{{ form.temp }}</td>
+                              <td>{{ form.code }}</td>
+                              <td>{{ form.address }}</td>
+                              <td>{{ form.contact_number }}</td>
+                            </tr>
                           </tbody>
 
                         </table>
@@ -442,7 +447,7 @@
                     style="display: flex; flex-direction: column; padding-right: 5px; height:250px;">
                     <div class="form-group">
                       <label>Select Products</label>
-                      <select id="Products" v-model="product_id" @change="updateSelectedProducts" multiple
+                      <select id="Products" v-model="form.product_id" @change="updateSelectedProducts" multiple
                         class="form-control">
                         <option v-for="product in prod" :key="product.id" :value="product.id">
                           {{ product.name }}
@@ -466,7 +471,7 @@
                           <!-- Flex container for fields -->
                           <div v-for="(field, index) in product.fields || []" :key="index" class="d-flex flex-wrap"
                             style="gap: 20px;">
-                            <input type="hidden" name="product_id[]" v-model="product.id" />
+                            <input type="hidden" name="product_id[]" v-model="form.product_id" />
 
                             <!-- Qty field -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
@@ -516,11 +521,12 @@
                         <!-- Commission input -->
                         <label for="commission">Commission in %</label>
                         <input type="number" v-model.number="form.commission" placeholder="0" class="w-25"
-                          name="commission" /><br>
+                          name="commission" @input="updateCommission" /><br>
 
                         <label class="font-small">Commission amount: Rs {{ commissionAmount }}</label>
 
                         <p class="text-center mr-5">Charges</p>
+
 
                         <div class="text-center">
                           <!-- Charges fields -->
@@ -686,7 +692,7 @@ export default {
         { id: 3, name: "Katla", fields: [] },
         { id: 4, name: "Shark", fields: [] },
       ],
-
+      // selectedAgentsDetails: null, // Store details of selected agent
       selectedProducts: [],
       invoiceDate: null, // You can set a default date if needed
       config: {
@@ -703,6 +709,9 @@ export default {
         total_dues: '',
         payment_status: '',
         product_id: '',
+        qty: '',
+        unit: '',
+        price: '',
 
       },
       // selectedAgents: null,
@@ -775,10 +784,10 @@ export default {
     totalSelectedProducts() {
       return this.product_id.length;
     },
-    selectedAgentsDetails() {
-      // Find the Agents object that matches the selected Agents's ID
-      return this.agents.find(Agents => Agents.id === this.agent);
-    },
+    // selectedAgentsDetails() {
+    //   // Find the Agents object that matches the selected Agents's ID
+    //   return this.agents.find(Agents => Agents.id === this.agent);
+    // },
     selectedProductNames() {
       return this.selectedProducts
         .map(productId => this.prod.find(product => product.id === productId)?.name)
@@ -793,7 +802,7 @@ export default {
     },
     commissionAmount() {
       const validTotal = isNaN(this.totalAmount) || this.totalAmount <= 0 ? 0 : this.totalAmount;
-      const validPercentage = isNaN(this.commission) || this.commission <= 0 ? 0 : this.commission;
+      const validPercentage = isNaN(this.form.commission) || this.form.commission <= 0 ? 0 : this.form.commission;
       return (validTotal * validPercentage) / 100;
     },
     totalCharged() {
@@ -939,9 +948,42 @@ export default {
   created() {
     const id = this.$route.params.id; // Fetch ID from route
     this.fetchBillingDetails(id);
-    
+
   },
   methods: {
+    fetchAgentDetails() {
+      if (!this.form.agent) {
+        this.selectedAgentDetails = null; // Clear details if no agent selected
+        return;
+      }
+      axios
+        .get(`http://localhost/dairy/index.php/Home/get_AgentDetails/${this.form.agent}`)
+        .then((response) => {
+          this.selectedAgentDetails = response.data; // Store selected agent's details
+        })
+        .catch((error) => {
+          console.error("Error fetching agent details:", error);
+        });
+    },
+
+    // fetchBillingDetails(id) {
+    //   fetch(`http://localhost/dairy/index.php/Home/edit_BillingAgent/${id}`, {
+    //     method: 'GET',
+    //   })
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //       if (data.status === 'success') {
+    //         console.log(data.data);
+    //         console.log(data.innerData);
+    //         this.form = data.data; // Populate form with fetched data
+    //         this.formData = data.innerData;
+    //       } else {
+    //         alert(data.message || 'Failed to fetch details');
+    //       }
+    //     })
+    //     .catch((error) => console.error('Error:', error));
+    // },
+
 
     fetchBillingDetails(id) {
       fetch(`http://localhost/dairy/index.php/Home/edit_BillingAgent/${id}`, {
@@ -950,14 +992,25 @@ export default {
         .then((response) => response.json())
         .then((data) => {
           if (data.status === 'success') {
-            this.form = data.data; // Populate form with fetched data
+            this.form = data.data; // Main billing details
+            this.fields = data.innerData.map((product) => ({
+              id: product.product_id,
+              name: product.product_name, // Ensure this field is included in your backend response
+              fields: [
+                {
+                  qty: product.qty,
+                  unit: product.unit,
+                  price: product.price,
+                },
+              ],
+            }));
           } else {
             alert(data.message || 'Failed to fetch details');
           }
         })
         .catch((error) => console.error('Error:', error));
     },
-   
+
 
     submitForm() {
       fetch('http://localhost/dairy/index.php/Home/update_BillingAgent', {
@@ -1014,7 +1067,7 @@ export default {
     // Add a new field, up to the max limit
 
     updateSelectedProducts() {
-      // Add new products to the fields array
+      // Ensure selected products are dynamically updated
       this.product_id.forEach((id) => {
         const product = this.prod.find((p) => p.id === id);
         if (product && !this.fields.find((f) => f.id === product.id)) {
@@ -1022,9 +1075,9 @@ export default {
             ...product,
             fields: [{ qty: 0, unit: "kg", price: 0 }],
           });
-
         }
       });
+
 
       // Remove products from fields if deselected
       this.fields = this.fields.filter((product) => this.product_id.includes(product.id));
@@ -1048,7 +1101,6 @@ export default {
       if (!product.fields) return 0; // Prevent accessing undefined.
       return product.fields.reduce((sum, field) => sum + (field.qty * field.price), 0);
     },
-
     calculateTotalQuantity(product) {
       return product.fields.reduce((total, field) => total + (field.qty || 0), 0);
     },

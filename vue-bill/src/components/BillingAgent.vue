@@ -387,7 +387,7 @@
                 <br>
                 <br>
                 <br>
-
+                <!-- table section starts here  -->
                 <div class="row" style="padding-left:10px;">
                   <div class="col-12">
                     <div class="card" style="display:flex;flex-direction:row;">
@@ -451,7 +451,6 @@
                     </div>
                   </div>
 
-                  <!-- Second Section: Display selected product details -->
                   <!-- Second Section: Display selected product details -->
                   <div class="col-md-7"
                     style="display: flex; flex-direction: column; padding-left: 5px; padding-right: 5px;">
@@ -578,20 +577,13 @@
                   </div>
 
                 </div>
-
-
-
-
                 <!-- Additional footer or total information -->
                 <div class="d-flex align-items-center justify-content-start gap-3 mt-3" style="margin-left:150px;">
                   <label for="qty" class="font-small text-sm px-5">Total Quantity: {{ totalQuantity }}</label>
                   <label for="qty" class="font-small text-sm px-3">Total Products: {{ totalSelectedProducts }}</label>
 
                 </div>
-                <br><br>
-
-                <br><br><br>
-
+                <br><br><br><br><br>
                 <!-- Payment Status and Payment Fields -->
                 <div style="display: flex; align-items: center;">
                   <!-- Payment Status -->
