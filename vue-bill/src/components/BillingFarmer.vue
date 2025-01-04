@@ -347,7 +347,7 @@
                     <div class="input-group-append">
                       <div class="input-group">
                         <!-- Date Picker Input -->
-                        <input type="text" class="form-control" ref="datepicker" placeholder="Select Date" />
+                        <input type="text" class="form-control" name="created_at" ref="datepicker" placeholder="Select Date" />
                         <!-- Calendar Icon that triggers the date picker -->
                         <div class="input-group-append" @click="openDatePicker">
                           <span class="input-group-text" style="cursor: pointer;">
@@ -377,7 +377,7 @@
                 <div class="col-md-2">
 
                   <label for="companies">Select companies:</label>
-                  <select id="companies" name="Company" v-model="selectedCompanies" required>
+                  <select id="companies" name="company" v-model="selectedCompanies" required>
                     <option v-for="companies in comp" :key="companies.id" :value="companies.id">
                       {{ companies.name }}
                     </option>
@@ -522,37 +522,46 @@
 
                         <p class="text-center mr-5">Charges</p>
 
+                        
                         <div class="text-center">
                           <!-- Charges fields -->
                           <span>
                             <label for="arhat">Arhat coolie :</label>
                             <label for="britty" class="pl-5">Britty</label><br>
-                            <input type="number" v-model.number="arhatCoolie" placeholder="0" class="w-25 mx-3" />
-                            <input type="number" v-model.number="britty" placeholder="0" class="w-25" /><br>
+                            <input type="number" v-model.number="arhat_coolie" name="arhat_coolie" placeholder="0"
+                              class="w-25 mx-3" />
+                            <input type="number" v-model.number="britty" placeholder="0" name="britty"
+                              class="w-25" /><br>
                           </span>
                           <span>
                             <label for="dan">Dan :</label>
-                            <label for="jeepFair" class="pl-5">Jeep fair :</label><br>
-                            <input type="number" v-model.number="dan" placeholder="0" class="w-25 mx-3" />
-                            <input type="number" v-model.number="jeepFair" placeholder="0" class="w-25" /><br>
+                            <label for="jeep_fair" class="pl-5">Jeep fair :</label><br>
+                            <input type="number" v-model.number="dan" placeholder="0" name="dan" class="w-25 mx-3" />
+                            <input type="number" v-model.number="jeep_fair" placeholder="0" name="jeep_fair"
+                              class="w-25" /><br>
                           </span>
                           <span>
-                            <label for="railCoolie">Rail Coolie :</label>
-                            <label for="iceLeaf" class="pl-5">Ice leaf :</label><br>
-                            <input type="number" v-model.number="railCoolie" placeholder="0" class="w-25 mx-3" />
-                            <input type="number" v-model.number="iceLeaf" placeholder="0" class="w-25" /><br>
-                          </span>
-
-                          <span>
-                            <label for="union">Union :</label>
-                            <label for="miscExp" class="pl-5">Misc Exp. :</label><br>
-                            <input type="number" v-model.number="union" placeholder="0" class="w-25 mx-3" />
-                            <input type="number" v-model.number="miscExp" placeholder="0" class="w-25" /><br>
+                            <label for="rail_coolie">Rail Coolie :</label>
+                            <label for="ice_leaf" class="pl-5">Ice leaf :</label><br>
+                            <input type="number" v-model.number="rail_coolie" placeholder="0" name="rail_coolie"
+                              class="w-25 mx-3" />
+                            <input type="number" v-model.number="ice_leaf" placeholder="0" name="ice_leaf"
+                              class="w-25" /><br>
                           </span>
 
                           <span>
-                            <label for="marketExp">Market Exp. :</label><br>
-                            <input type="number" v-model.number="marketExp" placeholder="0" class="w-25 mx-3" />
+                            <label for="unio_n">Unio_n :</label>
+                            <label for="misc_exp" class="pl-5">Misc Exp. :</label><br>
+                            <input type="number" v-model.number="unio_n" placeholder="0" name="unio_n"
+                              class="w-25 mx-3" />
+                            <input type="number" v-model.number="misc_exp" placeholder="0" name="misc_exp"
+                              class="w-25" /><br>
+                          </span>
+
+                          <span>
+                            <label for="market_exp">Market Exp. :</label><br>
+                            <input type="number" v-model.number="market_exp" placeholder="0" name="market_exp"
+                              class="w-25 mx-3" />
                           </span>
                         </div>
 
@@ -593,6 +602,7 @@
                 <br><br><br>
 
                 <!-- Payment Status and Payment Fields -->
+               
                 <div style="display: flex; align-items: center;">
                   <!-- Payment Status -->
                   <div style="margin-right: 20px;">
@@ -612,21 +622,21 @@
                       <!-- Cash Payment Field -->
                       <div>
                         <label for="cash" style="display: block;">Cash</label>
-                        <input type="number" v-model.number="cash" id="cash" placeholder="Enter Cash Amount"
+                        <input type="number" v-model.number="cash" name="cash" id="cash" placeholder="Enter Cash Amount"
                           style="width: 100px;" />
                       </div>
 
                       <!-- Cheque Payment Field -->
                       <div>
                         <label for="cheque" style="display: block;">Cheque</label>
-                        <input type="number" v-model.number="cheque" id="cheque" placeholder="Enter Cheque Amount"
+                        <input type="number" v-model.number="cheque" name="cheque" id="cheque" placeholder="Enter Cheque Amount"
                           style="width: 100px;" />
                       </div>
 
                       <!-- Online Payment Field -->
                       <div>
                         <label for="online" style="display: block;">Online</label>
-                        <input type="number" v-model.number="online" id="online" placeholder="Enter Online Payment"
+                        <input type="number" v-model.number="online" name="online" id="online" placeholder="Enter Online Payment"
                           style="width: 100px;" />
                       </div>
                     </div>
@@ -753,15 +763,15 @@ export default {
       imageSrc2: "/images/avatar5.png",
       dashboardText: "Dashboard",
       commissionPercentage: 0, // Initialize as 0
-      arhatCoolie: 0,
+      arhat_coolie: 0,
       britty: 0,
       dan: 0,
-      jeepFair: 0,
-      railCoolie: 0,
-      iceLeaf: 0,
-      union: 0,
-      miscExp: 0,
-      marketExp: 0,
+      jeep_fair: 0,
+      rail_coolie: 0,
+      ice_leaf: 0,
+      unio_n: 0,
+      misc_exp: 0,
+      market_exp: 0,
       cash: 0,
       cheque: 0,
       online: 0,
@@ -795,15 +805,15 @@ export default {
     totalCharged() {
       return (
         parseFloat(this.commissionAmount || 0) +
-        parseFloat(this.arhatCoolie || 0) +
+        parseFloat(this.arhat_coolie || 0) +
         parseFloat(this.britty || 0) +
         parseFloat(this.dan || 0) +
-        parseFloat(this.jeepFair || 0) +
-        parseFloat(this.railCoolie || 0) +
-        parseFloat(this.iceLeaf || 0) +
-        parseFloat(this.union || 0) +
-        parseFloat(this.miscExp || 0) +
-        parseFloat(this.marketExp || 0)
+        parseFloat(this.jeep_fair || 0) +
+        parseFloat(this.rail_coolie || 0) +
+        parseFloat(this.ice_leaf || 0) +
+        parseFloat(this.unio_n || 0) +
+        parseFloat(this.misc_exp || 0) +
+        parseFloat(this.market_exp || 0)
       );
     },
     grandTotal() {
@@ -931,69 +941,75 @@ export default {
     }
   },
   methods: {
-
     submitForm() {
       if (!this.selectedFarmers) {
-        alert("Please select a farmer.");
+        alert("Please select an agent.");
         return; // Prevent form submission
       }
-
+      if (!this.selectedProductIds || this.selectedProductIds.length === 0) {
+        alert("Please select at least one product.");
+        return; // Prevent form submission
+      }
       if (this.paymentStatus !== "Completed") {
         alert("Payment status must be 'Completed' to submit the form.");
         return; // Prevent form submission
       }
 
-      // Prepare data for billing agent product records
-      const payload = this.fields.map((product) => ({
-        product_id: product.id,
-        fields: product.fields.map((field) => ({
-          qty: field.qty,
-          unit: field.unit,
-          price: field.price,
-        })),
-      }));
-
-      console.log("Submitting product payload:", payload); // Debugging
+      // Prepare form data for NewAgentsBilling
+      const formData = new FormData(this.$refs.billingForm);
+      console.log("Cash value:", this.cash);
+      console.log("Cash value:", this.cheque);
+      console.log("Cash value:", this.online);
 
       axios
-        .post("http://localhost/dairy/index.php/Home/saveFarmersProductDetails", payload, {
+        .post("http://localhost/dairy/index.php/Home/NewFarmersBilling", formData, {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
           withCredentials: true,
+
         })
+        // first api's response  
         .then((response) => {
           if (response.data.status === "success") {
-            console.log("Product details saved successfully.");
+            console.log("Billing record saved successfully.");
 
-            // Prepare form data for agents_billing_record
-            const formData = new FormData(this.$refs.billingForm);
+            // Retrieve the billing_id from the response
+            const billingId = response.data.billing_id;
+            if (!billingId) {
+              throw new Error("Billing ID is missing in the response.");
+            }
 
-            return axios.post("http://localhost/dairy/index.php/Home/NewFarmersBilling", formData, {
+            // Prepare data for billing agent product records
+            const payload = this.fields.map((product) => ({
+              billing_id: billingId, // Include billing_id
+              product_id: product.id,
+              fields: product.fields.map((field) => ({
+                qty: field.qty,
+                unit: field.unit,
+                price: field.price,
+              })),
+            }));
+
+            console.log("Submitting product payload:", payload); // Debugging
+            // Call saveAgentsProductDetails API
+            return axios.post("http://localhost/dairy/index.php/Home/saveFarmersProductDetails", payload, {
               headers: {
-                "Content-Type": "multipart/form-data",
+                "Content-Type": "application/json",
               },
               withCredentials: true,
             });
           } else {
-            throw new Error(response.data.message || "Failed to save product details.");
+            throw new Error(response.data.message || "Failed to save billing record.");
           }
         })
-        .then((response) => {
-          if (response.data.status === "success") {
-            console.log("Billing record saved successfully!");
-            window.location.href = response.data.redirect_url;
 
-            // alert("Records saved successfully.");
-            // Optionally, reset the form or redirect
-            // this.$refs.billingForm.reset();
-          }
-        })
         .catch((error) => {
           console.error("Error:", error.response?.data || error.message || error);
           alert("An error occurred while saving the records.");
         });
     },
+  
 
 
     openDatePicker() {

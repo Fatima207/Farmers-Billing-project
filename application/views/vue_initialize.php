@@ -31,7 +31,10 @@
 </head>
 <body>
     <div class="app"></div>
-    
+ <script src="<?php echo base_url('assets/js/custom.js'); ?>"></script>
+ <script src="<?php echo base_url('views/Partials/footer.php'); ?>"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <!-- Bootstrap 4 -->
 <script src="<?= base_url() ?>assets/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- Select2 -->

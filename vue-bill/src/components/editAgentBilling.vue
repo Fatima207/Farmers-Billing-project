@@ -332,7 +332,7 @@
           <!-- /.container-fluid -->
         </section>
 
-        <form @submit.prevent="submitForm">
+        <form @submit.prevent="submitEditForm">
           <!-- billing page main content  -->
           <div class="card-body" style='justify-content: space-between;'>
 
@@ -347,7 +347,8 @@
                     <div class="input-group-append">
                       <div class="input-group">
                         <!-- Date Picker Input -->
-                        <input type="text" class="form-control" ref="datepicker" placeholder="Select Date" />
+                        <input type="text" class="form-control" ref="datepicker" name="created_at"
+                          v-model="form.created_at" placeholder="Select Date" />
                         <!-- Calendar Icon that triggers the date picker -->
                         <div class="input-group-append" @click="openDatePicker">
                           <span class="input-group-text" style="cursor: pointer;">
@@ -447,14 +448,16 @@
                     style="display: flex; flex-direction: column; padding-right: 5px; height:250px;">
                     <div class="form-group">
                       <label>Select Products</label>
-                      <select id="Products" v-model="form.product_id" @change="updateSelectedProducts" multiple
+                      <select id="Products" v-model="selectedProductIds" @change="updateSelectedProducts" multiple
                         class="form-control">
-                        <option v-for="product in prod" :key="product.id" :value="product.id">
+                        <option v-for="product in prod" :key="product.id" :value="product.id"
+                          @click="onProductSelect(product.id)">
                           {{ product.name }}
                         </option>
                       </select>
                     </div>
                   </div>
+
 
                   <!-- Second Section: Display selected product details -->
                   <div class="col-md-7"
@@ -468,19 +471,19 @@
                           <label class="mx-5">Total Amount: Rs {{ calculateTotalAmount(product) }}</label>
                           <label class="ml-5">Total Quantity: {{ calculateTotalQuantity(product) }}</label>
 
-                          <!-- Flex container for fields -->
+                          <!-- Fields for Quantity, Unit, and Price -->
                           <div v-for="(field, index) in product.fields || []" :key="index" class="d-flex flex-wrap"
                             style="gap: 20px;">
-                            <input type="hidden" name="product_id[]" v-model="form.product_id" />
+                            <input type="hidden" name="product_id[]" v-model="product.id" />
 
-                            <!-- Qty field -->
+                            <!-- Quantity -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Qty</label>
                               <input type="number" name="qty[]" v-model="field.qty" required placeholder="Enter Qty"
-                                style="width:100%; padding: 0px; box-sizing: border-box;" />
+                                style="width: 100%; padding: 0px; box-sizing: border-box;" />
                             </div>
 
-                            <!-- Unit field -->
+                            <!-- Unit -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Unit</label>
                               <select v-model="field.unit" name="unit[]" style="width: 100%; padding: 0px;">
@@ -490,14 +493,14 @@
                               </select>
                             </div>
 
-                            <!-- Price field -->
+                            <!-- Price -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Price</label>
                               <input type="number" name="price[]" v-model="field.price" required
                                 placeholder="Enter Price" style="width: 100%; padding: 0px; box-sizing: border-box;" />
                             </div>
 
-                            <!-- Amount calculation and remove button -->
+                            <!-- Remove Field Button -->
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Amount: Rs {{ calculateAmount(field.price, field.qty) }}</label>
                               <button @click="removeField(product, index)" class="btn btn-danger"
@@ -526,54 +529,57 @@
                         <label class="font-small">Commission amount: Rs {{ commissionAmount }}</label>
 
                         <p class="text-center mr-5">Charges</p>
-
-
                         <div class="text-center">
                           <!-- Charges fields -->
                           <span>
                             <label for="arhat">Arhat coolie :</label>
                             <label for="britty" class="pl-5">Britty</label><br>
-                            <input type="number" v-model.number="arhatCoolie" placeholder="0" class="w-25 mx-3" />
-                            <input type="number" v-model.number="britty" placeholder="0" class="w-25" /><br>
+                            <input type="number" v-model.number="form.arhat_coolie" name="arhat_coolie" placeholder="0"
+                              class="w-25 mx-3" />
+                            <input type="number" v-model.number="form.britty" placeholder="0" name="britty"
+                              class="w-25" /><br>
                           </span>
                           <span>
                             <label for="dan">Dan :</label>
-                            <label for="jeepFair" class="pl-5">Jeep fair :</label><br>
-                            <input type="number" v-model.number="dan" placeholder="0" class="w-25 mx-3" />
-                            <input type="number" v-model.number="jeepFair" placeholder="0" class="w-25" /><br>
+                            <label for="jeep_fair" class="pl-5">Jeep fair :</label><br>
+                            <input type="number" v-model.number="form.dan" placeholder="0" name="dan"
+                              class="w-25 mx-3" />
+                            <input type="number" v-model.number="form.jeep_fair" placeholder="0" name="jeep_fair"
+                              class="w-25" /><br>
                           </span>
                           <span>
-                            <label for="railCoolie">Rail Coolie :</label>
-                            <label for="iceLeaf" class="pl-5">Ice leaf :</label><br>
-                            <input type="number" v-model.number="railCoolie" placeholder="0" class="w-25 mx-3" />
-                            <input type="number" v-model.number="iceLeaf" placeholder="0" class="w-25" /><br>
-                          </span>
-
-                          <span>
-                            <label for="union">Union :</label>
-                            <label for="miscExp" class="pl-5">Misc Exp. :</label><br>
-                            <input type="number" v-model.number="union" placeholder="0" class="w-25 mx-3" />
-                            <input type="number" v-model.number="miscExp" placeholder="0" class="w-25" /><br>
+                            <label for="rail_coolie">Rail Coolie :</label>
+                            <label for="ice_Leaf" class="pl-5">Ice leaf :</label><br>
+                            <input type="number" v-model.number="form.rail_coolie" placeholder="0" name="rail_coolie"
+                              class="w-25 mx-3" />
+                            <input type="number" v-model.number="form.ice_leaf" placeholder="0" name="ice_leaf"
+                              class="w-25" /><br>
                           </span>
 
                           <span>
-                            <label for="marketExp">Market Exp. :</label><br>
-                            <input type="number" v-model.number="marketExp" placeholder="0" class="w-25 mx-3" />
+                            <label for="unio_n">unio_n :</label>
+                            <label for="misc_exp" class="pl-5">Misc Exp. :</label><br>
+                            <input type="number" v-model.number="form.unio_n" placeholder="0" name="unio_n"
+                              class="w-25 mx-3" />
+                            <input type="number" v-model.number="form.misc_exp" placeholder="0" name="misc_exp"
+                              class="w-25" /><br>
+                          </span>
+
+                          <span>
+                            <label for="market_exp">Market Exp. :</label><br>
+                            <input type="number" v-model.number="form.market_exp" placeholder="0" name="market_exp"
+                              class="w-25 mx-3" />
                           </span>
                         </div>
-
                         <!-- Total charged amount and Grand Total -->
                         <label for="totalCharged" style="font-size: 20px;">Total charged amount: Rs {{ totalCharged
                           }}</label><br>
-
                         <div class="text-center">
                           <button>
                             <label for="grandTotal">Grand Total: Rs
                               <span>{{ grandTotal }}</span>
                             </label>:value
                             <input type="hidden" name="grand_total" v-model="form.grand_total" />
-
-
                             <!-- Add a hidden input to send grand_total with the form -->
                             <label for="roundedOffAmount">Rounded off amount: Rs {{ roundedTotal }}</label><br>
                           </button>
@@ -614,22 +620,22 @@
                       <!-- Cash Payment Field -->
                       <div>
                         <label for="cash" style="display: block;">Cash</label>
-                        <input type="number" v-model.number="cash" id="cash" placeholder="Enter Cash Amount"
-                          style="width: 100px;" />
+                        <input type="number" v-model.number="form.cash" name="cash" id="cash"
+                          placeholder="Enter Cash Amount" style="width: 100px;" />
                       </div>
 
                       <!-- Cheque Payment Field -->
                       <div>
                         <label for="cheque" style="display: block;">Cheque</label>
-                        <input type="number" v-model.number="cheque" id="cheque" placeholder="Enter Cheque Amount"
-                          style="width: 100px;" />
+                        <input type="number" v-model.number="form.cheque" name="cheque" id="cheque"
+                          placeholder="Enter Cheque Amount" style="width: 100px;" />
                       </div>
 
                       <!-- Online Payment Field -->
                       <div>
                         <label for="online" style="display: block;">Online</label>
-                        <input type="number" v-model.number="online" id="online" placeholder="Enter Online Payment"
-                          style="width: 100px;" />
+                        <input type="number" v-model.number="form.online" name="online" id="online"
+                          placeholder="Enter Online Payment" style="width: 100px;" />
                       </div>
                     </div>
                   </div>
@@ -645,7 +651,7 @@
                     <button type="button" class="btn btn-primary btn-sm" @click="printPage" style="width: 100px;">
                       Print & Save
                     </button>
-                    <button type="submit" class="btn btn-dark btn-sm" style="width: 60px;">
+                    <button type="submit" class="btn btn-dark btn-sm" id="editagent" style="width: 60px;">
                       Save
                     </button>
                   </div>
@@ -676,11 +682,11 @@ import axios from 'axios';
 
 export default {
 
-
-
   data() {
 
     return {
+      isLoading: true,
+      fields: [],
       // paymentStatus: "",
       agents: [],              // This will store the list of Agentss from the backend
       billingList: [], // Array to store the billing list
@@ -692,13 +698,18 @@ export default {
         { id: 3, name: "Katla", fields: [] },
         { id: 4, name: "Shark", fields: [] },
       ],
-      // selectedAgentsDetails: null, // Store details of selected agent
+      // selectedAgentsDetails: [], // Store details of selected agent
+      selectedProductIds: [],
+      prefilledProducts: [1, 2], // Example prefilled product IDs
+
       selectedProducts: [],
       invoiceDate: null, // You can set a default date if needed
       config: {
         dateFormat: "Y-m-d", // Your desired date format
         allowInput: true
       },
+      // Prefilled fields for the second section
+      prefilledFields: [],
       form: {
 
         agent: '',
@@ -712,7 +723,24 @@ export default {
         qty: '',
         unit: '',
         price: '',
-
+        arhat_coolie: '',
+        britty: '',
+        dan: '',
+        jeep_fair: '',
+        rail_coolie: '',
+        ice_leaf: '',
+        unio_n: '',
+        misc_exp: '',
+        market_exp: '',
+        cash: '',
+        cheque: '',
+        online: '',
+        created_at: '',
+        temp:'',
+        code:'',
+        address:'',
+        contact_number:'',
+        
       },
       // selectedAgents: null,
       menuState: {
@@ -759,35 +787,44 @@ export default {
       },
 
 
-      fields: [],// Ensuring fields is an array from the start
+      // fields: [],// Ensuring fields is an array from the start
 
       documentLink: "http://localhost/dairy/index.php/Home/Document",
       imageSrc1: "/images/laravel3.png",
       imageSrc2: "/images/avatar5.png",
       dashboardText: "Dashboard",
       commission: 0, // Initialize as 0
-      arhatCoolie: 0,
+      arhat_coolie: 0,
       britty: 0,
       dan: 0,
-      jeepFair: 0,
-      railCoolie: 0,
-      iceLeaf: 0,
-      union: 0,
-      miscExp: 0,
-      marketExp: 0,
+      jeep_fair: 0,
+      rail_coolie: 0,
+      ice_Leaf: 0,
+      unio_n: 0,
+      misc_exp: 0,
+      market_exp: 0,
       cash: 0,
       cheque: 0,
       online: 0,
+      total_dues: 0,
     };
   },
   computed: {
-    totalSelectedProducts() {
-      return this.product_id.length;
+    selectedAgentsDetails() {
+      // Find the Agents object that matches the selected Agents's ID
+      return this.agents.find(Agents => Agents.id === this.form.agent);
     },
-    // selectedAgentsDetails() {
-    //   // Find the Agents object that matches the selected Agents's ID
-    //   return this.agents.find(Agents => Agents.id === this.agent);
-    // },
+    totalSelectedProducts() {
+      const allProducts = [...new Set([...this.prefilledProducts, ...this.selectedProducts])];
+      console.log("All Products:", allProducts);
+      return allProducts.length;
+    },
+    totalQuantity() {
+      return this.fields.reduce((total, product) => {
+        return total + this.calculateTotalQuantity(product);
+      }, 0);
+    },
+
     selectedProductNames() {
       return this.selectedProducts
         .map(productId => this.prod.find(product => product.id === productId)?.name)
@@ -808,15 +845,15 @@ export default {
     totalCharged() {
       return (
         parseFloat(this.commissionAmount || 0) +
-        parseFloat(this.arhatCoolie || 0) +
-        parseFloat(this.britty || 0) +
-        parseFloat(this.dan || 0) +
-        parseFloat(this.jeepFair || 0) +
-        parseFloat(this.railCoolie || 0) +
-        parseFloat(this.iceLeaf || 0) +
-        parseFloat(this.union || 0) +
-        parseFloat(this.miscExp || 0) +
-        parseFloat(this.marketExp || 0)
+        parseFloat(this.form.arhat_coolie || 0) +
+        parseFloat(this.form.britty || 0) +
+        parseFloat(this.form.dan || 0) +
+        parseFloat(this.form.jeep_fair || 0) +
+        parseFloat(this.form.rail_coolie || 0) +
+        parseFloat(this.form.ice_leaf || 0) +
+        parseFloat(this.form.unio_n || 0) +
+        parseFloat(this.form.misc_exp || 0) +
+        parseFloat(this.form.market_exp || 0)
       );
     },
     grandTotal() {
@@ -824,18 +861,11 @@ export default {
     },
     roundedTotal() {
       return Math.round(this.grandTotal);
-    },
-    // Calculate total quantity
-    totalQuantity() {
-      return this.fields.reduce((total, product) => {
-        return total + this.calculateTotalQuantity(product);
-      }, 0);
-    },
-
+    },   
     totalDues() {
-      const payments = parseFloat(this.cash || 0) + parseFloat(this.cheque || 0) + parseFloat(this.online || 0);
-      return this.grandTotal - payments;
-    },
+    const payments = parseFloat(this.form.cash || 0) + parseFloat(this.form.cheque || 0) + parseFloat(this.form.online || 0);
+    return this.roundedTotal - payments;
+  },
 
 
     amount() {
@@ -951,87 +981,139 @@ export default {
 
   },
   methods: {
-    fetchAgentDetails() {
-      if (!this.form.agent) {
-        this.selectedAgentDetails = null; // Clear details if no agent selected
-        return;
+    onProductSelect(productId) {
+      // Add only if the product is not already in the selectedProducts array
+      if (!this.selectedProducts.includes(productId)) {
+        this.selectedProducts.push(productId);
       }
-      axios
-        .get(`http://localhost/dairy/index.php/Home/get_AgentDetails/${this.form.agent}`)
-        .then((response) => {
-          this.selectedAgentDetails = response.data; // Store selected agent's details
-        })
-        .catch((error) => {
-          console.error("Error fetching agent details:", error);
-        });
     },
+   
+  fetchBillingDetails(id) {
+    fetch(`http://localhost/dairy/index.php/Home/edit_BillingAgent/${id}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.status === 'success') {
+          // Clear existing fields and reset
+          this.fields = [];
 
-    // fetchBillingDetails(id) {
-    //   fetch(`http://localhost/dairy/index.php/Home/edit_BillingAgent/${id}`, {
-    //     method: 'GET',
-    //   })
-    //     .then((response) => response.json())
-    //     .then((data) => {
-    //       if (data.status === 'success') {
-    //         console.log(data.data);
-    //         console.log(data.innerData);
-    //         this.form = data.data; // Populate form with fetched data
-    //         this.formData = data.innerData;
-    //       } else {
-    //         alert(data.message || 'Failed to fetch details');
-    //       }
-    //     })
-    //     .catch((error) => console.error('Error:', error));
-    // },
+          // Map grouped product data
+          Object.values(data.data).forEach(product => {
+            this.fields.push({
+              id: product.id || null, // Use product ID if available
+              name: product.name,
+              fields: product.fields.map(field => ({
+                qty: field.qty || 0,
+                unit: field.unit || 'kg',
+                price: field.price || 0,
+              })),
+            });
+          });
 
-
-    fetchBillingDetails(id) {
-      fetch(`http://localhost/dairy/index.php/Home/edit_BillingAgent/${id}`, {
-        method: 'GET',
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === 'success') {
-            this.form = data.data; // Main billing details
-            this.fields = data.innerData.map((product) => ({
-              id: product.product_id,
-              name: product.product_name, // Ensure this field is included in your backend response
-              fields: [
-                {
-                  qty: product.qty,
-                  unit: product.unit,
-                  price: product.price,
-                },
-              ],
-            }));
-          } else {
-            alert(data.message || 'Failed to fetch details');
+          // Prefill other form fields if extra data exists
+          if (data.extraFields) {
+            this.form = {
+              ...this.form,
+              ...data.extraFields, // Add top-level fields (e.g., billing_id, agent, etc.)
+            };
           }
-        })
-        .catch((error) => console.error('Error:', error));
-    },
 
+          this.isLoading = false; // Data is fully loaded
+        } else {
+          alert(data.message || 'Failed to fetch details');
+          this.isLoading = false;
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        this.isLoading = false;
+      });
+  },
 
-    submitForm() {
-      fetch('http://localhost/dairy/index.php/Home/update_BillingAgent', {
-        method: 'POST',
+  updateField(product) {
+    const existingProduct = this.fields.find(field => field.name === product.name);
+
+    if (!existingProduct) {
+      // Add the product to the fields array
+      this.fields.push({
+        id: product.id || null,
+        name: product.name,
+        fields: [
+          {
+            qty: product.qty || 0,
+            unit: product.unit || 'kg',
+            price: product.price || 0,
+          },
+        ],
+      });
+    } else {
+      // Add additional fields to an existing product
+      existingProduct.fields.push({
+        qty: product.qty || 0,
+        unit: product.unit || 'kg',
+        price: product.price || 0,
+      });
+    }
+  },
+
+  fetchAgentDetails() {
+    if (!this.form.agent) {
+      this.selectedAgentDetails = null; // Clear details if no agent selected
+      return;
+    }
+    axios
+      .get(`http://localhost/dairy/index.php/Home/get_AgentDetails/${this.form.agent}`)
+      .then(response => {
+        this.selectedAgentDetails = response.data; // Store selected agent's details
+      })
+      .catch(error => {
+        console.error('Error fetching agent details:', error);
+      });
+  },
+
+  submitEditForm() {
+    const formData = {
+      selectedProductIds: this.selectedProductIds,
+      fields: this.fields,
+      form: this.form,
+    };
+
+    // API call to save edited data
+    axios
+      .post("http://localhost/dairy/index.php/Home/update_BillingAgent", formData, {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(this.form), // Send updated form data
+        withCredentials: true,
       })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.status === 'success') {
-            alert('Record updated successfully.');
-            // Redirect to the AgentsBillingList page
-            // window.location.href = 'http://localhost/dairy/index.php/Home/AgentsBillingList';
-          } else {
-            alert(data.message || 'Failed to update record.');
-          }
-        })
-        .catch((error) => console.error('Error:', error));
-    },
+      .then(response => {
+        if (response.data.status === "success") {
+          alert("Billing record updated successfully!");
+        } else {
+          throw new Error(response.data.message || "Failed to update billing record.");
+        }
+      })
+      .catch(error => {
+        console.error("Error updating billing record:", error);
+      });
+  },
+
+  updateSelectedProducts() {
+    this.selectedProductIds.forEach(productId => {
+      const existingProduct = this.fields.find(field => field.id === productId);
+
+      if (!existingProduct) {
+        const selectedProduct = this.prod.find(product => product.id === productId);
+        if (selectedProduct) {
+          this.fields.push({
+            id: selectedProduct.id,
+            name: selectedProduct.name,
+            fields: selectedProduct.fields || [],
+          });
+        }
+      }
+    });
+  },
+
 
 
 
@@ -1064,35 +1146,32 @@ export default {
       });
     },
 
-    // Add a new field, up to the max limit
+    // updateSelectedProducts() {
+    //   this.selectedProductIds.forEach(productId => {
+    //     const existingProduct = this.fields.find(field => field.id === productId);
 
-    updateSelectedProducts() {
-      // Ensure selected products are dynamically updated
-      this.product_id.forEach((id) => {
-        const product = this.prod.find((p) => p.id === id);
-        if (product && !this.fields.find((f) => f.id === product.id)) {
-          this.fields.push({
-            ...product,
-            fields: [{ qty: 0, unit: "kg", price: 0 }],
-          });
-        }
-      });
+    //     if (!existingProduct) {
+    //       const selectedProduct = this.prod.find(product => product.id === productId);
+    //       if (selectedProduct) {
+    //         this.fields.push({
+    //           id: selectedProduct.id,
+    //           name: selectedProduct.name,
+    //           fields: selectedProduct.fields || [],
+    //         });
+    //       }
+    //     }
+    //   });
+    // },
 
 
-      // Remove products from fields if deselected
-      this.fields = this.fields.filter((product) => this.product_id.includes(product.id));
-    },
+    // Add a new field (for adding more rows for qty, price, etc.)
     addField(product) {
-      product.fields.push({ product_id: '', qty: 0, unit: "", price: 0 });
-      console.log("Updated Fields:", product.fields); // Verify the updated fields
+      product.fields.push({ qty: '', unit: 'kg', price: '' });
     },
+
     removeField(product, index) {
-      if (!product.fields) return; // Safeguard
       product.fields.splice(index, 1);
-      if (product.fields.length === 0) {
-        this.fields = this.fields.filter((f) => f.id !== product.id);
-        this.product_id = this.product_id.filter((id) => id !== product.id);
-      }
+
     },
     calculateAmount(price, qty) {
       return price * qty || 0;
@@ -1102,7 +1181,7 @@ export default {
       return product.fields.reduce((sum, field) => sum + (field.qty * field.price), 0);
     },
     calculateTotalQuantity(product) {
-      return product.fields.reduce((total, field) => total + (field.qty || 0), 0);
+      return product.fields.reduce((total, field) => total + (Number(field.qty) || 0), 0);
     },
 
 

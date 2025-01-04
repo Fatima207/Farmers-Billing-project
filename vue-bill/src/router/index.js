@@ -3,6 +3,7 @@ import BillingFarmer from "../components/BillingFarmer.vue";
 import BillingAgent from "../components/BillingAgent.vue";
 import BillingRetailer from "@/components/BillingRetailer.vue";
 import editAgentBilling from "@/components/editAgentBilling.vue";
+import editFarmerBilling from "@/components/editFarmerBilling.vue";
 
 const routes = [
 	{
@@ -21,6 +22,12 @@ const routes = [
 		path: "/editAgentBilling/:id",
 		name: "EditAgentBilling",
 		component: editAgentBilling, // Adjust the path as needed
+		props: true,
+	},
+	{
+		path: "/editFarmerBilling/:id",
+		name: "EditFarmerBilling",
+		component: editFarmerBilling, // Adjust the path as needed
 		props: true,
 	},
 ];

@@ -73,7 +73,51 @@
     document.getElementById("print-button").addEventListener("click", function() {
         window.print();
     });
-</script><script type="text/javascript">
+</script>
+<script>
+    $(document).ready(function() {
+        $('#editagent').on('click', function() {
+            $.ajax({
+                url: 'http://localhost/dairy/index.php/Home/update_BillingAgent',
+                method: 'POST',
+                postData: {
+                    id: this.id, // Example Vue.js variable
+                    billing_number: this.billing_number,
+                    agent: this.agentName,
+                    company: this.companyName,
+                    grand_total: this.grandTotal,
+                    final_total: this.finalTotal,
+                    total_dues: this.totalDues,
+                    commission: this.commission,
+                    arhat_coolie: this.arhatCoolie,
+                    britty: this.brittyExpense,
+                    dan: this.dan,
+                    jeep_fair: this.jeep_fair,
+                    rail_coolie: this.rail_coolie,
+                    ice_leaf: this.ice_leaf,
+                    unio_n: this.unio_n,
+                    misc_exp: this.misc_exp,
+                    market_exp: this.market_exp,
+                    cheque: this.cheque,
+                    cash: this.cash,
+                    online: this.online,
+                    created_at: this.created_at,
+                    updated_at: this.updated_at,
+                    payment_status: this.payment_status
+                },
+                success: function(response) {
+                    console.log('Success:', response);
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                }
+            });
+
+        });
+    });
+</script>
+
+<script type="text/javascript">
     $(document).ready(function() {
         $("#employee").change(function() {
             var id = $(this).find(":selected").val();
@@ -123,34 +167,33 @@
         //Money Euro
         $("[data-mask]").inputmask();
 
-       //Date range picker
-    $('#reservation').daterangepicker()
-    //Date range picker with time picker
-    $('#reservationtime').daterangepicker({
-      timePicker: true,
-      timePickerIncrement: 30,
-      locale: {
-        format: 'MM/DD/YYYY hh:mm A'
-      }
-    })
-    //Date range as a button
-    $('#daterange-btn').daterangepicker(
-      {
-        ranges   : {
-          'Today'       : [moment(), moment()],
-          'Yesterday'   : [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-          'Last 7 Days' : [moment().subtract(6, 'days'), moment()],
-          'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-          'This Month'  : [moment().startOf('month'), moment().endOf('month')],
-          'Last Month'  : [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-        },
-        startDate: moment().subtract(29, 'days'),
-        endDate  : moment()
-      },
-      function (start, end) {
-        $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
-      }
-    )
+        //Date range picker
+        $('#reservation').daterangepicker()
+        //Date range picker with time picker
+        $('#reservationtime').daterangepicker({
+            timePicker: true,
+            timePickerIncrement: 30,
+            locale: {
+                format: 'MM/DD/YYYY hh:mm A'
+            }
+        })
+        //Date range as a button
+        $('#daterange-btn').daterangepicker({
+                ranges: {
+                    'Today': [moment(), moment()],
+                    'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+                    'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+                    'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+                    'This Month': [moment().startOf('month'), moment().endOf('month')],
+                    'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+                },
+                startDate: moment().subtract(29, 'days'),
+                endDate: moment()
+            },
+            function(start, end) {
+                $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'))
+            }
+        )
         //Timepicker
         $("#timepicker").datetimepicker({
             format: "LT",
@@ -172,7 +215,6 @@
             $(this).bootstrapSwitch("state", $(this).prop("checked"));
         });
     });
-
 </script>
 
 
