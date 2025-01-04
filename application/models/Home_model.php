@@ -321,24 +321,24 @@ class Home_model extends CI_Model
     $query = $this->db->get_where('reg_farmers', ['id' => $id]); // Assuming 'id' is the agent's identifier
     return $query->row_array();
   }
-  // public function edit_BillingFarmer($id)
-  // {
-  //   $this->db->select('b.id as billing_id, b.farmer_billing_num, b.farmer, b.company, b.commission, b.arhat_coolie, b.britty, b.dan, b.jeep_fair, b.rail_coolie, b.ice_leaf, b.unio_n,b.misc_exp, b.market_exp, b.grand_total, b.final_total, b.total_dues, b.payment_status,b.cash,b.cheque,b.online, b.created_at, b.updated_at,bp.product_id, bp.qty, bp.unit, bp.price, r.id temp, r.code, r.address, r.contact_number,p.name product_name, bp.product_id, bp.qty, bp.unit, bp.price');
-  //   $this->db->from('billing_farmer_records b');
-  //   $this->db->join('billing_farmer_product_records bp', 'b.id = bp.billing_id',  'inner');
-  //   $this->db->join('reg_farmers r', 'r.id = b.farmer', 'inner');
-  //   $this->db->join('add_products p', 'p.id = bp.product_id', 'inner');
+  public function edit_BillingFarmer($id)
+  {
+    $this->db->select('b.id as billing_id, b.farmer_billing_num, b.farmer, b.company, b.commission, b.arhat_coolie, b.britty, b.dan, b.jeep_fair, b.rail_coolie, b.ice_leaf, b.unio_n,b.misc_exp, b.market_exp, b.grand_total, b.final_total, b.total_dues, b.payment_status,b.cash,b.cheque,b.online, b.created_at, b.updated_at,bp.product_id, bp.qty, bp.unit, bp.price, r.id temp, r.code, r.address, r.contact_number,p.name product_name, bp.product_id, bp.qty, bp.unit, bp.price');
+    $this->db->from('billing_farmer_records b');
+    $this->db->join('billing_farmer_product_records bp', 'b.id = bp.billing_id',  'inner');
+    $this->db->join('reg_farmers r', 'r.id = b.farmer', 'inner');
+    $this->db->join('add_products p', 'p.id = bp.product_id', 'inner');
 
-  //   $this->db->where('b.id', $id);
+    $this->db->where('b.id', $id);
 
-  //   $query = $this->db->get();
+    $query = $this->db->get();
 
-  //   if ($query->num_rows() > 0) {
-  //     return $query->result_array(); 
-  //   }
-  //   return false;
+    if ($query->num_rows() > 0) {
+      return $query->result_array(); 
+    }
+    return false;
 
-  // }
+  }
 
   public function get_last_billing_farmers()
   {
