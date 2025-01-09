@@ -987,6 +987,8 @@ export default {
                 price: field.price,
               })),
             }));
+            // console.log('product id ',product_id),
+            // console.log('product id ',product.id),
 
             console.log("Submitting product payload:", payload); // Debugging
             // Call saveAgentsProductDetails API

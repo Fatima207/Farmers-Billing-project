@@ -448,8 +448,8 @@
                     style="display: flex; flex-direction: column; padding-right: 5px; height:250px;">
                     <div class="form-group">
                       <label>Select Products</label>
-                      <select id="Products" v-model="selectedProductIds" @change="updateSelectedProducts" multiple
-                        class="form-control">
+                      <select id="Products" v-model="selectedProductIds" @change="updateSelectedProducts($event)"
+                        multiple class="form-control">
                         <option v-for="product in prod" :key="product.id" :value="product.id"
                           @click="onProductSelect(product.id)">
                           {{ product.name }}
@@ -687,21 +687,19 @@ export default {
     return {
       isLoading: true,
       fields: [],
-      // paymentStatus: "",
+      editId: this.$route.params.id, // Fetch the ID from the route
       agents: [],              // This will store the list of Agentss from the backend
       billingList: [], // Array to store the billing list
       comp: [],
       product_id: [],
+      prefilledProducts: [],
       prod: [
         { id: 1, name: "Goldfish", fields: [] },
         { id: 2, name: "Whales", fields: [] },
         { id: 3, name: "Katla", fields: [] },
         { id: 4, name: "Shark", fields: [] },
       ],
-      // selectedAgentsDetails: [], // Store details of selected agent
       selectedProductIds: [],
-      prefilledProducts: [1, 2], // Example prefilled product IDs
-
       selectedProducts: [],
       invoiceDate: null, // You can set a default date if needed
       config: {
@@ -709,9 +707,8 @@ export default {
         allowInput: true
       },
       // Prefilled fields for the second section
-      prefilledFields: [],
       form: {
-
+        billing_id: '',
         agent: '',
         company: '',
         commission: '',
@@ -736,11 +733,11 @@ export default {
         cheque: '',
         online: '',
         created_at: '',
-        temp:'',
-        code:'',
-        address:'',
-        contact_number:'',
-        
+        temp: '',
+        code: '',
+        address: '',
+        contact_number: '',
+
       },
       // selectedAgents: null,
       menuState: {
@@ -810,15 +807,26 @@ export default {
     };
   },
   computed: {
+    prefilledProductNames() {
+      return this.prefilledProducts
+        .map(productId => this.prod.find(product => product.id === productId)?.name)
+        .filter(name => name); // Filter out undefined names
+    },
     selectedAgentsDetails() {
       // Find the Agents object that matches the selected Agents's ID
       return this.agents.find(Agents => Agents.id === this.form.agent);
     },
     totalSelectedProducts() {
-      const allProducts = [...new Set([...this.prefilledProducts, ...this.selectedProducts])];
-      console.log("All Products:", allProducts);
-      return allProducts.length;
+      // Combine both arrays (prefilled and selected) into a single array
+      const allProducts = [...this.prefilledProducts, ...this.selectedProducts];
+
+      // Deduplicate using a Set to count unique product IDs
+      const uniqueProducts = new Set(allProducts);
+
+      // Return the count of unique product IDs
+      return uniqueProducts.size;
     },
+
     totalQuantity() {
       return this.fields.reduce((total, product) => {
         return total + this.calculateTotalQuantity(product);
@@ -861,11 +869,11 @@ export default {
     },
     roundedTotal() {
       return Math.round(this.grandTotal);
-    },   
+    },
     totalDues() {
-    const payments = parseFloat(this.form.cash || 0) + parseFloat(this.form.cheque || 0) + parseFloat(this.form.online || 0);
-    return this.roundedTotal - payments;
-  },
+      const payments = parseFloat(this.form.cash || 0) + parseFloat(this.form.cheque || 0) + parseFloat(this.form.online || 0);
+      return this.roundedTotal - payments;
+    },
 
 
     amount() {
@@ -958,6 +966,11 @@ export default {
     this.getAgents();
     this.getCompanies();
     this.getProducts();
+
+    // Simulate prefilled products being fetched from the backend
+    this.prefilledProducts = [1, 2]; // Assuming product ID 1 is prefilled
+    console.log("Prefilled Products Initialized:", this.prefilledProducts);
+
     // this.saveProductDetails();
     // Safely initialize flatpickr when the component is mounted
     if (this.$refs.datepicker) {
@@ -979,140 +992,183 @@ export default {
     const id = this.$route.params.id; // Fetch ID from route
     this.fetchBillingDetails(id);
 
+
   },
   methods: {
     onProductSelect(productId) {
-      // Add only if the product is not already in the selectedProducts array
+      // Add selected product ID to `selectedProducts` if not already present
       if (!this.selectedProducts.includes(productId)) {
-        this.selectedProducts.push(productId);
+        this.selectedProducts = [...this.selectedProducts, productId];
       }
+
+      // Update the fields array for the newly selected product
+      const selectedProduct = this.prod.find(product => product.id === productId);
+      if (selectedProduct && !this.fields.some(field => field.id === productId)) {
+        this.fields.push({
+          id: selectedProduct.id,
+          name: selectedProduct.name,
+          fields: selectedProduct.fields || [],
+        });
+      }
+
+      console.log("Selected Products:", this.selectedProducts);
     },
-   
-  fetchBillingDetails(id) {
-    fetch(`http://localhost/dairy/index.php/Home/edit_BillingAgent/${id}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.status === 'success') {
-          // Clear existing fields and reset
-          this.fields = [];
+    fetchBillingDetails(id) {
+      fetch(`http://localhost/dairy/index.php/Home/edit_BillingAgent/${id}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.status === 'success') {
+            // Clear existing fields and reset
+            this.fields = [];
 
-          // Map grouped product data
-          Object.values(data.data).forEach(product => {
-            this.fields.push({
-              id: product.id || null, // Use product ID if available
-              name: product.name,
-              fields: product.fields.map(field => ({
-                qty: field.qty || 0,
-                unit: field.unit || 'kg',
-                price: field.price || 0,
-              })),
+            // Map grouped product data
+            Object.values(data.data).forEach(product => {
+              this.fields.push({
+                id: product.id || null, // Use product ID if available
+                name: product.name,
+                fields: product.fields.map(field => ({
+                  qty: field.qty || 0,
+                  unit: field.unit || 'kg',
+                  price: field.price || 0,
+                })),
+              });
             });
-          });
+            // Prefill other form fields if extra data exists
+            if (data.extraFields) {
+              this.form = {
+                ...this.form,
+                ...data.extraFields, // Add top-level fields (e.g., billing_id, agent, etc.)
+              };
+            }
 
-          // Prefill other form fields if extra data exists
-          if (data.extraFields) {
-            this.form = {
-              ...this.form,
-              ...data.extraFields, // Add top-level fields (e.g., billing_id, agent, etc.)
-            };
+            this.isLoading = false; // Data is fully loaded
+          } else {
+            alert(data.message || 'Failed to fetch details');
+            this.isLoading = false;
           }
-
-          this.isLoading = false; // Data is fully loaded
-        } else {
-          alert(data.message || 'Failed to fetch details');
+        })
+        .catch(error => {
+          console.error('Error:', error);
           this.isLoading = false;
-        }
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        this.isLoading = false;
-      });
-  },
+        });
+    },
 
-  updateField(product) {
-    const existingProduct = this.fields.find(field => field.name === product.name);
+    updateField(product) {
+      console.log('Product:', product); // Debugging line
 
-    if (!existingProduct) {
-      // Add the product to the fields array
-      this.fields.push({
-        id: product.id || null,
-        name: product.name,
-        fields: [
-          {
-            qty: product.qty || 0,
-            unit: product.unit || 'kg',
-            price: product.price || 0,
-          },
-        ],
-      });
-    } else {
-      // Add additional fields to an existing product
-      existingProduct.fields.push({
-        qty: product.qty || 0,
-        unit: product.unit || 'kg',
-        price: product.price || 0,
-      });
-    }
-  },
-
-  fetchAgentDetails() {
-    if (!this.form.agent) {
-      this.selectedAgentDetails = null; // Clear details if no agent selected
-      return;
-    }
-    axios
-      .get(`http://localhost/dairy/index.php/Home/get_AgentDetails/${this.form.agent}`)
-      .then(response => {
-        this.selectedAgentDetails = response.data; // Store selected agent's details
-      })
-      .catch(error => {
-        console.error('Error fetching agent details:', error);
-      });
-  },
-
-  submitEditForm() {
-    const formData = {
-      selectedProductIds: this.selectedProductIds,
-      fields: this.fields,
-      form: this.form,
-    };
-
-    // API call to save edited data
-    axios
-      .post("http://localhost/dairy/index.php/Home/update_BillingAgent", formData, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-        withCredentials: true,
-      })
-      .then(response => {
-        if (response.data.status === "success") {
-          alert("Billing record updated successfully!");
-        } else {
-          throw new Error(response.data.message || "Failed to update billing record.");
-        }
-      })
-      .catch(error => {
-        console.error("Error updating billing record:", error);
-      });
-  },
-
-  updateSelectedProducts() {
-    this.selectedProductIds.forEach(productId => {
-      const existingProduct = this.fields.find(field => field.id === productId);
+      const existingProduct = this.fields.find(field => field.name === product.name);
 
       if (!existingProduct) {
-        const selectedProduct = this.prod.find(product => product.id === productId);
-        if (selectedProduct) {
-          this.fields.push({
-            id: selectedProduct.id,
-            name: selectedProduct.name,
-            fields: selectedProduct.fields || [],
-          });
-        }
+        this.fields.push({
+          id: product.id || this.fields.length + 1, // Assign a default ID if missing
+          name: product.name,
+          fields: [
+            {
+              qty: product.qty || 0,
+              unit: product.unit || 'kg',
+              price: product.price || 0,
+            },
+          ],
+        });
+      } else {
+        existingProduct.fields.push({
+          qty: product.qty || 0,
+          unit: product.unit || 'kg',
+          price: product.price || 0,
+        });
       }
-    });
-  },
+    },
+    fetchAgentDetails() {
+      if (!this.form.agent) {
+        this.selectedAgentDetails = null; // Clear details if no agent selected
+        return;
+      }
+      axios
+        .get(`http://localhost/dairy/index.php/Home/get_AgentDetails/${this.form.agent}`)
+        .then(response => {
+          this.selectedAgentDetails = response.data; // Store selected agent's details
+        })
+        .catch(error => {
+          console.error('Error fetching agent details:', error);
+        });
+    },
+
+    submitEditForm() {
+      const formData = {
+        billing_id: this.form.billing_id,
+        agent: this.form.agent,
+        company: this.form.company,
+        commission: this.form.commission,
+        final_total: this.form.final_total,
+        grand_total: this.form.grand_total,
+        total_dues: this.form.total_dues,
+        payment_status: this.form.payment_status,
+        arhat_coolie: this.form.arhat_coolie,
+        britty: this.form.britty,
+        dan: this.form.dan,
+        jeep_fair: this.form.jeep_fair,
+        rail_coolie: this.form.rail_coolie,
+        ice_leaf: this.form.ice_leaf,
+        unio_n: this.form.unio_n,
+        misc_exp: this.form.misc_exp,
+        market_exp: this.form.market_exp,
+        cash: this.form.cash,
+        cheque: this.form.cheque,
+        online: this.form.online,
+        created_at: this.form.created_at,
+
+        product_details: this.selectedProducts.map(product => ({
+          product_id: this.form.product_id,
+          qty: this.form.qty,
+          unit: this.form.unit,
+          price: this.form.price,
+        })),
+      };
+
+      console.log("Sending data:", formData);
+
+      axios
+        .post("http://localhost/dairy/index.php/Home/updateBillingAgent", formData, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        })
+        .then((response) => {
+          if (response.data.status === "success") {
+            alert("Billing record updated successfully!");
+          } else {
+            throw new Error(response.data.message || "Failed to update billing record.");
+          }
+        })
+        .catch((error) => {
+          console.error("Error updating billing record:", error);
+        });
+    },
+
+
+    updateSelectedProducts(event) {
+      // Track selected product IDs from the dropdown
+      const productId = parseInt(event.target.value, 10);
+
+      // Add product to `selectedProductIds` if it's not already there
+      if (!this.selectedProductIds.includes(productId)) {
+        this.selectedProductIds.push(productId);
+      }
+
+      // Update fields with selected product details if not already present
+      const selectedProduct = this.prod.find(product => product.id === productId);
+      if (selectedProduct && !this.fields.some(field => field.id === productId)) {
+        this.fields.push({
+          id: selectedProduct.id,
+          name: selectedProduct.name,
+          fields: selectedProduct.fields || [],
+        });
+      }
+
+      console.log("Selected Products:", this.selectedProductIds);
+    },
+
 
 
 
@@ -1146,22 +1202,7 @@ export default {
       });
     },
 
-    // updateSelectedProducts() {
-    //   this.selectedProductIds.forEach(productId => {
-    //     const existingProduct = this.fields.find(field => field.id === productId);
 
-    //     if (!existingProduct) {
-    //       const selectedProduct = this.prod.find(product => product.id === productId);
-    //       if (selectedProduct) {
-    //         this.fields.push({
-    //           id: selectedProduct.id,
-    //           name: selectedProduct.name,
-    //           fields: selectedProduct.fields || [],
-    //         });
-    //       }
-    //     }
-    //   });
-    // },
 
 
     // Add a new field (for adding more rows for qty, price, etc.)

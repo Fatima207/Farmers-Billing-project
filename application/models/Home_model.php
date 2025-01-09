@@ -274,7 +274,34 @@ class Home_model extends CI_Model
   }
   public function update_BillingRetailer($id, $postData)
   {
-    return $this->db->update('billing_retailer_records', $postData, ['id' => $id]);
+    $this->db->trans_start(); // Begin transaction
+
+    $this->db->where('id', $id);
+    $this->db->update('billing_retailer_records', $postData); // Update billing agent record
+
+    if (isset($data['product_details'])) {
+        // Loop through the product details to update the product record
+        foreach ($data['product_details'] as $product) {
+            // Assuming 'product_id', 'qty', 'unit', and 'price' are being updated
+            $this->db->where('billing_id', $id);
+            $this->db->where('product_id', $product['product_id']);
+            $this->db->update('billing_agent_product_records', [
+                'qty' => $product['qty'],
+                'unit' => $product['unit'],
+                'price' => $product['price']
+            ]);
+        }
+    }
+
+    // Commit or roll back the transaction based on the success of all updates
+    $this->db->trans_complete(); // Complete transaction
+
+    // Check if transaction was successful
+    if ($this->db->trans_status() === FALSE) {
+        return false; // If any update fails, return false
+    }
+
+    return true; // If everything is successful, return true
   }
 
 
@@ -360,7 +387,30 @@ class Home_model extends CI_Model
     }
     return false;
   }
+public function getRetailerById($id)
+{
+  // Fetch agent details by ID
+  $query = $this->db->get_where('reg_retailers', ['id' => $id]); // Assuming 'id' is the agent's identifier
+  return $query->row_array();
+}
+public function edit_BillingRetailer($id)
+{
+  $this->db->select('b.id as billing_id, b.retailer_billing_num, b.retailer, b.company, b.commission, b.arhat_coolie, b.britty, b.dan, b.jeep_fair, b.rail_coolie, b.ice_leaf, b.unio_n,b.misc_exp, b.market_exp, b.grand_total, b.final_total, b.total_dues, b.payment_status,b.cash,b.cheque,b.online, b.created_at, b.updated_at,bp.product_id, bp.qty, bp.unit, bp.price, r.id temp, r.code, r.address, r.contact_number,p.name product_name, bp.product_id, bp.qty, bp.unit, bp.price');
+  $this->db->from('billing_retailer_records b');
+  $this->db->join('billing_retailer_product_records bp', 'b.id = bp.billing_id',  'inner');
+  $this->db->join('reg_retailers r', 'r.id = b.retailer', 'inner');
+  $this->db->join('add_products p', 'p.id = bp.product_id', 'inner');
 
+  $this->db->where('b.id', $id);
+
+  $query = $this->db->get();
+
+  if ($query->num_rows() > 0) {
+    return $query->result_array(); 
+  }
+  return false;
+
+}
   // AGENTS
   
 
@@ -384,16 +434,21 @@ class Home_model extends CI_Model
 
   }
 
-  public function update_BillingAgent($id, $data)
+ 
+public function update_billingAgentRecord($billing_id, $billingData)
+{
+    $this->db->where('id', $billing_id);
+    return $this->db->update('billing_agent_records', $billingData);
+}
+
+
+  public function update_BillingAgent($id,$data)
 { 
-    // Start a transaction to ensure data consistency across multiple tables
     $this->db->trans_start(); // Begin transaction
 
-    // Update the main table (billing_agent_records)
     $this->db->where('id', $id);
     $this->db->update('billing_agent_records', $data); // Update billing agent record
 
-    // If there are product-related data to update in billing_agent_product_records, handle that
     if (isset($data['product_details'])) {
         // Loop through the product details to update the product record
         foreach ($data['product_details'] as $product) {
@@ -419,11 +474,7 @@ class Home_model extends CI_Model
     return true; // If everything is successful, return true
 }
 
-  // public function update_BillingAgent($id, $data)
-  // {
-  //   $this->db->where('id', $id);
-  //   return $this->db->update('billing_agent_records',  $data); // Update the record
-  // }
+
   public function get_last_billing_agents()
   {
     $this->db->select('billing_number');
@@ -457,66 +508,27 @@ class Home_model extends CI_Model
     }
     return false; // Return false if no matching records found
   }
+  public function get_retailersbilling_products($billing_id)
+  {
+    $this->db->select('b.id as billing_id, b.retailer_billing_num, b.retailer, b.company, b.commission, b.grand_total, b.final_total, b.total_dues, b.payment_status, b.created_at, bp.product_id, bp.qty, bp.unit, bp.price');
+    $this->db->from('billing_retailer_records b');
+    $this->db->join('billing_retailer_product_records bp', 'b.id = bp.billing_id', 'inner');
+
+    $this->db->where('b.id', $billing_id);
+    $query = $this->db->get();
+
+    if ($query->num_rows() > 0) {
+      return $query->result_array(); // Return as an array of results
+    }
+    return false; // Return false if no matching records found
+  }
+
 
   public function save_agentsBillingproductDetails($batch_data)
   {
     return $this->db->insert_batch('billing_agent_product_records', $batch_data);
   }
  
-  
-  // public function update_BillingAgentProducts($id, $batch_data)
-  // {
-  //   $this->db->where('id', $id);
-  //   return $this->db->update('billing_agent_product_records', $batch_data); // Update the record
-  // }
-//   public function update_BillingAgentWithProducts($id, $data, $productData)
-// {
-//     // Start a transaction (optional but recommended for consistency)
-//     $this->db->trans_start();
-
-//     // Update the billing agent information
-//     $this->update_BillingAgent($id, $data);
-
-//     // Update the product details for this agent
-//     if (!empty($productData['fields'])) {
-//         foreach ($productData['fields'] as $field) {
-//             $productUpdateData = [
-//                 'billing_id' => $id,
-//                 'product_id' => $field['product_id'],  // Assuming product_id is passed in the fields
-//                 'qty' => $field['qty'],
-//                 'unit' => $field['unit'],
-//                 'price' => $field['price']
-//             ];
-
-//             // Check if the product already exists for this billing_id
-//             $this->db->where('billing_id', $id);
-//             $this->db->where('product_id', $field['product_id']);
-//             $existingProduct = $this->db->get('billing_agent_product_records');
-
-//             if ($existingProduct->num_rows() > 0) {
-//                 // Update the existing product record
-//                 $this->db->where('billing_id', $id);
-//                 $this->db->where('product_id', $field['product_id']);
-//                 $this->db->update('billing_agent_product_records', $productUpdateData);
-//             } else {
-//                 // Insert new product record
-//                 $this->db->insert('billing_agent_product_records', $productUpdateData);
-//             }
-//         }
-//     }
-
-//     // Complete the transaction
-//     $this->db->trans_complete();
-
-//     // Check if the transaction was successful
-//     if ($this->db->trans_status() === FALSE) {
-//         // Transaction failed, handle the error
-//         return false;
-//     }
-
-//     return true;
-// }
-
   public function delete_BillingAgent($id)
   {
     return $this->db->delete('billing_agent_records', ['id' => $id]);
@@ -634,4 +646,23 @@ class Home_model extends CI_Model
 
     return $query->result_array();  // Return all matching results
   }
+
+  // public function getPrefilledProducts() {
+	// 	$editId = $this->input->get('billing_id'); // Get the ID from the request
+		
+	// 	// Fetch prefilled product IDs from the database based on the editId
+	// 	$query = $this->db->select('product_id')
+	// 					  ->from('billing_agent_product_record') // Replace with your table name
+	// 					  ->where('billing_id', $editId)
+	// 					  ->get();
+	
+	// 	$result = $query->result_array();
+	// 	$prefilledProducts = array_column($result, 'product_id');
+	
+	// 	// Return the IDs as a JSON response
+	// 	echo json_encode(['prefilledProducts' => $prefilledProducts]);
+	// }
+	
+
+
 }
