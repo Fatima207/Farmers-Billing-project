@@ -1071,6 +1071,10 @@ class Home extends CI_Controller
 				'cash'			 => $data['cash'],
 				'online'		 => $data['online'],
 				'created_at' => $data['created_at'],
+				// 'product_id' => $data['product_id'],
+				// 'qty' => $data['qty'],
+				// 'unit' => $data['unit'],
+				// 'price' => $data['price'],
 				// 'temp' => $data['temp'],
 				// 'code' => $data['code'],
 				// 'address' => $data['address'],
@@ -1079,6 +1083,10 @@ class Home extends CI_Controller
 
 			// Start a database transaction
 			$this->db->trans_start();
+
+
+			// Clear existing data for the billing ID
+			$this->db->where('billing_id', $billing_id)->delete('billing_agent_product_records');
 
 			// Update the main billing record
 			$updateBilling = $this->Home_model->update_billingAgentRecord($billing_id, $billingData);
@@ -1091,7 +1099,16 @@ class Home extends CI_Controller
 
 			// Insert new product records
 			if (!empty($data['product_details'])) {
+				// echo "<pre>";
+				// print_r($data['product_details']);
+				// echo "</pre>";
+				//exit;
+
 				foreach ($data['product_details'] as $product) {
+					echo "<pre>";
+					print_r($product);
+					echo "</pre>";
+					echo "inside the loop ";
 					$productData = [
 						'billing_id' => $billing_id,
 						'product_id' => $product['product_id'],

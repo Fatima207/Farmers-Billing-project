@@ -474,6 +474,7 @@
                           <!-- Fields for Quantity, Unit, and Price -->
                           <div v-for="(field, index) in product.fields || []" :key="index" class="d-flex flex-wrap"
                             style="gap: 20px;">
+                            <!-- Product ID (Hidden) -->
                             <input type="hidden" name="product_id[]" v-model="product.id" />
 
                             <!-- Quantity -->
@@ -504,7 +505,9 @@
                             <div class="d-flex flex-column" style="flex: 1; min-width: 120px;">
                               <label>Amount: Rs {{ calculateAmount(field.price, field.qty) }}</label>
                               <button @click="removeField(product, index)" class="btn btn-danger"
-                                style="margin-top: 5px; width: 50px; font-size: 14px; padding: 0px;">-</button>
+                                style="margin-top: 5px; width: 50px; font-size: 14px; padding: 0px;">
+                                -
+                              </button>
                             </div>
                           </div>
                         </div>
@@ -686,13 +689,25 @@ export default {
 
     return {
       isLoading: true,
-      fields: [],
       editId: this.$route.params.id, // Fetch the ID from the route
       agents: [],              // This will store the list of Agentss from the backend
       billingList: [], // Array to store the billing list
       comp: [],
       product_id: [],
       prefilledProducts: [],
+      fields: [
+        // Example product list
+        {
+          id: 1,
+          name: "Goldfish",
+          fields: [], // Dynamic fields for qty, unit, price
+        },
+        {
+          id: 2,
+          name: "Whales",
+          fields: [],
+        },
+      ],
       prod: [
         { id: 1, name: "Goldfish", fields: [] },
         { id: 2, name: "Whales", fields: [] },
@@ -1053,6 +1068,7 @@ export default {
         });
     },
 
+
     updateField(product) {
       console.log('Product:', product); // Debugging line
 
@@ -1094,7 +1110,19 @@ export default {
     },
 
     submitEditForm() {
+      const productDetails = this.fields.flatMap((product) => {
+        return (product.fields || [])
+          .filter((field) => field.qty && field.price) // Exclude empty fields
+          .map((field) => ({
+            product_id: product.id,
+            qty: field.qty,
+            unit: field.unit,
+            price: field.price,
+          }));
+      });
+
       const formData = {
+        product_details: productDetails,
         billing_id: this.form.billing_id,
         agent: this.form.agent,
         company: this.form.company,
@@ -1116,27 +1144,22 @@ export default {
         cheque: this.form.cheque,
         online: this.form.online,
         created_at: this.form.created_at,
-
-        product_details: this.selectedProducts.map(product => ({
-          product_id: this.form.product_id,
-          qty: this.form.qty,
-          unit: this.form.unit,
-          price: this.form.price,
-        })),
+        // Add other required form fields here
       };
 
-      console.log("Sending data:", formData);
+      console.log("Form Data to Submit:", formData);
 
+      // Send data to the server
       axios
         .post("http://localhost/dairy/index.php/Home/updateBillingAgent", formData, {
           headers: {
             "Content-Type": "application/json",
           },
-          withCredentials: true,
         })
         .then((response) => {
           if (response.data.status === "success") {
             alert("Billing record updated successfully!");
+            this.fetchBillingDetails(); // Reload data to ensure accuracy
           } else {
             throw new Error(response.data.message || "Failed to update billing record.");
           }
@@ -1147,26 +1170,29 @@ export default {
     },
 
 
+
     updateSelectedProducts(event) {
-      // Track selected product IDs from the dropdown
       const productId = parseInt(event.target.value, 10);
 
-      // Add product to `selectedProductIds` if it's not already there
-      if (!this.selectedProductIds.includes(productId)) {
-        this.selectedProductIds.push(productId);
-      }
-
-      // Update fields with selected product details if not already present
+      // Find the selected product by ID
       const selectedProduct = this.prod.find(product => product.id === productId);
-      if (selectedProduct && !this.fields.some(field => field.id === productId)) {
-        this.fields.push({
-          id: selectedProduct.id,
+
+      if (selectedProduct) {
+        const productData = {
+          product_id: selectedProduct.id,
           name: selectedProduct.name,
-          fields: selectedProduct.fields || [],
-        });
+          qty: 0, // Default value for quantity
+          unit: '', // Default value for unit
+          price: 0, // Default value for price
+        };
+
+        // Add the product only if it's not already in the list
+        if (!this.selectedProducts.some(product => product.product_id === productData.product_id)) {
+          this.selectedProducts.push(productData);
+        }
       }
 
-      console.log("Selected Products:", this.selectedProductIds);
+      console.log("Selected Products after update:", JSON.stringify(this.selectedProducts, null, 2));
     },
 
 
@@ -1201,30 +1227,39 @@ export default {
         }
       });
     },
+   
 
-
-
-
-    // Add a new field (for adding more rows for qty, price, etc.)
     addField(product) {
       product.fields.push({ qty: '', unit: 'kg', price: '' });
     },
-
+    // Remove a specific field for a product
     removeField(product, index) {
-      product.fields.splice(index, 1);
-
+      if (product.fields) {
+        product.fields.splice(index, 1);
+      }
     },
-    calculateAmount(price, qty) {
-      return price * qty || 0;
-    },
+    // Calculate total amount for a specific product
     calculateTotalAmount(product) {
-      if (!product.fields) return 0; // Prevent accessing undefined.
-      return product.fields.reduce((sum, field) => sum + (field.qty * field.price), 0);
-    },
-    calculateTotalQuantity(product) {
-      return product.fields.reduce((total, field) => total + (Number(field.qty) || 0), 0);
+      if (!product.fields) return 0;
+
+      return product.fields.reduce((total, field) => {
+        return total + this.calculateAmount(field.price, field.qty);
+      }, 0);
     },
 
+    // Calculate total quantity for a specific product
+    calculateTotalQuantity(product) {
+      if (!product.fields) return 0;
+
+      return product.fields.reduce((total, field) => {
+        return total + Number(field.qty || 0);
+      }, 0);
+    },
+
+    // Helper to calculate amount (price * qty)
+    calculateAmount(price, qty) {
+      return Number(price || 0) * Number(qty || 0);
+    },
 
     printPage() {
       // You can perform any necessary save actions here before printing, like saving to a database
